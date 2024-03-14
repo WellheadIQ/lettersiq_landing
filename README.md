@@ -33,7 +33,7 @@ npm run build
 Preview the Build Locally
 npm run preview
 
-Project Structure 
+# Project Structure 
 
 LettersIQ/
 ├── public/             # Static files like favicon
