@@ -29,15 +29,15 @@ const { title } = Astro.props;
   <meta property="og:url" content="https://lettersiq.com" />
   <meta property="og:image" content="/lettersiqlogo.png" />
   
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16667114456"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+<!-- Google tag (gtag.js) -->
+<script type="text/partytown" async src="https://www.googletagmanager.com/gtag/js?id=G-16667114456"></script>
+<script type="text/partytown">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-16667114456');
+</script>
 
-    gtag('config', 'AW-16667114456');
-  </script>
   
   <title>{title}</title>
 </head>
