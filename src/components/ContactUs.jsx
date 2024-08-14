@@ -4,6 +4,15 @@ import { motion } from 'framer-motion';
 export const ContactUs = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
+  const gtag_report_conversion = () => {
+    gtag('event', 'conversion', {
+      'send_to': 'AW-16667114456/R0rYCLP-rMkZENj3v4s-',
+      'event_callback': function() {
+        console.log('Conversion tracked successfully.');
+      }
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -16,6 +25,7 @@ export const ContactUs = () => {
       });
 
       if (response.ok) {
+        gtag_report_conversion(); // Trigger Google Ads conversion tracking
         setFormSubmitted(true);
       } else {
         console.error('Form submission failed');
