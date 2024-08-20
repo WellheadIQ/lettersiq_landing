@@ -24,6 +24,9 @@ export const Footer = () => {
             LettersIQ is not affiliated with the Texas Railroad Commission.
           </p>
           <p className="text-xs mt-2">&copy; {new Date().getFullYear()} LettersIQ. All rights reserved.</p>
+          <p className="text-xs mt-2">
+            <a href="/privacy-policy" className="text-customSecondary hover:text-white transition-colors duration-300">Privacy Policy</a>
+          </p>
         </div>
       </div>
     </footer>
