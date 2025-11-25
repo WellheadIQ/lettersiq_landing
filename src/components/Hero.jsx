@@ -12,79 +12,142 @@ export const Hero = () => {
 
   return (
     <section
-      className="w-screen flex justify-center items-center bg-customDarkBg1 mb-[28vw] md:mb-[18vw] lg:mb-[10vw] xl:mb-[13vw] 2xl:mb-60 hero-bg-gradient pb-24 sm:pb-32 md:pb-44 lg:pb-0"
+      className="w-full flex flex-col justify-start items-center relative overflow-hidden"
       id="home"
     >
-      <div className="w-full md:w-[800px] xl:w-[900px] flex flex-col justify-center items-center pt-16 md:pt-16 lg:pt-20 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="text-customSecondary text-sm sm:text-base mb-6 sm:mt-32 mt-16 font-bold">
-            Simplify Your Life As A Texas Oil and Gas Operator
-          </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-        >
-          <div className="text-5xl sm:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-wide text-white px-8 sm:px-8 md:px-20 lg:px-4">
-            <span className="inline">LettersIQ</span>
-          </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <div className="text-customGrayText text-sm lg:text-base xl:text-lg sm:text-base mt-10 px-12 sm:px-48">
-            Stay ahead of potential compliance issues with real-time monitoring and instant notifications. Protect your operations and avoid costly severance actions from The Texas Railroad Commission.
-          </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
-          <div className="flex flex-col gap-2 sm:flex-row mt-14 mb-24 sm:mb-40 justify-center">
-            <div
-              className="custom-button-colored w-64 sm:w-52 h-12 mr-0 sm:mr-4 lg:mr-6 mb-2 sm:mb-0 cursor-pointer"
-              onClick={scrollToContactUs}
-            >
-              Get Started
+      {/* Dark header section */}
+      <div className="w-full bg-labFg pt-24 pb-16 md:pt-28 md:pb-20">
+        <div className="w-full max-w-6xl mx-auto px-6 md:px-8">
+          {/* Technical decorative elements */}
+          <div className="flex justify-between items-start mb-8">
+            <div className="font-mono text-xs text-white/40">
+              <div className="flex flex-col gap-1">
+                <span>SYS_ID: LIQ-2024</span>
+                <span>STATUS: ACTIVE</span>
+                <span className="text-labAlert">{">>>>>>>>>"}</span>
+              </div>
+            </div>
+            <div className="font-mono text-xs text-white/40 text-right hidden md:block">
+              <div className="flex flex-col gap-1">
+                <span>REGION: TEXAS</span>
+                <span>MODE: MONITORING</span>
+                <span>V 2.0</span>
+              </div>
             </div>
           </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10, zIndex: 20 }}
-          animate={{ opacity: 1, y: 0, zIndex: 20 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
-          <div className="relative w-screen flex justify-center">
-            <img
-              src={dashboard}
-              alt="LettersIQ Dashboard"
-              className="w-4/5 2xl:w-[1200px] mx-auto absolute z-10 rounded-xl custom-border-gray hero-dashboard-border-gradient lg:top-6 xl:top-0"
-            />
-          </div>
-        </motion.div>
-        <div className="relative w-screen flex justify-center">
-          <div className="custom-shape-divider-bottom-1665343298 mt-4 sm:mt-16 md:mt-52 hidden lg:block">
-            <svg
-              data-name="Layer 1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 1200 120"
-              preserveAspectRatio="none"
-              className="bg-customDarkBg2"
+
+          {/* Main headline - specific to LettersIQ */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="mb-8"
+          >
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1]">
+              <span className="block">Never miss a</span>
+              <span className="block">severance letter</span>
+              <span className="block text-white/50">again.</span>
+            </h1>
+          </motion.div>
+
+          {/* Subtitle */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mb-8 max-w-2xl"
+          >
+            <p className="text-white/60 text-base md:text-lg leading-relaxed">
+              RRC violations delivered to your inbox daily. Stay ahead of compliance issues and avoid costly severance actions from the Texas Railroad Commission.
+            </p>
+          </motion.div>
+
+          {/* CTA buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-wrap gap-4"
+          >
+            <motion.button
+              onClick={scrollToContactUs}
+              className="px-8 py-4 bg-labAlert text-labFg font-mono text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <path
-                d="M1200 0L0 0 598.97 114.72 1200 0z"
-                className="shape-fill custom-bg-dark1"
-              ></path>
-            </svg>
-          </div>
+              Get Started
+            </motion.button>
+            <motion.a
+              href="#features"
+              className="px-8 py-4 bg-transparent text-white font-mono text-sm uppercase tracking-wider border border-white/30 hover:border-white transition-colors duration-300"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Learn More
+            </motion.a>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Light section with dashboard */}
+      <div className="w-full bg-labBg py-16 md:py-24">
+        <div className="w-full max-w-6xl mx-auto px-6 md:px-8">
+          {/* Dashboard image with technical frame */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            className="relative"
+          >
+            {/* Technical frame corners */}
+            <div className="absolute -top-2 -left-2 w-8 h-8 border-l-2 border-t-2 border-labFg" />
+            <div className="absolute -top-2 -right-2 w-8 h-8 border-r-2 border-t-2 border-labFg" />
+            <div className="absolute -bottom-2 -left-2 w-8 h-8 border-l-2 border-b-2 border-labFg" />
+            <div className="absolute -bottom-2 -right-2 w-8 h-8 border-r-2 border-b-2 border-labFg" />
+            
+            {/* Image label */}
+            <div className="absolute -top-8 left-0 font-mono text-xs text-labFgMuted flex items-center gap-4">
+              <span>FIG. 01</span>
+              <span className="w-16 h-px bg-labBorder" />
+              <span>DASHBOARD INTERFACE</span>
+            </div>
+            
+            {/* Main image */}
+            <div className="border border-labBorder bg-white p-2 md:p-4">
+              <img
+                src={dashboard}
+                alt="LettersIQ Dashboard"
+                className="w-full h-auto"
+              />
+            </div>
+            
+            {/* Bottom technical info */}
+            <div className="flex justify-between items-center mt-4 font-mono text-xs text-labFgMuted">
+              <span>REAL-TIME MONITORING</span>
+              <span>/// LETTERSIQ PLATFORM</span>
+              <span>24/7 ALERTS</span>
+            </div>
+          </motion.div>
+
+          {/* Stats bar */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 md:mt-16 pt-8 border-t border-labBorder"
+          >
+            {[
+              { label: "DELIVERY", value: "7AM CST" },
+              { label: "COVERAGE", value: "TEXAS" },
+              { label: "MONITORING", value: "24/7" },
+              { label: "STATUS", value: "ACTIVE" },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center md:text-left">
+                <div className="font-mono text-xs text-labFgMuted mb-1">{stat.label}</div>
+                <div className="font-bold text-2xl md:text-3xl text-labFg">{stat.value}</div>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </div>
     </section>

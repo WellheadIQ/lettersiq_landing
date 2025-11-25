@@ -1,48 +1,67 @@
-/* Hero */
+/* Lab Theme - Decorative Elements */
 
-.custom-shape-divider-bottom-1665343298 {
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
+/* Technical grid pattern */
+.tech-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
-.custom-shape-divider-bottom-1665343298 svg {
+
+/* Technical frame corners */
+.tech-corners {
   position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 200px;
-}
-.hero-title-gradient {
-  background: -webkit-linear-gradient(white, #b4add1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
-/* Features Top */
-
-.custom-shape-divider-bottom-1665696614 {
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  transform: rotate(180deg);
+.tech-corners::before,
+.tech-corners::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
 }
-.custom-shape-divider-bottom-1665696614 svg {
+
+.tech-corners::before {
+  top: -1px;
+  left: -1px;
+  border-left: 1px solid rgba(0,0,0,0.3);
+  border-top: 1px solid rgba(0,0,0,0.3);
+}
+
+.tech-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-right: 1px solid rgba(0,0,0,0.3);
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+}
+
+/* Technical label styling */
+.tech-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #4B5563;
+}
+
+/* Scan line effect for images */
+.scan-lines {
   position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 127px;
-  transform: rotateY(180deg);
 }
 
-/* Features Bottom */
-
-.custom-shape-divider-top-1665696661 {
-  overflow: hidden;
-  line-height: 0;
-}
-.custom-shape-divider-top-1665696661 svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 127px;
-  transform: rotateY(180deg);
+.scan-lines::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.02) 2px,
+    rgba(0,0,0,0.02) 4px
+  );
+  pointer-events: none;
 }

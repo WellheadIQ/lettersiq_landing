@@ -4,6 +4,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Lab Palette
+        labBg: "#FAFAFA",
+        labBgAlt: "#F3F4F6",
+        labFg: "#111111",
+        labFgMuted: "#4B5563",
+        labAccent: "#3B82F6",
+        labAlert: "#4B9CD3",
+        labBorder: "rgba(0,0,0,0.1)",
+        labBorderStrong: "rgba(0,0,0,0.2)",
+        // Legacy (kept for compatibility during migration)
         customPrimary: "rgb(99, 102, 241)",
         customSecondary: "rgb(161, 163, 247)",
         customDarkBg1: "rgb(31, 32, 35)",
@@ -18,6 +28,8 @@ module.exports = {
         customDarkBgTransparentLighter: "rgb(48, 49, 54, 0.7)"  
       },
       fontFamily: {
+        sans: ["Space Grotesk", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
         Inter: "Inter",
       },
       screens: {
@@ -32,4 +44,3 @@ module.exports = {
     },
   },
 };
-

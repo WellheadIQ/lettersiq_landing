@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import React from 'react';
 
 export const ScrollUpButton = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -27,42 +28,35 @@ export const ScrollUpButton = () => {
     });
   };
 
-  const buttonVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
     <>
       {isVisible && (
         <motion.div
-          className="w-12 h-12 fixed bottom-6 right-6 custom-border-gray rounded-full bg-customDarkBg2 hover:bg-customDarkBg3 cursor-pointer flex justify-center items-center transition z-50"
+          className="w-12 h-12 fixed bottom-6 right-6 border border-labBorder bg-labBg hover:border-labFg cursor-pointer flex justify-center items-center transition-colors z-50 group"
           onClick={scrollToTop}
-          initial="hidden"
-          animate="visible"
-          variants={buttonVariants}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <motion.svg
+          <svg
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            width="35px"
-            height="35px"
-            viewBox="0 0 20 20"
-            initial={{ rotate: 180 }}
-            animate={{ rotate: 0 }}
-            transition={{ duration: 0.3 }}
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            className="text-labFgMuted group-hover:text-labFg transition-colors"
           >
             <path
-              d="M4.16732 12.5L10.0007 6.66667L15.834 12.5"
-              stroke="rgb(99, 102, 241)"
+              d="M18 15L12 9L6 15"
+              stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-            ></path>
-          </motion.svg>
+            />
+          </svg>
         </motion.div>
       )}
     </>

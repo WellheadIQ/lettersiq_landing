@@ -13,7 +13,6 @@ export const ContactUs = () => {
   const [errors, setErrors] = useState({});
   const [validFields, setValidFields] = useState({});
 
-  // Reset form after successful submission
   useEffect(() => {
     if (formState === 'success') {
       const timer = setTimeout(() => {
@@ -26,12 +25,11 @@ export const ContactUs = () => {
           phone: ''
         });
         setFormState('idle');
-      }, 60000); // 60000 milliseconds = 1 minute
+      }, 60000);
       return () => clearTimeout(timer);
     }
   }, [formState]);
 
-  // Validate individual field
   const validateField = useCallback((name, value) => {
     switch (name) {
       case 'name':
@@ -46,7 +44,6 @@ export const ContactUs = () => {
     }
   }, []);
 
-  // Handle input change
   const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -76,7 +73,6 @@ export const ContactUs = () => {
     }
   }, [validateField]);
 
-  // Validate entire form
   const validateForm = useCallback(() => {
     const newErrors = {};
     let isValid = true;
@@ -90,7 +86,6 @@ export const ContactUs = () => {
     return isValid;
   }, [formData, validateField]);
 
-  // Handle form submission
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setFormState('submitting');
@@ -115,7 +110,6 @@ export const ContactUs = () => {
     }
   }, [formData, validateForm]);
 
-  // Google Analytics conversion tracking
   const gtag_report_conversion = useCallback(() => {
     if (typeof gtag === 'function') {
       gtag('event', 'conversion', {
@@ -128,186 +122,209 @@ export const ContactUs = () => {
   }, []);
 
   return (
-    <section id="contact-us" className="w-full flex flex-col items-center justify-center py-12 bg-customDarkBg2">
-      <h2 className="text-3xl font-bold text-white mb-8">Contact Us</h2>
-      <AnimatePresence mode="wait">
-        {formState === 'success' ? (
-          <SuccessMessage key="success" />
-        ) : (
-          <motion.div
-            key="form"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-lg space-y-6"
-          >
-            {formState === 'error' && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-red-500 text-center"
-              >
-                Please fix the errors in the form and try again.
-              </motion.div>
-            )}
-            <ContactForm
-              formState={formState}
-              formData={formData}
-              errors={errors}
-              validFields={validFields}
-              handleInputChange={handleInputChange}
-              handleSubmit={handleSubmit}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <section id="contact-us" className="w-full bg-labFg py-16 md:py-24 relative">
+      {/* Technical grid overlay */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="w-full h-full" style={{
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+          backgroundSize: '40px 40px'
+        }} />
+      </div>
+
+      <div className="max-w-2xl mx-auto px-6 md:px-8 relative z-10">
+        {/* Section label */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center gap-4 mb-6"
+        >
+          <span className="font-mono text-xs text-labBg/60 uppercase tracking-widest">07</span>
+          <span className="w-12 h-px bg-labBg/20" />
+          <span className="font-mono text-xs text-labBg/60 uppercase tracking-widest">CONTACT</span>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-8"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold text-labBg mb-4">
+            Get Started
+          </h2>
+          <p className="text-labBg/70">
+            Fill out the form below and we'll reach out within 24 hours.
+          </p>
+        </motion.div>
+
+        <AnimatePresence mode="wait">
+          {formState === 'success' ? (
+            <SuccessMessage key="success" />
+          ) : (
+            <motion.div
+              key="form"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              {formState === 'error' && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="mb-6 p-4 border border-red-500/50 bg-red-500/10 text-red-400 font-mono text-sm"
+                >
+                  /// ERROR: Please fix the errors in the form and try again.
+                </motion.div>
+              )}
+              <ContactForm
+                formState={formState}
+                formData={formData}
+                errors={errors}
+                validFields={validFields}
+                handleInputChange={handleInputChange}
+                handleSubmit={handleSubmit}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </section>
   );
 };
 
-// Success message component
 const SuccessMessage = () => (
   <motion.div
     initial={{ opacity: 0, y: 50 }}
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -50 }}
     transition={{ duration: 0.5 }}
-    className="text-white text-center"
+    className="text-center py-12 border border-labBg/20 bg-labBg/5"
   >
     <motion.div
       initial={{ scale: 0 }}
-      animate={{ scale: [0, 1.2, 1] }}
-      transition={{ duration: 0.5, times: [0, 0.8, 1] }}
-      className="text-6xl mb-6 flex justify-center space-x-4"
+      animate={{ scale: 1 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
+      className="w-16 h-16 mx-auto mb-6 border-2 border-green-500 flex items-center justify-center"
     >
-      {['🎉', '🚀', '👍'].map((emoji, index) => (
-        <motion.span
-          key={emoji}
-          role="img"
-          aria-label={`Emoji ${index + 1}`}
-          whileHover={{ rotate: 20, scale: 1.2 }}
-          whileTap={{ rotate: 0, scale: 0.8 }}
-        >
-          {emoji}
-        </motion.span>
-      ))}
+      <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+      </svg>
     </motion.div>
-    <motion.h3 
-      className="text-2xl font-bold mb-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3, duration: 0.5 }}
-    >
-      Thank you for reaching out!
-    </motion.h3>
-    <motion.p 
-      className="mb-2"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.5, duration: 0.5 }}
-    >
-      We'll get back to you within 24 hours!
-    </motion.p>
-    <motion.p 
-      className="text-customSecondary"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.7, duration: 0.5 }}
-    >
-      Welcome to the LettersIQ family! 🎊
-    </motion.p>
+    <h3 className="text-2xl font-bold text-labBg mb-4">
+      Submission Received
+    </h3>
+    <p className="text-labBg/70 mb-2">
+      We'll get back to you within 24 hours.
+    </p>
+    <p className="font-mono text-xs text-labAccent">
+      /// WELCOME TO LETTERSIQ
+    </p>
   </motion.div>
 );
 
-// Contact form component
 const ContactForm = ({ formState, formData, errors, validFields, handleInputChange, handleSubmit }) => (
   <motion.form
     onSubmit={handleSubmit}
-    className="w-full space-y-4"
+    className="border border-labBg/20 bg-labBg/5"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
   >
-    {['name', 'operator', 'email', 'phone'].map((field, index) => (
-      <FormField
-        key={field}
-        field={field}
-        value={formData[field]}
-        error={errors[field]}
-        isValid={validFields[field]}
-        onChange={handleInputChange}
-        delay={index * 0.1}
-      />
-    ))}
-    <motion.div
-      className="flex justify-center"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.4 }}
-    >
-      <button
+    {/* Form header */}
+    <div className="p-4 border-b border-labBg/20 flex items-center justify-between">
+      <span className="font-mono text-xs text-labBg/60">FORM_CONTACT</span>
+      <span className="font-mono text-xs text-labBg/60">FIELDS: 4</span>
+    </div>
+
+    <div className="p-6 space-y-6">
+      {['name', 'operator', 'email', 'phone'].map((field, index) => (
+        <FormField
+          key={field}
+          field={field}
+          value={formData[field]}
+          error={errors[field]}
+          isValid={validFields[field]}
+          onChange={handleInputChange}
+          index={index}
+        />
+      ))}
+    </div>
+
+    {/* Submit button */}
+    <div className="p-6 pt-0">
+      <motion.button
         type="submit"
         disabled={formState === 'submitting'}
-        className="bg-customPrimary text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
+        className="w-full py-4 bg-labAccent text-labBg font-mono text-sm uppercase tracking-wider hover:bg-labBg hover:text-labFg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        whileHover={{ scale: formState === 'submitting' ? 1 : 1.01 }}
+        whileTap={{ scale: formState === 'submitting' ? 1 : 0.99 }}
       >
-        {formState === 'submitting' ? 'Submitting...' : 'Submit'}
-      </button>
-    </motion.div>
+        {formState === 'submitting' ? '/// PROCESSING...' : 'Submit Request'}
+      </motion.button>
+    </div>
   </motion.form>
 );
 
-// Form field component
-const FormField = ({ field, value, error, isValid, onChange, delay }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay }}
-    className="relative"
-  >
-    <label htmlFor={field} className="block text-white mb-2">
-      {field.charAt(0).toUpperCase() + field.slice(1)}
-    </label>
-    <div className="relative">
-      <input
-        type={field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'}
-        id={field}
-        name={field}
-        value={value}
-        onChange={onChange}
-        className={`w-full p-2 pr-10 rounded ${
-          isValid ? 'border-green-500' : error ? 'border-red-500' : 'border-gray-300'
-        }`}
-      />
-      <motion.div
-        className="absolute right-3 top-1/2 transform -translate-y-1/2"
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.2 }}
-      >
-        {isValid ? (
-          <FaCheck className="text-green-500" />
-        ) : error ? (
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 0.5, repeat: Infinity }}
-          >
-            <FaTimes className="text-red-500" />
-          </motion.div>
-        ) : null}
-      </motion.div>
-    </div>
-    {error && (
-      <motion.p
-        className="text-red-500 text-sm mt-1"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {error}
-      </motion.p>
-    )}
-  </motion.div>
-);
+const FormField = ({ field, value, error, isValid, onChange, index }) => {
+  const labels = {
+    name: 'Full Name',
+    operator: 'Operator Name',
+    email: 'Email Address',
+    phone: 'Phone Number'
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.1 }}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <label htmlFor={field} className="font-mono text-xs text-labBg/60 uppercase tracking-wider">
+          {labels[field]}
+        </label>
+        <span className="font-mono text-xs text-labBg/40">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+      </div>
+      <div className="relative">
+        <input
+          type={field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'}
+          id={field}
+          name={field}
+          value={value}
+          onChange={onChange}
+          placeholder={field === 'phone' ? '10 digits, no dashes' : ''}
+          className={`w-full p-4 bg-transparent border text-labBg font-mono text-sm focus:outline-none transition-colors ${
+            isValid 
+              ? 'border-green-500/50 focus:border-green-500' 
+              : error 
+                ? 'border-red-500/50 focus:border-red-500' 
+                : 'border-labBg/20 focus:border-labBg/50'
+          }`}
+        />
+        {/* Validation indicator */}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+          {isValid ? (
+            <FaCheck className="text-green-500 w-4 h-4" />
+          ) : error ? (
+            <FaTimes className="text-red-500 w-4 h-4" />
+          ) : null}
+        </div>
+      </div>
+      {error && (
+        <motion.p
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-2 font-mono text-xs text-red-400"
+        >
+          /// {error}
+        </motion.p>
+      )}
+    </motion.div>
+  );
+};
