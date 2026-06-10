@@ -122,40 +122,43 @@ export const ContactUs = () => {
   }, []);
 
   return (
-    <section id="contact-us" className="w-full bg-labFg py-16 md:py-24 relative">
+    <section id="contact-us" className="w-full bg-ink py-16 md:py-24 relative overflow-hidden">
+      {/* Ambient glow */}
+      <div
+        className="pointer-events-none absolute -top-32 right-0 w-[34rem] h-[34rem] rounded-full opacity-30 blur-3xl"
+        style={{ background: "radial-gradient(circle, rgba(224,86,14,0.4), transparent 60%)" }}
+      />
       {/* Technical grid overlay */}
-      <div className="absolute inset-0 opacity-5">
+      <div className="absolute inset-0 opacity-[0.4]">
         <div className="w-full h-full" style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-          backgroundSize: '40px 40px'
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)',
+          backgroundSize: '56px 56px'
         }} />
       </div>
 
-      <div className="max-w-2xl mx-auto px-6 md:px-8 relative z-10">
+      <div className="section-shell max-w-2xl relative z-10">
         {/* Section label */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-4 mb-6"
+          className="flex items-center gap-3 mono-label text-white/55 mb-5"
         >
-          <span className="font-mono text-xs text-labBg/60 uppercase tracking-widest">07</span>
-          <span className="w-12 h-px bg-labBg/20" />
-          <span className="font-mono text-xs text-labBg/60 uppercase tracking-widest">CONTACT</span>
+          <span className="text-emberBright">07</span>
+          <span className="w-8 h-px bg-white/25" />
+          <span>Contact</span>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.5, delay: 0.08 }}
           className="mb-8"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-labBg mb-4">
-            Get Started
-          </h2>
-          <p className="text-labBg/70">
+          <h2 className="text-display-sm font-bold text-white">Get started</h2>
+          <p className="mt-4 text-white/60 text-base md:text-lg">
             Fill out the form below and we'll reach out within 24 hours.
           </p>
         </motion.div>
@@ -259,11 +262,11 @@ const ContactForm = ({ formState, formData, errors, validFields, handleInputChan
       <motion.button
         type="submit"
         disabled={formState === 'submitting'}
-        className="w-full py-4 bg-labAccent text-labBg font-mono text-sm uppercase tracking-wider hover:bg-labBg hover:text-labFg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-4 bg-ember text-white font-mono text-sm uppercase tracking-[0.12em] hover:bg-emberBright transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         whileHover={{ scale: formState === 'submitting' ? 1 : 1.01 }}
         whileTap={{ scale: formState === 'submitting' ? 1 : 0.99 }}
       >
-        {formState === 'submitting' ? '/// PROCESSING...' : 'Submit Request'}
+        {formState === 'submitting' ? '/// PROCESSING...' : 'Submit Request →'}
       </motion.button>
     </div>
   </motion.form>

@@ -1,152 +1,188 @@
 import { motion } from "framer-motion";
 import dashboard from "../assets/images/dashboard.jpg";
-import React from 'react';
+import React from "react";
+
+const monitored = [
+  "DELINQUENT H-10",
+  "WELL SEVERANCE",
+  "FEE DUES",
+  "STATEWIDE RULE 14",
+  "P-4 FILINGS",
+  "SEAL ORDERS",
+];
+
+const stats = [
+  { label: "DELIVERY", value: "7AM", unit: "CST" },
+  { label: "COVERAGE", value: "TEXAS", unit: "RRC" },
+  { label: "MONITORING", value: "24/7", unit: "AUTO" },
+  { label: "PRICE", value: "$4", unit: "/LEASE" },
+];
 
 export const Hero = () => {
   const scrollToContactUs = () => {
-    const contactUsSection = document.getElementById("contact-us");
-    if (contactUsSection) {
-      contactUsSection.scrollIntoView({ behavior: "smooth" });
-    }
+    document.getElementById("contact-us")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section
-      className="w-full flex flex-col justify-start items-center relative overflow-hidden"
-      id="home"
-    >
-      {/* Dark header section */}
-      <div className="w-full bg-labFg pt-24 pb-16 md:pt-28 md:pb-20">
-        <div className="w-full max-w-6xl mx-auto px-6 md:px-8">
-          {/* Technical decorative elements */}
-          <div className="flex justify-between items-start mb-8">
-            <div className="font-mono text-xs text-white/40">
-              <div className="flex flex-col gap-1">
-                <span>SYS_ID: LIQ-2024</span>
-                <span>STATUS: ACTIVE</span>
-                <span className="text-labAlert">{">>>>>>>>>"}</span>
-              </div>
-            </div>
-            <div className="font-mono text-xs text-white/40 text-right hidden md:block">
-              <div className="flex flex-col gap-1">
-                <span>REGION: TEXAS</span>
-                <span>MODE: MONITORING</span>
-                <span>V 2.0</span>
-              </div>
-            </div>
-          </div>
+    <section className="w-full flex flex-col relative overflow-hidden" id="home">
+      {/* ---------- Dark stage ---------- */}
+      <div className="relative w-full bg-ink pt-[68px] md:pt-20">
+        {/* Ambient ember glow */}
+        <div
+          className="pointer-events-none absolute -top-40 right-0 w-[42rem] h-[42rem] rounded-full opacity-40 blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(224,86,14,0.35), transparent 60%)" }}
+        />
+        {/* Fine grid on the dark stage */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.5]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
+            maskImage: "radial-gradient(120% 90% at 70% 0%, #000 30%, transparent 100%)",
+            WebkitMaskImage: "radial-gradient(120% 90% at 70% 0%, #000 30%, transparent 100%)",
+          }}
+        />
 
-          {/* Main headline - specific to LettersIQ */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-8"
-          >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.1]">
-              <span className="block">Never miss a</span>
-              <span className="block">severance letter</span>
-              <span className="block text-white/50">again.</span>
-            </h1>
-          </motion.div>
-
-          {/* Subtitle */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-8 max-w-2xl"
-          >
-            <p className="text-white/60 text-base md:text-lg leading-relaxed">
-              RRC violations delivered to your inbox daily. Stay ahead of compliance issues and avoid costly severance actions from the Texas Railroad Commission.
-            </p>
-          </motion.div>
-
-          {/* CTA buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-wrap gap-4"
-          >
-            <motion.button
-              onClick={scrollToContactUs}
-              className="px-8 py-4 bg-labAlert text-labFg font-mono text-sm uppercase tracking-wider hover:bg-white transition-colors duration-300"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Get Started
-            </motion.button>
-            <motion.a
-              href="#features"
-              className="px-8 py-4 bg-transparent text-white font-mono text-sm uppercase tracking-wider border border-white/30 hover:border-white transition-colors duration-300"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Learn More
-            </motion.a>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Light section with dashboard */}
-      <div className="w-full bg-labBg py-16 md:py-24">
-        <div className="w-full max-w-6xl mx-auto px-6 md:px-8">
-          {/* Dashboard image with technical frame */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="relative"
-          >
-            {/* Technical frame corners */}
-            <div className="absolute -top-2 -left-2 w-8 h-8 border-l-2 border-t-2 border-labFg" />
-            <div className="absolute -top-2 -right-2 w-8 h-8 border-r-2 border-t-2 border-labFg" />
-            <div className="absolute -bottom-2 -left-2 w-8 h-8 border-l-2 border-b-2 border-labFg" />
-            <div className="absolute -bottom-2 -right-2 w-8 h-8 border-r-2 border-b-2 border-labFg" />
-            
-            {/* Image label */}
-            <div className="absolute -top-8 left-0 font-mono text-xs text-labFgMuted flex items-center gap-4">
-              <span>FIG. 01</span>
-              <span className="w-16 h-px bg-labBorder" />
-              <span>DASHBOARD INTERFACE</span>
-            </div>
-            
-            {/* Main image */}
-            <div className="border border-labBorder bg-white p-2 md:p-4">
-              <img
-                src={dashboard}
-                alt="LettersIQ Dashboard"
-                className="w-full h-auto"
-              />
-            </div>
-            
-            {/* Bottom technical info */}
-            <div className="flex justify-between items-center mt-4 font-mono text-xs text-labFgMuted">
-              <span>REAL-TIME MONITORING</span>
-              <span>/// LETTERSIQ PLATFORM</span>
-              <span>24/7 ALERTS</span>
-            </div>
-          </motion.div>
-
-          {/* Stats bar */}
+        <div className="section-shell relative pt-12 pb-16 md:pt-16 md:pb-24">
+          {/* Status row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 md:mt-16 pt-8 border-t border-labBorder"
+            transition={{ duration: 0.6 }}
+            className="flex items-center justify-between gap-4 mb-10 md:mb-14 font-mono text-[11px] tracking-[0.16em]"
           >
-            {[
-              { label: "DELIVERY", value: "7AM CST" },
-              { label: "COVERAGE", value: "TEXAS" },
-              { label: "MONITORING", value: "24/7" },
-              { label: "STATUS", value: "ACTIVE" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center md:text-left">
-                <div className="font-mono text-xs text-labFgMuted mb-1">{stat.label}</div>
-                <div className="font-bold text-2xl md:text-3xl text-labFg">{stat.value}</div>
-              </div>
+            <div className="flex items-center gap-2 text-emberBright">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-emberBright opacity-75 animate-ping" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emberBright" />
+              </span>
+              SYSTEM&nbsp;ACTIVE
+            </div>
+            <div className="hidden sm:flex items-center gap-6 text-white/35">
+              <span>SYS_ID: LIQ-2024</span>
+              <span>REGION: TX</span>
+              <span className="hidden md:inline">V 2.0</span>
+            </div>
+          </motion.div>
+
+          {/* Headline */}
+          <div className="max-w-4xl">
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.05 }}
+              className="text-display-lg font-bold text-white"
+            >
+              Never miss a
+              <br />
+              severance letter{" "}
+              <span className="relative inline-block text-ember">
+                again.
+                <motion.span
+                  className="absolute left-0 -bottom-1 h-[3px] w-full bg-ember origin-left"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.7, delay: 0.6 }}
+                />
+              </span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mt-7 max-w-2xl text-white/60 text-base md:text-lg leading-relaxed"
+            >
+              RRC violations delivered to your inbox every morning. Stay ahead of
+              compliance issues and avoid costly severance actions from the Texas
+              Railroad Commission.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="mt-9 flex flex-col xs:flex-row flex-wrap gap-3 xs:gap-4"
+            >
+              <button onClick={scrollToContactUs} className="btn-ember">
+                Get Started
+                <span aria-hidden>→</span>
+              </button>
+              <a href="#features" className="btn-ghost-dark">
+                See How It Works
+              </a>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Monitored marquee strip */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="relative border-t border-white/10 py-4 overflow-hidden"
+        >
+          <div className="flex w-max animate-marquee gap-10 font-mono text-[11px] tracking-[0.18em] text-white/35">
+            {[...monitored, ...monitored, ...monitored].map((m, i) => (
+              <span key={i} className="flex items-center gap-10 whitespace-nowrap">
+                <span className="text-ember/70">›</span> {m}
+              </span>
             ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* ---------- Light stage: dashboard ---------- */}
+      <div className="w-full bg-paper py-16 md:py-24">
+        <div className="section-shell">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7 }}
+            className="relative"
+          >
+            {/* Caption */}
+            <div className="flex items-center gap-3 mb-5 font-mono text-[11px] tracking-[0.16em] text-labFgMuted">
+              <span className="text-labFg font-semibold">FIG.01</span>
+              <span className="w-10 h-px bg-labBorderStrong" />
+              <span>DASHBOARD INTERFACE</span>
+              <span className="ml-auto hidden sm:inline">REAL-TIME</span>
+            </div>
+
+            {/* Framed dashboard */}
+            <div className="relative">
+              <span className="bracket -top-2 -left-2 border-l-2 border-t-2 border-labFg" />
+              <span className="bracket -top-2 -right-2 border-r-2 border-t-2 border-labFg" />
+              <span className="bracket -bottom-2 -left-2 border-l-2 border-b-2 border-labFg" />
+              <span className="bracket -bottom-2 -right-2 border-r-2 border-b-2 border-labFg" />
+
+              <div className="relative border border-labBorderStrong bg-white p-2 md:p-3 shadow-panelLg overflow-hidden">
+                {/* Scanning sweep */}
+                <div className="pointer-events-none absolute inset-0 overflow-hidden z-10">
+                  <div className="absolute top-0 bottom-0 w-1/3 animate-sweep bg-gradient-to-r from-transparent via-ember/10 to-transparent" />
+                </div>
+                <img src={dashboard} alt="LettersIQ monitoring dashboard" className="w-full h-auto block" />
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-px mt-10 md:mt-14 bg-labBorder border border-labBorder">
+              {stats.map((stat) => (
+                <div key={stat.label} className="bg-paper px-5 py-6">
+                  <div className="font-mono text-[11px] tracking-[0.16em] text-labFgMuted mb-2">
+                    {stat.label}
+                  </div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="font-bold text-2xl md:text-3xl text-labFg tracking-tight">
+                      {stat.value}
+                    </span>
+                    <span className="font-mono text-xs text-ember">{stat.unit}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>
