@@ -7,6 +7,10 @@ import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/500.css";
 import "@fontsource/jetbrains-mono/600.css";
 import "@fontsource/jetbrains-mono/700.css";
+import "@fontsource/archivo/600.css";
+import "@fontsource/archivo/700.css";
+import "@fontsource/archivo/800.css";
+import "@fontsource/archivo/900.css";
 import { Analytics } from "../components/Analytics.jsx";
 
 export interface Props {
@@ -23,7 +27,7 @@ const { title } = Astro.props;
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="/favicon.ico" />
   <meta name="generator" content={Astro.generator} />
-  <meta name="description" content="LettersIQ for monitoring severance notifications from the Texas Railroad Commission" />
+  <meta name="description" content="LettersIQ monitors 8 Texas Railroad Commission datasets and connects them into one 7 AM briefing — severance, certified letters, P-5 renewals, Rule 15, proration, commingle blast radius, drilling permits, and P-4 filings. Predict and prevent shut-ins before they cost you." />
   
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JLT6WXDYCK"></script>
@@ -46,8 +50,8 @@ const { title } = Astro.props;
   <!-- End Google Tag Manager -->
 
   <!-- Open Graph meta tags -->
-  <meta property="og:title" content="LettersIQ - Automatic Notifications of RRC Violations" />
-  <meta property="og:description" content="LettersIQ provides automatic notifications of violations from the Texas Railroad Commission, helping you stay compliant and avoid costly severance actions." />
+  <meta property="og:title" content="LettersIQ — Stop severances before the letter" />
+  <meta property="og:description" content="LettersIQ watches 8 Texas RRC datasets and connects them so a problem visible only across two systems lands as one line in your 7 AM email. Predict, prevent, and prove compliance before it costs you a shut-in." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://lettersiq.com" />
   <meta property="og:image" content="/lettersiqlogo.png" />
@@ -74,8 +78,10 @@ const { title } = Astro.props;
   <slot />
   <style is:global>
     :root {
-      --paper: #faf8f4;
-      --ink: #0c0d0f;
+      --parchment: #f7f5f0;
+      --oxford: #0a1428;
+      --signal-red: #c8102e;
+      --cobalt: #1f4fff;
     }
 
     * {
@@ -85,28 +91,28 @@ const { title } = Astro.props;
 
     html {
       font-family: 'Space Grotesk', sans-serif;
-      background-color: var(--paper);
+      background-color: var(--parchment);
       overflow-x: hidden;
       scroll-behavior: smooth;
-      scroll-padding-top: 6rem;
+      scroll-padding-top: 7rem;
       text-rendering: optimizeLegibility;
     }
 
     body {
-      background-color: var(--paper);
-      color: var(--ink);
+      background-color: var(--parchment);
+      color: var(--oxford);
       position: relative;
       overflow-x: hidden;
     }
 
-    /* Technical Grid Background — only behind light areas */
+    /* Technical blueprint grid — only behind light areas */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(12,13,15,0.028) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(12,13,15,0.028) 1px, transparent 1px);
+        linear-gradient(rgba(10,20,40,0.030) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(10,20,40,0.030) 1px, transparent 1px);
       background-size: 56px 56px;
       pointer-events: none;
       z-index: 0;
@@ -125,26 +131,31 @@ const { title } = Astro.props;
       font-family: 'JetBrains Mono', monospace;
     }
 
+    /* Display face utility */
+    .font-display {
+      font-family: 'Archivo', 'Space Grotesk', sans-serif;
+    }
+
     /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 10px;
       height: 10px;
     }
     ::-webkit-scrollbar-track {
-      background: #f1eee7;
+      background: #efebe2;
     }
     ::-webkit-scrollbar-thumb {
-      background: #c9c4ba;
-      border: 2px solid #f1eee7;
+      background: #b9c0cc;
+      border: 2px solid #efebe2;
       border-radius: 999px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #0c0d0f;
+      background: #0a1428;
     }
 
     /* Text selection */
     ::selection {
-      background: #e0560e;
+      background: #c8102e;
       color: #fff;
     }
 

@@ -1,5 +1,6 @@
 /* ============================================================
-   LettersIQ — Monitoring Console Theme
+   LettersIQ — Lone Star Instrument Panel Theme
+   Red / white / blue. Ink hairlines. Rationed accent.
    ============================================================ */
 
 /* Typography */
@@ -36,7 +37,7 @@
 }
 body,
 html {
-  @apply bg-labBg;
+  @apply bg-parchment;
 }
 
 /* Borders */
@@ -48,16 +49,22 @@ html {
   @apply border border-solid border-labBorderStrong;
 }
 
-/* Buttons */
+/* Buttons (legacy alias) */
 
 .custom-button-colored {
-  @apply font-mono font-bold bg-labFg text-labBg flex justify-center items-center hover:bg-labAccent cursor-pointer transition;
+  @apply font-mono font-bold bg-signalRed text-white flex justify-center items-center hover:bg-signalBright cursor-pointer;
+  transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.custom-button-colored:active {
+  transform: scale(0.97);
 }
 
 /* Navbar */
 
 .navbar-link {
-  @apply text-labFg lg:text-base text-2xl leading-6 mr-4 ml-4 2xl:mr-6 2xl:ml-6 cursor-pointer font-normal lg:font-medium hover:text-labAccent transition duration-300 h-full pt-2;
+  @apply text-white/70 lg:text-base text-2xl leading-6 mr-4 ml-4 2xl:mr-6 2xl:ml-6 cursor-pointer font-normal lg:font-medium hover:text-white h-full pt-2;
+  transition: color 200ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* ============================================================
@@ -70,6 +77,11 @@ html {
   max-width: 80rem;
 }
 
+/* Display face for monumental headlines */
+.font-display {
+  font-family: "Archivo", "Space Grotesk", sans-serif;
+}
+
 /* Monospace data/eyebrow label */
 .mono-label {
   font-family: "JetBrains Mono", monospace;
@@ -78,33 +90,61 @@ html {
   letter-spacing: 0.16em;
 }
 
-/* Primary ember button */
+/* Primary signal-red button — square, no glow at rest (rationed accent).
+   Emit only specific GPU-friendly transitions; snappy 160ms ease-out; press
+   feedback via :active scale (Emil: buttons must feel responsive). */
 .btn-ember {
-  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 bg-ember text-white transition-all duration-300;
+  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 bg-signalRed text-white;
+  border-radius: 2px;
+  transition: background-color 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
-.btn-ember:hover {
-  background-color: #c54a0a;
-  box-shadow: 0 16px 40px -16px rgba(224, 86, 14, 0.7);
-  transform: translateY(-1px);
+.btn-ember:active {
+  transform: scale(0.97);
 }
 
 /* Ghost button (light surfaces) */
 .btn-ghost {
-  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 border border-labBorderStrong text-labFg transition-all duration-300;
+  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 border border-labBorderStrong text-labFg;
+  border-radius: 2px;
+  transition: border-color 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    color 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .btn-ghost:hover {
-  border-color: #0c0d0f;
-  background-color: #0c0d0f;
-  color: #faf8f4;
+  border-color: #0a1428;
+  background-color: #0a1428;
+  color: #fafbff;
+}
+.btn-ghost:active {
+  transform: scale(0.97);
 }
 
 /* Ghost button (dark surfaces) */
 .btn-ghost-dark {
-  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 border border-white/25 text-white transition-all duration-300;
+  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 border border-white/25 text-white;
+  border-radius: 2px;
+  transition: border-color 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .btn-ghost-dark:hover {
   border-color: rgba(255, 255, 255, 0.9);
   background-color: rgba(255, 255, 255, 0.08);
+}
+.btn-ghost-dark:active {
+  transform: scale(0.97);
+}
+
+/* Hover lift only on real pointers — avoids sticky states on touch (Emil) */
+@media (hover: hover) and (pointer: fine) {
+  .btn-ember:hover {
+    background-color: #e8354f;
+    box-shadow: 0 16px 40px -16px rgba(200, 16, 46, 0.7);
+    transform: translateY(-1px);
+  }
 }
 
 /* Corner-bracket frame */
@@ -130,15 +170,15 @@ html {
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.3s ease;
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .link-underline:hover::after {
   transform: scaleX(1);
 }
 
-/* Accessible focus ring */
+/* Accessible focus ring — cobalt */
 :where(a, button, input, textarea, select):focus-visible {
-  outline: 2px solid #e0560e;
+  outline: 2px solid #1f4fff;
   outline-offset: 2px;
   border-radius: 1px;
 }

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
+import { SectionLabel } from "./Primitives.jsx";
 
 const testimonialsData = [
   {
@@ -26,9 +27,9 @@ const testimonialsData = [
 ];
 
 export const Testimonials = () => (
-  <section className="w-full bg-paper py-16 md:py-24 relative">
+  <section className="w-full bg-parchment py-16 md:py-24 relative">
     <div className="absolute -top-16" id="feedback" />
-    <div className="absolute top-0 left-0 right-0 h-px bg-labBorder" />
+    <div className="absolute top-0 left-0 right-0 h-px bg-line" />
 
     <div className="section-shell">
       <motion.div
@@ -36,11 +37,9 @@ export const Testimonials = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="flex items-center gap-3 mono-label text-labFgMuted mb-5"
+        className="mb-5"
       >
-        <span className="text-ember">04</span>
-        <span className="w-8 h-px bg-labBorderStrong" />
-        <span>Field Reports</span>
+        <SectionLabel number="04" label="Field Reports" />
       </motion.div>
 
       <motion.div
@@ -50,7 +49,7 @@ export const Testimonials = () => (
         transition={{ duration: 0.5, delay: 0.08 }}
         className="mb-12 max-w-2xl"
       >
-        <h2 className="text-display-sm font-bold text-labFg">What our customers say</h2>
+        <h2 className="font-display font-extrabold text-labFg text-display-sm">What our customers say</h2>
         <p className="mt-4 text-labFgMuted text-base md:text-lg">
           Trusted by operators across Texas for compliance monitoring and severance
           prevention.
@@ -61,7 +60,7 @@ export const Testimonials = () => (
         {testimonialsData.map((t, index) => (
           <motion.figure
             key={`${t.customerName}-${index}`}
-            className="flex flex-col border border-labBorder bg-paperPanel hover:border-labFg hover:shadow-panel transition-all duration-300 relative group"
+            className="flex flex-col border border-labBorder bg-paperPanel hover:border-labFg hover:shadow-panel transition-[border-color,box-shadow] duration-200 ease-out-strong relative group"
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

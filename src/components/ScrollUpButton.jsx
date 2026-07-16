@@ -34,13 +34,12 @@ export const ScrollUpButton = () => {
         <motion.button
           type="button"
           aria-label="Scroll to top"
-          className="w-12 h-12 fixed bottom-6 right-6 border border-labBorderStrong bg-paperPanel shadow-panel hover:bg-ink hover:border-ink cursor-pointer flex justify-center items-center transition-colors z-50 group"
+          className="w-12 h-12 fixed bottom-6 right-6 border border-lineStrong bg-card shadow-panel hover:bg-oxford hover:border-oxford cursor-pointer flex justify-center items-center transition-colors z-50 group"
           onClick={scrollToTop}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.3 }}
-          whileHover={{ scale: 1.06 }}
+          transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
           whileTap={{ scale: 0.94 }}
         >
           <svg

@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import React from "react";
+import { SectionLabel } from "./Primitives.jsx";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./ui/accordion.jsx";
 
 const FAQData = [
   {
@@ -38,16 +39,49 @@ const FAQData = [
       "We deliver notifications regarding any operational actions that may violate statutes, rules, or commission orders. This includes, but is not limited to, delinquent H-10 filings, fee dues, and any operational activities that need immediate attention to prevent severance. Right now, we focus on delivering Texas Railroad Commission notifications.",
     code: "FAQ_006",
   },
+  {
+    question: "What does LettersIQ monitor besides severance letters?",
+    answer:
+      "Eight public RRC datasets: severance and seal orders, certified (pre-severance) letters, P-5 organization renewal status, the Rule 15 inactive-well aging report, monthly proration schedules, surface commingling permits (P-17), drilling permits (W-1), and gatherer/purchaser filings (P-4). We diff each one and email only what changed.",
+    code: "FAQ_007",
+  },
+  {
+    question: "How can you warn me before a severance happens?",
+    answer:
+      "Most severances are preceded by public signals: a certified letter, a P-5 expiring, a delinquent W-10 on the proration schedule, or an unresolved Rule 15 well. We watch those upstream signals and give you a countdown, so you can cure the issue before the severance order is ever issued.",
+    code: "FAQ_008",
+  },
+  {
+    question: "What is commingle blast radius?",
+    answer:
+      "If several leases share one surface commingling permit (P-17), a severance on any of them stops production on all of them — even leases you don't operate. Because the severance is filed against the other operator, it never appears in your own records. LettersIQ maps your commingles and watches every co-member lease, so you're alerted the moment a neighbor's problem becomes yours.",
+    code: "FAQ_009",
+  },
+  {
+    question: "My well is producing but has no allowable — can you tell me why?",
+    answer:
+      "Yes. When a well shows no allowable on the proration schedule, we cross-reference its drilling permit and completion dependencies and give you a named checklist of what's missing — W-2/G-1 completion report, directional survey (W-12) for horizontal wells, L-1 electric log, W-15 cementing — so you can chase the exact filing instead of guessing.",
+    code: "FAQ_010",
+  },
+  {
+    question: "How does P-5 renewal monitoring work?",
+    answer:
+      "We track your organization report's expiration date and count down at 60, 30, 14, and 7 days, plus an immediate alert if your status flips to Delinquent. An unrenewed P-5 severs every lease your organization holds, so this is the single highest-leverage date we watch.",
+    code: "FAQ_011",
+  },
+  {
+    question: "Do I get the new alerts automatically?",
+    answer:
+      "The expanded Alert Engine is opt-in and turned on per organization, with zero change to the severance notifications you already rely on. Tell us to enable it and the new datasets start appearing in your next briefing.",
+    code: "FAQ_012",
+  },
 ];
 
 export const FAQ = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
-  const toggleFAQ = (index) => setActiveIndex(activeIndex === index ? null : index);
-
   return (
-    <section className="relative py-16 md:py-24 bg-paper overflow-hidden">
+    <section className="relative py-16 md:py-24 bg-parchment overflow-hidden">
       <div className="absolute -top-10" id="FAQ" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-labBorder" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-line" />
 
       <div className="section-shell max-w-3xl">
         <motion.div
@@ -55,11 +89,9 @@ export const FAQ = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 mono-label text-labFgMuted mb-5"
+          className="mb-5"
         >
-          <span className="text-ember">06</span>
-          <span className="w-8 h-px bg-labBorderStrong" />
-          <span>Documentation</span>
+          <SectionLabel number="08" label="Documentation" />
         </motion.div>
 
         <motion.div
@@ -69,25 +101,24 @@ export const FAQ = () => {
           transition={{ duration: 0.5, delay: 0.08 }}
           className="mb-10"
         >
-          <h2 className="text-display-sm font-bold text-labFg">Frequently asked questions</h2>
+          <h2 className="font-display font-extrabold text-labFg text-display-sm">Frequently asked questions</h2>
           <p className="mt-4 text-labFgMuted text-base md:text-lg">
             Common inquiries about our compliance monitoring service.
           </p>
         </motion.div>
 
-        <div className="border border-labBorder bg-paperPanel divide-y divide-labBorder">
+        <Accordion type="single" collapsible className="border border-line bg-card">
           {FAQData.map((item, index) => (
-            <FAQBox
-              key={index}
-              index={index}
-              title={item.question}
-              content={item.answer}
-              code={item.code}
-              isOpen={activeIndex === index}
-              onToggle={() => toggleFAQ(index)}
-            />
+            <AccordionItem key={index} value={`faq-${index}`}>
+              <AccordionTrigger index={index} code={item.code}>
+                {item.question}
+              </AccordionTrigger>
+              <AccordionContent>
+                <p className="text-labFgMuted leading-relaxed">{item.answer}</p>
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
 
         <motion.div
           initial={{ opacity: 0 }}
@@ -96,59 +127,12 @@ export const FAQ = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="mt-8 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] tracking-wider text-labFgMuted"
         >
-          <span className="text-ember">/// DOCUMENTATION v2.0</span>
+          <span className="text-signalRed">/// DOCUMENTATION v2.0</span>
           <span>TOTAL ENTRIES: {FAQData.length}</span>
-          <span>UPDATED: 2024</span>
+          <span>UPDATED: 2026</span>
         </motion.div>
       </div>
     </section>
   );
 };
 
-const FAQBox = ({ index, title, content, code, isOpen, onToggle }) => (
-  <div>
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-expanded={isOpen}
-      className={`w-full text-left cursor-pointer group px-5 sm:px-6 py-5 flex items-start gap-4 transition-colors ${
-        isOpen ? "bg-paperAlt" : "hover:bg-paperAlt"
-      }`}
-    >
-      <span className="font-mono text-[11px] text-ember pt-1 shrink-0">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-
-      <h3 className="flex-1 text-base md:text-lg text-labFg font-medium pr-2">{title}</h3>
-
-      <div className="flex items-center gap-4 shrink-0">
-        <span className="font-mono text-[11px] text-labFgMuted hidden md:block">{code}</span>
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="w-7 h-7 border border-labBorder flex items-center justify-center group-hover:border-labFg transition-colors"
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="text-labFgMuted group-hover:text-labFg transition-colors">
-            <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </motion.span>
-      </div>
-    </button>
-
-    <AnimatePresence initial={false}>
-      {isOpen && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: "auto", opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="overflow-hidden"
-        >
-          <div className="px-5 sm:px-6 py-5 sm:pl-[3.75rem] bg-paperAlt border-t border-labBorder">
-            <p className="text-labFgMuted leading-relaxed">{content}</p>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  </div>
-);

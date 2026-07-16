@@ -2,13 +2,14 @@
 import Layout from "../layouts/Layout.astro";
 import { Hero } from "../components/Hero.jsx";
 import { Navbar } from "../components/Navbar.jsx";
+import { Coverage } from "../components/Coverage.jsx";
 import { Features1 } from "../components/Features1.jsx";
 import { Features2 } from "../components/Features2.jsx";
 import { Testimonials } from "../components/Testimonials.jsx";
 import { FeaturesDiagonal } from "../components/FeaturesDiagonal.jsx";
+import { BlastRadius } from "../components/BlastRadius.jsx";
 import { Pricing } from "../components/Pricing.jsx";
 import { FAQ } from "../components/FAQ.jsx";
-import { Brands } from "../components/Brands.jsx";
 import { Divider } from "../components/Divider";
 import { Footer } from "../components/Footer.jsx";
 import { ScrollUpButton } from "../components/ScrollUpButton";
@@ -18,16 +19,17 @@ import "../styles/Diagonals.css";
 
 ---
 
-<Layout title="LettersIQ">
+<Layout title="LettersIQ — Stop severances before the letter">
   <Navbar client:load />
   <Hero client:load />
-  <Features1 client:load />
+  <Coverage client:load />
   <Divider />
+  <Features1 client:load />
   <Features2 client:load />
   <Testimonials client:load />
   <FeaturesDiagonal client:load />
+  <BlastRadius client:load />
   <Pricing client:load />
-  <!--Brands client:load /-->
   <FAQ client:load />
   <ContactUs client:load />
   <Footer />

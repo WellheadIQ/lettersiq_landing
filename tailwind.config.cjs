@@ -4,42 +4,67 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Monitoring Console palette
-        ink: "#0C0D0F",
-        inkPanel: "#15171A",
-        inkSoft: "#1D2024",
-        paper: "#FAF8F4",
-        paperAlt: "#F1EEE7",
+        // ============================================================
+        // Lone Star instrument-panel palette — red / white / blue
+        // ============================================================
+        parchment: "#F7F5F0", // page canvas (warm paper white)
+        parchmentAlt: "#EFEBE2", // alternating light band
+        card: "#FFFFFF", // card surface, one tier above canvas
+        oxford: "#0A1428", // dark instrument sections + ink on light
+        midnight: "#060D1B", // deepest navy: hero stage, footer
+        slateNavy: "#132340", // elevated navy panel on dark
+
+        signalRed: "#C8102E", // rationed accent: CTA, critical, active, closing band
+        signalBright: "#E8354F", // brighter red for hover/alert glow
+        signalSoft: "rgba(200,16,46,0.10)", // soft red wash for badges
+
+        cobalt: "#1F4FFF", // secondary voice: links, info, chart lines
+        unionBlue: "#0A3161", // deep blue linework / info-deep
+        cobaltSoft: "rgba(31,79,255,0.10)",
+
+        starWhite: "#FAFBFF", // text on dark
+
+        // Neutral ink ramp (navy-biased)
+        ink: "#0A1428",
+        inkMuted: "#4A5568",
+        inkFaint: "#8A94A6",
+
+        // Hairlines
+        line: "rgba(10,20,40,0.12)", // on light
+        lineStrong: "rgba(10,20,40,0.22)",
+        lineDark: "rgba(250,251,255,0.14)", // on dark
+        lineDarkStrong: "rgba(250,251,255,0.28)",
+
+        // ------------------------------------------------------------
+        // Semantic aliases (keep legacy class names resolving to the
+        // refreshed palette so nothing renders undefined mid-migration)
+        // ------------------------------------------------------------
+        paper: "#F7F5F0",
+        paperAlt: "#EFEBE2",
         paperPanel: "#FFFFFF",
-        ember: "#E0560E",
-        emberBright: "#F97316",
-        emberSoft: "rgba(224,86,14,0.10)",
-        steel: "#3F6F8F",
-
-        // Semantic aliases mapped to the refreshed palette
-        // (keeps existing class names consistent everywhere)
-        labBg: "#FAF8F4",
-        labBgAlt: "#F1EEE7",
-        labFg: "#0C0D0F",
-        labFgMuted: "#57534E",
-        labAccent: "#E0560E",
-        labAlert: "#F97316",
-        labBorder: "rgba(12,13,15,0.10)",
-        labBorderStrong: "rgba(12,13,15,0.20)",
-
-        // Legacy (kept for compatibility during migration)
-        customPrimary: "rgb(99, 102, 241)",
-        customSecondary: "rgb(161, 163, 247)",
+        ember: "#C8102E",
+        emberBright: "#E8354F",
+        emberSoft: "rgba(200,16,46,0.10)",
+        steel: "#1F4FFF",
+        labBg: "#F7F5F0",
+        labBgAlt: "#EFEBE2",
+        labFg: "#0A1428",
+        labFgMuted: "#4A5568",
+        labAccent: "#C8102E",
+        labAlert: "#E8354F",
+        labBorder: "rgba(10,20,40,0.12)",
+        labBorderStrong: "rgba(10,20,40,0.22)",
       },
       fontFamily: {
         sans: ["Space Grotesk", "sans-serif"],
+        display: ["Archivo", "Space Grotesk", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
         Inter: "Inter",
       },
       fontSize: {
-        "display-sm": ["clamp(2.25rem, 6vw, 3rem)", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
-        "display": ["clamp(2.75rem, 7vw, 4.5rem)", { lineHeight: "1.02", letterSpacing: "-0.025em" }],
-        "display-lg": ["clamp(3rem, 9vw, 6rem)", { lineHeight: "0.98", letterSpacing: "-0.03em" }],
+        "display-sm": ["clamp(2.25rem, 6vw, 3.25rem)", { lineHeight: "0.98", letterSpacing: "-0.03em" }],
+        display: ["clamp(2.75rem, 7.5vw, 5rem)", { lineHeight: "0.94", letterSpacing: "-0.035em" }],
+        "display-lg": ["clamp(3rem, 9.5vw, 6.5rem)", { lineHeight: "0.9", letterSpacing: "-0.04em" }],
       },
       maxWidth: {
         content: "80rem",
@@ -55,23 +80,41 @@ module.exports = {
         85: "0.85",
       },
       boxShadow: {
-        panel: "0 1px 2px rgba(12,13,15,0.04), 0 12px 40px -12px rgba(12,13,15,0.18)",
-        panelLg: "0 1px 2px rgba(12,13,15,0.05), 0 30px 80px -24px rgba(12,13,15,0.28)",
-        emberGlow: "0 18px 50px -18px rgba(224,86,14,0.55)",
+        // Shadows are used sparingly; hierarchy is hairline + surface step
+        panel: "0 1px 2px rgba(10,20,40,0.05), 0 14px 44px -18px rgba(10,20,40,0.22)",
+        panelLg: "0 1px 2px rgba(10,20,40,0.06), 0 34px 90px -28px rgba(10,20,40,0.32)",
+        redGlow: "0 16px 44px -16px rgba(200,16,46,0.55)",
+      },
+      transitionTimingFunction: {
+        // Emil Kowalski's stronger custom curves — built-in CSS easings lack punch
+        "out-strong": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "in-out-strong": "cubic-bezier(0.77, 0, 0.175, 1)",
+        drawer: "cubic-bezier(0.32, 0.72, 0, 1)",
       },
       keyframes: {
         marquee: {
           "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(-33.333%)" },
         },
         sweep: {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(200%)" },
         },
+        "accordion-down": {
+          from: { height: "0", opacity: "0" },
+          to: { height: "var(--radix-accordion-content-height)", opacity: "1" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)", opacity: "1" },
+          to: { height: "0", opacity: "0" },
+        },
       },
       animation: {
-        marquee: "marquee 32s linear infinite",
-        sweep: "sweep 2.6s ease-in-out infinite",
+        marquee: "marquee 38s linear infinite",
+        sweep: "sweep 2.8s ease-in-out infinite",
+        // enter deliberate, exit snappy — asymmetric per Emil's guidance
+        "accordion-down": "accordion-down 240ms cubic-bezier(0.23, 1, 0.32, 1)",
+        "accordion-up": "accordion-up 180ms cubic-bezier(0.23, 1, 0.32, 1)",
       },
       screens: {
         xs: "480px",
@@ -84,4 +127,5 @@ module.exports = {
       },
     },
   },
+  plugins: [require("tailwindcss-animate")],
 };

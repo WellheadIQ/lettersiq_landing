@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCheck, FaTimes } from 'react-icons/fa';
+import { SectionLabel } from './Primitives.jsx';
 
 export const ContactUs = () => {
   const [formState, setFormState] = useState('idle');
@@ -143,11 +144,9 @@ export const ContactUs = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 mono-label text-white/55 mb-5"
+          className="mb-5"
         >
-          <span className="text-emberBright">07</span>
-          <span className="w-8 h-px bg-white/25" />
-          <span>Contact</span>
+          <SectionLabel number="09" label="Contact" tone="dark" />
         </motion.div>
 
         <motion.div
@@ -157,7 +156,7 @@ export const ContactUs = () => {
           transition={{ duration: 0.5, delay: 0.08 }}
           className="mb-8"
         >
-          <h2 className="text-display-sm font-bold text-white">Get started</h2>
+          <h2 className="font-display font-extrabold text-white text-display-sm">Get started</h2>
           <p className="mt-4 text-white/60 text-base md:text-lg">
             Fill out the form below and we'll reach out within 24 hours.
           </p>
@@ -262,9 +261,8 @@ const ContactForm = ({ formState, formData, errors, validFields, handleInputChan
       <motion.button
         type="submit"
         disabled={formState === 'submitting'}
-        className="w-full py-4 bg-ember text-white font-mono text-sm uppercase tracking-[0.12em] hover:bg-emberBright transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-        whileHover={{ scale: formState === 'submitting' ? 1 : 1.01 }}
-        whileTap={{ scale: formState === 'submitting' ? 1 : 0.99 }}
+        className="w-full py-4 bg-ember text-white font-mono text-sm uppercase tracking-[0.12em] hover:bg-emberBright transition-colors duration-200 ease-out-strong disabled:opacity-50 disabled:cursor-not-allowed"
+        whileTap={{ scale: formState === 'submitting' ? 1 : 0.97 }}
       >
         {formState === 'submitting' ? '/// PROCESSING...' : 'Submit Request →'}
       </motion.button>
