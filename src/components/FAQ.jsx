@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { SectionLabel } from "./Primitives.jsx";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./ui/accordion.jsx";
@@ -75,28 +74,18 @@ export const FAQ = () => {
       <div className="absolute top-0 left-0 right-0 h-px bg-line" />
 
       <div className="section-shell max-w-3xl">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-5"
-        >
+        <div className="mb-5">
           <SectionLabel label="FAQ" />
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.08 }}
-          className="mb-10"
-        >
-          <h2 className="font-display font-extrabold text-labFg text-display-sm tracking-[-0.02em]">Questions, answered.</h2>
-          <p className="mt-4 text-labFgMuted text-base md:text-lg">
+        <div className="mb-10">
+          <h2 className="text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-labFg">
+            Questions, answered.
+          </h2>
+          <p className="mt-4 text-pretty text-base text-labFgMuted md:text-lg">
             How the monitoring works, what's covered, and how billing scales.
           </p>
-        </motion.div>
+        </div>
 
         <Accordion type="single" collapsible className="border border-line bg-card">
           {visibleItems.map((item, index) => (
@@ -120,16 +109,15 @@ export const FAQ = () => {
           {showAll ? "Show fewer questions" : `View ${FAQData.length - visibleItems.length} more questions`}
         </button>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 text-sm text-labFgMuted"
-        >
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 text-sm text-labFgMuted">
           <span>Still have a question?</span>
-          <a href="#contact-us" className="link-underline inline-flex min-h-11 items-center text-labFg">Talk to us &rarr;</a>
-        </motion.div>
+          <a
+            href="#contact-us"
+            className="link-underline inline-flex min-h-11 items-center text-labFg"
+          >
+            Talk to us &rarr;
+          </a>
+        </div>
       </div>
     </section>
   );

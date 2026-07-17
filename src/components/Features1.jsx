@@ -154,12 +154,13 @@ export const Features1 = () => {
     const beats = utils.$(".outcome-beat");
     if (!beats.length || reduceMotion) return;
 
+    // Staggered scroll reveal — ~100ms cascade, ease-out, no opacity gate.
     utils.set(beats, { translateY: 12 });
     animate(beats, {
       translateY: [12, 0],
       duration: 420,
       ease: "out(3)",
-      delay: stagger(70),
+      delay: stagger(100),
       autoplay: onScroll({ target: ".outcomes-list", enter: "top 85%" }),
     });
   }, []);

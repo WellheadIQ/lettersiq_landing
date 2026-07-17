@@ -54,24 +54,25 @@ export const Hero = () => {
 
     const bootTargets = utils.$(".boot-in");
 
+    // Content stays painted — motion enhances, never gates visibility.
     if (reduceMotion) {
-      utils.set(bootTargets, { opacity: 1, translateY: 0 });
+      utils.set(bootTargets, { translateY: 0 });
       utils.set(".boot-underline", { scaleX: 1 });
       utils.set(".hero-draw", { opacity: 0.5 });
       return;
     }
 
     createTimeline({ defaults: { ease: "out(3)" } })
-      .add(".boot-eyebrow", { opacity: [0, 1], translateY: [12, 0], duration: 450 })
-      .add(".boot-headline", { opacity: [0, 1], translateY: [22, 0], duration: 650 }, "-=200")
+      .add(".boot-eyebrow", { translateY: [12, 0], duration: 450 })
+      .add(".boot-headline", { translateY: [18, 0], duration: 560 }, "-=200")
       .add(".boot-underline", { scaleX: [0, 1], duration: 560 }, "-=320")
-      .add(".boot-sub", { opacity: [0, 1], translateY: [16, 0], duration: 480 }, "-=340")
-      .add(".boot-cta", { opacity: [0, 1], translateY: [14, 0], duration: 440 }, "-=280")
-      .add(".boot-panel", { opacity: [0, 1], translateY: [24, 0], duration: 700 }, "-=520")
+      .add(".boot-sub", { translateY: [12, 0], duration: 420 }, "-=340")
+      .add(".boot-cta", { translateY: [10, 0], duration: 400 }, "-=280")
+      .add(".boot-panel", { translateY: [16, 0], duration: 560 }, "-=420")
       .add(
         ".boot-row",
-        { opacity: [0, 1], translateX: [10, 0], duration: 360, delay: anime.stagger(60) },
-        "-=420"
+        { translateX: [8, 0], duration: 320, delay: anime.stagger(55) },
+        "-=360"
       );
 
     if (svg && svg.createDrawable) {
@@ -121,8 +122,8 @@ export const Hero = () => {
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           {/* ---------- Left: message ---------- */}
           <div>
-            <div className="boot-in boot-eyebrow flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-white/55">
-              <span className="h-1.5 w-1.5 bg-signalRed" aria-hidden="true" />
+            <div className="boot-in boot-eyebrow flex items-center gap-2.5 text-sm font-semibold text-white/65">
+              <span className="h-px w-6 shrink-0 bg-signalRed" aria-hidden="true" />
               <span>Texas RRC compliance monitoring</span>
             </div>
 
@@ -152,9 +153,9 @@ export const Hero = () => {
               </Button>
             </div>
 
-            <div className="boot-in boot-cta mt-8 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-white/60">
-              <span className="h-2 w-2 rounded-full bg-cobalt" aria-hidden="true" />
-              Systems nominal — last scan 07:00 CT
+            <div className="boot-in boot-cta mt-8 flex items-center gap-3 text-sm text-white/60">
+              <span className="h-2 w-2 shrink-0 bg-cobalt" aria-hidden="true" />
+              Last scan 07:00 CT · next briefing tomorrow morning
             </div>
           </div>
 

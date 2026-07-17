@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
 import { SectionLabel } from "./Primitives.jsx";
 
@@ -20,7 +20,7 @@ const Icon = ({ children }) => (
 
 const sources = [
   {
-    title: "SEVERANCE & SEAL ORDERS",
+    title: "Severance & seal orders",
     body: "The original signal — plus an all-clear the day a lease is back in business.",
     tone: "red",
     icon: (
@@ -33,7 +33,7 @@ const sources = [
     ),
   },
   {
-    title: "CERTIFIED LETTERS",
+    title: "Certified letters",
     body: "The last warning the Commission sends before a severance order. Catch it while there's still time to cure.",
     tone: "red",
     icon: (
@@ -44,7 +44,7 @@ const sources = [
     ),
   },
   {
-    title: "P-5 RENEWAL",
+    title: "P-5 renewal",
     body: "A 60 / 30 / 14 / 7-day countdown to your organization report expiry. An unrenewed P-5 severs every lease you have.",
     tone: "cobalt",
     icon: (
@@ -56,7 +56,7 @@ const sources = [
     ),
   },
   {
-    title: "RULE 15 / INACTIVE WELLS",
+    title: "Rule 15 / inactive wells",
     body: "5- and 10-year inactivity milestones, W-3X extension status, and wells that newly hit the inactive aging report.",
     tone: "cobalt",
     icon: (
@@ -68,7 +68,7 @@ const sources = [
     ),
   },
   {
-    title: "PRORATION SCHEDULES",
+    title: "Proration schedules",
     body: "Delinquent codes (DLQ W-10, DLQ FORM, H-15 VIOL) and allowable changes, diffed off the schedule every day.",
     tone: "red",
     icon: (
@@ -80,7 +80,7 @@ const sources = [
     ),
   },
   {
-    title: "SURFACE COMMINGLING (P-17)",
+    title: "Surface commingling (P-17)",
     body: "Blast-radius monitoring — a severance on any lease sharing your commingle stops your production too.",
     tone: "red",
     icon: (
@@ -93,7 +93,7 @@ const sources = [
     ),
   },
   {
-    title: "DRILLING PERMITS (W-1)",
+    title: "Drilling permits (W-1)",
     body: "A countdown to the 2-year no-spud expiry, verified against the wellbore record so you're only warned on undrilled permits.",
     tone: "cobalt",
     icon: (
@@ -104,7 +104,7 @@ const sources = [
     ),
   },
   {
-    title: "GATHERER / PURCHASER (P-4)",
+    title: "Gatherer / purchaser (P-4)",
     body: "Lost market outlets and operator-of-record transfers the day the Commission processes them.",
     tone: "cobalt",
     icon: (
@@ -117,42 +117,43 @@ const sources = [
   },
 ];
 
+const PREVIEW_COUNT = 4;
+
 export const Coverage = () => {
-  const root = useAnimeScope(({ self, reduceMotion, anime }) => {
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? sources : sources.slice(0, PREVIEW_COUNT);
+
+  const root = useAnimeScope(({ reduceMotion, anime }) => {
     const { utils, animate, stagger, onScroll } = anime;
     const cards = utils.$(".coverage-card");
-    if (!cards.length) return;
+    if (!cards.length || reduceMotion) return;
 
-    if (reduceMotion) return;
-
-    // Content stays visible if JS or the scroll observer fails. Motion is an
-    // enhancement only: cards rise into place without using opacity as a gate.
     utils.set(cards, { translateY: 16 });
     animate(cards, {
       translateY: [16, 0],
       duration: 520,
       ease: "out(3)",
-      delay: stagger(55),
+      delay: stagger(90),
       autoplay: onScroll({ target: ".coverage-grid", enter: "top 85%" }),
     });
-  }, []);
+  }, [showAll]);
 
   return (
     <section
       ref={root}
       id="coverage"
-      className="w-full bg-parchment py-16 md:py-24 relative"
+      className="relative w-full bg-parchment py-16 md:py-24"
     >
-      <div className="absolute top-0 left-0 right-0 h-px bg-line" />
+      <div className="absolute left-0 right-0 top-0 h-px bg-line" />
 
       <div className="section-shell">
         <SectionLabel label="Coverage" className="mb-5" />
 
-        <div className="max-w-3xl mb-12">
-          <h2 className="font-display font-extrabold text-labFg text-display-sm tracking-[-0.02em]">
+        <div className="mb-12 max-w-3xl">
+          <h2 className="text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-labFg">
             Eight datasets. One briefing.
           </h2>
-          <p className="mt-5 text-labFgMuted text-base md:text-lg leading-relaxed">
+          <p className="mt-5 text-pretty text-base leading-relaxed text-labFgMuted md:text-lg">
             Every morning we scan the public RRC record across eight datasets and
             diff them against yesterday. You only hear from us when something
             changes — never the same standing issue twice.
@@ -160,7 +161,7 @@ export const Coverage = () => {
         </div>
 
         <div className="coverage-grid grid grid-cols-1 gap-x-12 md:grid-cols-2">
-          {sources.map((s) => (
+          {visible.map((s) => (
             <article
               key={s.title}
               className="coverage-card flex gap-5 border-t border-line py-6"
@@ -171,20 +172,32 @@ export const Coverage = () => {
                 {s.icon}
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-labFg">
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-labFgMuted">{s.body}</p>
+                <h3 className="text-sm font-semibold text-labFg">{s.title}</h3>
+                <p className="mt-2 text-pretty text-sm leading-relaxed text-labFgMuted">
+                  {s.body}
+                </p>
               </div>
             </article>
           ))}
         </div>
 
-        {/* Cadence note */}
+        <button
+          type="button"
+          aria-expanded={showAll}
+          onClick={() => setShowAll((value) => !value)}
+          className="mt-6 inline-flex min-h-11 items-center border border-lineStrong px-4 text-sm font-semibold text-labFg transition-colors hover:bg-parchmentAlt"
+        >
+          {showAll
+            ? "Show fewer datasets"
+            : `View ${sources.length - PREVIEW_COUNT} more datasets`}
+        </button>
+
         <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-labFgMuted">
           <span className="text-labFg">Daily:</span>
           <span>Severance · Certified · Proration</span>
-          <span className="text-lineStrong">/</span>
+          <span className="text-lineStrong" aria-hidden>
+            /
+          </span>
           <span className="text-labFg">Weekly:</span>
           <span>P-5 · Rule 15 · W-1 · P-17 · P-4</span>
         </div>

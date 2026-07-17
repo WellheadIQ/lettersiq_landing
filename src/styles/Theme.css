@@ -57,7 +57,7 @@ html {
     transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .custom-button-colored:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 /* Navbar */
@@ -100,7 +100,7 @@ html {
     transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .btn-ember:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 /* Ghost button (light surfaces) */
@@ -118,7 +118,7 @@ html {
   color: #fafbff;
 }
 .btn-ghost:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 /* Ghost button (dark surfaces) */
@@ -134,7 +134,7 @@ html {
   background-color: rgba(255, 255, 255, 0.08);
 }
 .btn-ghost-dark:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 /* Hover lift only on real pointers — avoids sticky states on touch (Emil) */

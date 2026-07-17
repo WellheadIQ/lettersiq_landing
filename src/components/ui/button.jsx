@@ -7,7 +7,7 @@ import { cn } from "../../lib/utils.js";
 // Emil: buttons must feel responsive (scale on :active), animate transform/opacity
 // only, custom ease-out curve, sub-200ms feedback.
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-mono uppercase tracking-[0.12em] font-medium select-none transition-[transform,background-color,color,border-color] duration-150 ease-out-strong will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signalRed focus-visible:ring-offset-2 focus-visible:ring-offset-parchment disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-mono uppercase tracking-[0.12em] font-medium select-none transition-[transform,background-color,color,border-color] duration-150 ease-out-strong will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signalRed focus-visible:ring-offset-2 focus-visible:ring-offset-parchment disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96]",
   {
     variants: {
       variant: {

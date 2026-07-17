@@ -2,163 +2,328 @@ import React from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
 import { SectionLabel } from "./Primitives.jsx";
 
-const CENTER = { x: 168, y: 176, label: "CLAM LAKE", sub: "(18458001)" };
+const CENTER = { x: 180, y: 168, label: "Clam Lake", sub: "18458001" };
+
 const nodes = [
-  { id: "third", x: 96, y: 78, label: "08-12345", sub: "MCFADDIN TRUST", tag: "THIRD-PARTY", tone: "hot" },
-  { id: "y1", x: 268, y: 84, label: "08-08559", sub: "", tag: "YOUR LEASE", tone: "you" },
-  { id: "y2", x: 292, y: 190, label: "08-09012", sub: "", tag: "YOUR LEASE", tone: "you" },
-  { id: "o1", x: 78, y: 258, label: "08-11234", sub: "", tag: "OTHER LEASE", tone: "muted" },
-  { id: "o2", x: 214, y: 268, label: "08-07777", sub: "", tag: "OTHER LEASE", tone: "muted" },
+  {
+    id: "third",
+    x: 86,
+    y: 74,
+    label: "08-12345",
+    sub: "McFaddin",
+    tone: "hot",
+  },
+  {
+    id: "y1",
+    x: 276,
+    y: 80,
+    label: "08-08559",
+    sub: "Yours",
+    tone: "you",
+  },
+  {
+    id: "y2",
+    x: 292,
+    y: 190,
+    label: "08-09012",
+    sub: "Yours",
+    tone: "you",
+  },
+  {
+    id: "o1",
+    x: 74,
+    y: 248,
+    label: "08-11234",
+    sub: "",
+    tone: "muted",
+  },
+  {
+    id: "o2",
+    x: 218,
+    y: 266,
+    label: "08-07777",
+    sub: "",
+    tone: "muted",
+  },
 ];
 
-const CommingleGraph = () => (
-  <div className="relative w-full aspect-square max-w-[460px] mx-auto">
-    <svg viewBox="0 0 360 340" className="w-full h-full" aria-hidden="true">
-      {/* Edges */}
-      {nodes.map((n) => (
-        <path
-          key={`edge-${n.id}`}
-          className={n.tone === "hot" ? "graph-edge graph-edge-hot" : "graph-edge"}
-          d={`M${CENTER.x},${CENTER.y} L${n.x},${n.y}`}
-          stroke={n.tone === "hot" ? "#E8354F" : "rgba(250,251,255,0.28)"}
-          strokeWidth={n.tone === "hot" ? "2" : "1"}
-          fill="none"
-        />
-      ))}
+const toneStroke = {
+  hot: "#E8354F",
+  you: "#7AA0FF", // cobaltText — readable on midnight
+  muted: "rgba(250,251,255,0.35)",
+};
 
-      {/* Center node */}
-      <g>
-        <circle cx={CENTER.x} cy={CENTER.y} r="30" fill="#0A1428" stroke="rgba(250,251,255,0.5)" strokeWidth="1.2" />
-        <text x={CENTER.x} y={CENTER.y - 2} textAnchor="middle" className="font-mono" fontSize="9" fill="#FAFBFF">
+const toneFill = {
+  hot: "#E8354F",
+  you: "#7AA0FF",
+  muted: "rgba(250,251,255,0.55)",
+};
+
+const legend = [
+  { tone: "hot", label: "Severed third-party" },
+  { tone: "you", label: "Your lease" },
+  { tone: "muted", label: "Other lease on permit" },
+];
+
+/** Draw order: severed edge first, then the rest — telegraphs the blast path. */
+const edgeOrder = ["third", "y1", "y2", "o1", "o2"];
+
+const CommingleGraph = () => (
+  <div className="relative mx-auto w-full max-w-[440px]">
+    <svg
+      viewBox="0 0 360 320"
+      className="h-auto w-full"
+      role="img"
+      aria-labelledby="commingle-graph-title commingle-graph-desc"
+    >
+      <title id="commingle-graph-title">Surface commingle graph for Clam Lake</title>
+      <desc id="commingle-graph-desc">
+        A third-party lease on the Clam Lake surface commingle is severed. Two of
+        your leases share that permit and are exposed.
+      </desc>
+
+      {edgeOrder.map((id) => {
+        const n = nodes.find((node) => node.id === id);
+        return (
+          <path
+            key={`edge-${n.id}`}
+            className={
+              n.tone === "hot" ? "graph-edge graph-edge-hot" : "graph-edge"
+            }
+            data-edge={n.id}
+            d={`M${CENTER.x},${CENTER.y} L${n.x},${n.y}`}
+            stroke={n.tone === "hot" ? toneStroke.hot : "rgba(250,251,255,0.22)"}
+            strokeWidth={n.tone === "hot" ? "1.75" : "1"}
+            fill="none"
+          />
+        );
+      })}
+
+      <g className="graph-center">
+        <circle
+          cx={CENTER.x}
+          cy={CENTER.y}
+          r="36"
+          fill="#0A1428"
+          stroke="rgba(250,251,255,0.45)"
+          strokeWidth="1.25"
+        />
+        <text
+          x={CENTER.x}
+          y={CENTER.y - 2}
+          textAnchor="middle"
+          className="font-mono"
+          fontSize="12"
+          fill="#FAFBFF"
+        >
           {CENTER.label}
         </text>
-        <text x={CENTER.x} y={CENTER.y + 9} textAnchor="middle" className="font-mono" fontSize="7" fill="rgba(250,251,255,0.55)">
+        <text
+          x={CENTER.x}
+          y={CENTER.y + 13}
+          textAnchor="middle"
+          className="font-mono"
+          fontSize="10"
+          fill="rgba(250,251,255,0.55)"
+        >
           {CENTER.sub}
         </text>
       </g>
 
-      {/* Outer nodes */}
-      {nodes.map((n) => {
-        const stroke =
-          n.tone === "hot" ? "#E8354F" : n.tone === "you" ? "#F0B429" : "rgba(250,251,255,0.4)";
-        const labelColor =
-          n.tone === "hot" ? "#E8354F" : n.tone === "you" ? "#F0B429" : "rgba(250,251,255,0.65)";
-        return (
-          <g key={n.id} className={n.tone === "hot" ? "graph-node-hot" : ""}>
-            <circle cx={n.x} cy={n.y} r="26" fill="#060D1B" stroke={stroke} strokeWidth={n.tone === "hot" ? "1.8" : "1"} />
-            <text x={n.x} y={n.y - 2} textAnchor="middle" className="font-mono" fontSize="8.5" fill={labelColor}>
-              {n.label}
+      {nodes.map((n) => (
+        <g key={n.id} className={`graph-node graph-node-${n.tone}`}>
+          <circle
+            cx={n.x}
+            cy={n.y}
+            r="30"
+            fill="#060D1B"
+            stroke={toneStroke[n.tone]}
+            strokeWidth={n.tone === "hot" ? "1.75" : "1.1"}
+          />
+          <text
+            x={n.x}
+            y={n.sub ? n.y - 4 : n.y + 4}
+            textAnchor="middle"
+            className="font-mono"
+            fontSize="11"
+            fill={toneFill[n.tone]}
+          >
+            {n.label}
+          </text>
+          {n.sub ? (
+            <text
+              x={n.x}
+              y={n.y + 10}
+              textAnchor="middle"
+              fontSize="10"
+              fill={
+                n.tone === "hot" ? toneFill.hot : "rgba(250,251,255,0.55)"
+              }
+            >
+              {n.sub}
             </text>
-            {n.sub && (
-              <text x={n.x} y={n.y + 7} textAnchor="middle" className="font-mono" fontSize="5.5" fill="rgba(250,251,255,0.5)">
-                {n.sub}
-              </text>
-            )}
-            <text x={n.x} y={n.y + (n.sub ? 15 : 8)} textAnchor="middle" className="font-mono" fontSize="5" fill={labelColor}>
-              ({n.tag})
-            </text>
-          </g>
-        );
-      })}
+          ) : null}
+        </g>
+      ))}
     </svg>
   </div>
 );
 
 export const BlastRadius = () => {
-  const root = useAnimeScope(({ self, reduceMotion, anime }) => {
+  const root = useAnimeScope(({ reduceMotion, anime }) => {
     const { utils, animate, stagger, onScroll, svg } = anime;
 
-    if (svg && svg.createDrawable) {
-      const edges = svg.createDrawable(".graph-edge");
-      if (reduceMotion) {
-        utils.set(edges, { draw: "0 1" });
-      } else {
-        utils.set(edges, { draw: "0 0" });
-        animate(edges, {
-          draw: ["0 0", "0 1"],
-          duration: 900,
-          delay: stagger(120),
-          ease: "inOut(2)",
-          autoplay: onScroll({ target: ".blast-graph", enter: "top 80%" }),
-        });
-      }
-    }
-
-    if (!reduceMotion) {
-      animate(".graph-node-hot circle", {
-        opacity: [1, 0.55, 1],
-        duration: 1600,
-        loop: true,
-        ease: "inOutSine",
+    // Staggered scroll reveal on narrative beats — translate only so content
+    // never blanks if the observer misses.
+    const beats = utils.$(".blast-beat");
+    if (beats.length && !reduceMotion) {
+      utils.set(beats, { translateY: 12 });
+      animate(beats, {
+        translateY: [12, 0],
+        duration: 420,
+        delay: stagger(90),
+        ease: "out(3)",
+        autoplay: onScroll({ target: ".blast-beats", enter: "top 85%" }),
       });
     }
+
+    const nodesEls = utils.$(".graph-node");
+    if (nodesEls.length && !reduceMotion) {
+      utils.set(nodesEls, { translateY: 10 });
+      animate(nodesEls, {
+        translateY: [10, 0],
+        duration: 420,
+        delay: stagger(55),
+        ease: "out(3)",
+        autoplay: onScroll({ target: ".blast-graph", enter: "top 82%" }),
+      });
+    }
+
+    // One-shot line drawing. Edges stay fully painted until the graph enters
+    // view, then we blank and draw once — never a looping pulse.
+    if (reduceMotion || !svg?.createDrawable) return;
+
+    const graphEl = utils.$(".blast-graph")[0];
+    if (!graphEl || typeof IntersectionObserver === "undefined") return;
+
+    const edges = svg.createDrawable(".graph-edge");
+    let drawn = false;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || drawn) return;
+        drawn = true;
+        observer.disconnect();
+        utils.set(edges, { draw: "0 0" });
+        animate(edges, {
+          draw: "0 1",
+          duration: 700,
+          delay: stagger(80),
+          ease: "out(3)",
+        });
+      },
+      { threshold: 0.35, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    observer.observe(graphEl);
   }, []);
 
   return (
     <section
       ref={root}
       id="blast-radius"
-      className="w-full bg-midnight py-16 md:py-28 relative overflow-hidden"
+      className="relative w-full overflow-hidden bg-midnight py-16 md:py-24"
     >
-      <div className="section-shell relative z-10">
-        <SectionLabel label="Blast Radius" className="mb-6" />
+      <div className="absolute left-0 right-0 top-0 h-px bg-white/10" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Copy */}
+      <div className="section-shell relative z-10">
+        <SectionLabel label="Blast radius" className="mb-5" />
+
+        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           <div>
-            <h2 className="font-display font-extrabold text-white text-display-sm leading-[1.0] tracking-[-0.02em]">
+            <h2 className="max-w-xl text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-white">
               You can be shut in by someone else's violation.
             </h2>
-            <p className="mt-6 text-white/60 text-base md:text-lg leading-relaxed max-w-xl">
+            <p className="mt-5 max-w-lg text-pretty text-base leading-relaxed text-white/65 md:text-lg">
               When any lease on a shared surface commingle (Form P-17) is severed,
-              every lease on that permit stops producing — including yours. That
-              severance is filed against the other operator, so it never appears in
-              your own records. You find out when your purchaser rejects the load.
+              every lease on that permit stops producing — including yours. The
+              severance is filed against the other operator, so it never appears
+              in your own records.
             </p>
-            <p className="mt-4 text-white/60 text-base md:text-lg leading-relaxed max-w-xl">
-              LettersIQ builds the commingle graph from the RRC's imaged P-17 filings,
-              then watches your neighbors' leases the same way it watches yours.
+            <p className="mt-4 max-w-lg text-pretty text-base leading-relaxed text-white/65 md:text-lg">
+              LettersIQ builds the commingle graph from imaged P-17 filings, then
+              watches your neighbors the same way it watches you.
             </p>
 
-            {/* Example alert — faithful product copy without decorative terminal syntax */}
-            <div className="mt-8 border border-signalRed/45 bg-signalSoft">
-              <div className="flex items-center justify-between border-b border-signalRed/25 px-5 py-3">
-                <span className="text-sm font-semibold text-white">Example alert</span>
-                <span className="font-mono text-xs font-semibold text-signalBright">
+            <ul className="blast-beats mt-9 space-y-0 border-t border-white/10">
+              <li className="blast-beat border-b border-white/10 py-4">
+                <div className="text-sm font-semibold text-white">Hidden upstream</div>
+                <p className="mt-1.5 max-w-md text-[15px] leading-relaxed text-white/60">
+                  You find out when your purchaser rejects the load — unless someone
+                  is watching the co-member leases.
+                </p>
+              </li>
+              <li className="blast-beat border-b border-white/10 py-4">
+                <div className="text-sm font-semibold text-white">One graph, every morning</div>
+                <p className="mt-1.5 max-w-md text-[15px] leading-relaxed text-white/60">
+                  By hand this means cross-referencing two disconnected RRC systems
+                  every day. We do that before 7:00 AM CT.
+                </p>
+              </li>
+            </ul>
+          </div>
+
+          <figure className="blast-graph w-full lg:pt-2">
+            <div className="overflow-hidden rounded-[3px] border border-white/15 bg-white/[0.03]">
+              <div className="flex items-center justify-between border-b border-white/10 px-5 py-3.5">
+                <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                  <span className="h-2 w-2 bg-signalRed" aria-hidden="true" />
+                  Commingle graph
+                </div>
+                <span className="font-mono text-xs font-semibold text-signalRed">
                   Critical
                 </span>
               </div>
-              <div className="space-y-3 px-5 py-4 text-sm leading-relaxed">
-                <p className="text-white/80">
-                  Third-party lease 08-12345 MCFADDIN TRUST (operator: SOMEONE ELSE LLC)
-                  on your shared surface commingle CLAM LAKE (18458001) is under an
-                  outstanding severance.
+
+              <div className="px-3 py-5 sm:px-5">
+                <CommingleGraph />
+              </div>
+
+              <ul className="flex flex-wrap gap-x-5 gap-y-2 border-t border-white/10 px-5 py-3.5">
+                {legend.map((item) => (
+                  <li
+                    key={item.label}
+                    className="flex items-center gap-2 text-xs text-white/65"
+                  >
+                    <span
+                      className="h-2 w-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: toneStroke[item.tone] }}
+                      aria-hidden="true"
+                    />
+                    {item.label}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="border-t border-signalRed/30 bg-signalSoft px-5 py-4">
+                <p className="text-sm leading-relaxed text-white/85">
+                  Third-party lease{" "}
+                  <span className="font-mono tabular-nums text-white">08-12345</span>{" "}
+                  (McFaddin Trust) on Clam Lake is under an outstanding severance.
                 </p>
-                <p className="font-semibold text-signalBright">
-                  Commingled leases cannot produce or move stock until it clears.
-                </p>
-                <p className="text-white/80">
-                  <span className="font-semibold text-[#F0B429]">Your affected leases:</span>{" "}
-                  08-08559, 08-09012
+                <p className="mt-2 text-sm font-semibold text-signalRed">
+                  Your leases{" "}
+                  <span className="font-mono tabular-nums">08-08559</span> and{" "}
+                  <span className="font-mono tabular-nums">08-09012</span> cannot
+                  produce until it clears.
                 </p>
               </div>
             </div>
-          </div>
-
-          {/* Graph */}
-          <div className="blast-graph relative">
-            <div className="border border-white/15 bg-white/[0.02] p-4">
-              <CommingleGraph />
-            </div>
-            <div className="mt-4 flex items-center justify-between text-sm text-white/65">
-              <span>Commingle graph</span>
-              <span className="text-white/70">Source: RRC Form P-17</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-12 border-t border-white/10 pt-6 text-sm text-white/65">
-          By hand, this means cross-referencing two disconnected RRC systems — every day.
+            <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-white/60">
+              <span>Example surface commingle</span>
+              <span>Source: RRC Form P-17</span>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>

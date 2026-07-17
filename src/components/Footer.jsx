@@ -3,14 +3,13 @@ import LettersIQLogo from "/lettersiqlogo.png";
 import wellheadiqLogo from "../assets/icons/wellheadiq_logo.png";
 import { StarMark } from "./Primitives.jsx";
 
+// Keep in lockstep with Navbar — fewer choices, same destinations.
 const navLinks = [
   { label: "Blast Radius", href: "#blast-radius" },
   { label: "How it works", href: "#how-it-works" },
   { label: "Coverage", href: "#coverage" },
-  { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
-  { label: "FAQ", href: "#FAQ" },
-  { label: "Contact", href: "#contact-us" },
+  { label: "Get Started", href: "#contact-us" },
 ];
 
 export const Footer = () => {
@@ -34,7 +33,7 @@ export const Footer = () => {
           </div>
           <a
             href="#contact-us"
-            className="hidden sm:inline-flex items-center gap-2 bg-white text-signalRed font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 transition-transform duration-150 hover:scale-[1.02] active:scale-[0.97]"
+            className="hidden sm:inline-flex items-center gap-2 bg-white text-signalRed font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 transition-transform duration-150 hover:scale-[1.02] active:scale-[0.96]"
             style={{ borderRadius: 2 }}
           >
             Get Started <span aria-hidden>&rarr;</span>
@@ -48,11 +47,11 @@ export const Footer = () => {
             {/* Brand */}
             <div className="md:col-span-5">
               <img src={LettersIQLogo} alt="LettersIQ" className="h-10 w-auto mb-5" />
-              <p className="text-white/55 text-sm leading-relaxed max-w-sm mb-5">
-                Predictive compliance monitoring for Texas oil and gas operators.
-                Eight RRC datasets, connected into one daily briefing.
+              <p className="mb-5 max-w-sm text-sm leading-relaxed text-white/65">
+                Daily compliance monitoring for Texas oil and gas operators.
+                Eight RRC datasets, connected into one morning briefing.
               </p>
-              <div className="flex items-center gap-2 text-sm text-white/55">
+              <div className="flex items-center gap-2 text-sm text-white/65">
                 <span>Made with</span>
                 <StarMark size={12} className="text-signalRed" />
                 <span>in Austin, TX</span>
@@ -61,7 +60,7 @@ export const Footer = () => {
 
             {/* Navigation */}
             <div className="md:col-span-4">
-              <div className="mono-label text-white/60 mb-5">Navigation</div>
+              <div className="mb-5 text-sm font-semibold text-white/70">Navigation</div>
               <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                 {navLinks.map((link) => (
                   <a
@@ -77,7 +76,7 @@ export const Footer = () => {
 
             {/* Powered by */}
             <div className="md:col-span-3">
-              <div className="mono-label text-white/60 mb-5">Powered by</div>
+              <div className="mb-5 text-sm font-semibold text-white/70">Powered by</div>
               <a
                 href="https://www.wellheadiq.com/"
                 target="_blank"
