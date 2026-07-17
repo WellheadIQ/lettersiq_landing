@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
+import { useAnimeScope } from "../hooks/useAnimeScope.js";
 import { SectionLabel } from "./Primitives.jsx";
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./ui/accordion.jsx";
 
 const FAQData = [
   {
@@ -65,51 +65,60 @@ const FAQData = [
 ];
 
 export const FAQ = () => {
-  const [showAll, setShowAll] = useState(false);
-  const visibleItems = showAll ? FAQData : FAQData.slice(0, 6);
+  const root = useAnimeScope(({ reduceMotion, anime }) => {
+    const { utils, animate, stagger, onScroll } = anime;
+    const items = utils.$(".faq-item");
+    if (!items.length || reduceMotion) return;
+
+    utils.set(items, { translateY: 12 });
+    animate(items, {
+      translateY: [12, 0],
+      duration: 400,
+      ease: "out(3)",
+      delay: stagger(45),
+      autoplay: onScroll({ target: ".faq-list", enter: "top 88%" }),
+    });
+  }, []);
 
   return (
-    <section className="relative py-16 md:py-24 bg-parchment overflow-hidden">
+    <section
+      ref={root}
+      className="relative overflow-hidden bg-parchment py-16 md:py-24"
+    >
       <div className="absolute -top-10" id="FAQ" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-line" />
+      <div className="absolute left-0 right-0 top-0 h-px bg-line" />
 
-      <div className="section-shell max-w-3xl">
-        <div className="mb-5">
-          <SectionLabel label="FAQ" />
-        </div>
+      <div className="section-shell">
+        <SectionLabel label="FAQ" className="mb-5" />
 
-        <div className="mb-10">
+        <div className="mb-12 max-w-3xl">
           <h2 className="text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-labFg">
             Questions, answered.
           </h2>
           <p className="mt-4 text-pretty text-base text-labFgMuted md:text-lg">
-            How the monitoring works, what's covered, and how billing scales.
+            How the monitoring works, what's covered, and how billing scales —
+            all of it, no digging.
           </p>
         </div>
 
-        <Accordion type="single" collapsible className="border border-line bg-card">
-          {visibleItems.map((item, index) => (
-            <AccordionItem key={index} value={`faq-${index}`}>
-              <AccordionTrigger>
+        {/* Open Q&A — every answer visible. No accordion, no “view more.” */}
+        <dl className="faq-list grid grid-cols-1 gap-x-16 border-t border-line md:grid-cols-2">
+          {FAQData.map((item) => (
+            <div
+              key={item.question}
+              className="faq-item border-b border-line py-7"
+            >
+              <dt className="text-balance font-display text-base font-bold tracking-[-0.01em] text-labFg md:text-lg">
                 {item.question}
-              </AccordionTrigger>
-              <AccordionContent>
-                <p className="text-labFgMuted leading-relaxed">{item.answer}</p>
-              </AccordionContent>
-            </AccordionItem>
+              </dt>
+              <dd className="mt-3 max-w-prose text-pretty text-[15px] leading-relaxed text-labFgMuted">
+                {item.answer}
+              </dd>
+            </div>
           ))}
-        </Accordion>
+        </dl>
 
-        <button
-          type="button"
-          aria-expanded={showAll}
-          onClick={() => setShowAll((value) => !value)}
-          className="mt-5 inline-flex min-h-11 items-center border border-lineStrong px-4 text-sm font-semibold text-labFg transition-colors hover:bg-parchmentAlt"
-        >
-          {showAll ? "Show fewer questions" : `View ${FAQData.length - visibleItems.length} more questions`}
-        </button>
-
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 text-sm text-labFgMuted">
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 text-sm text-labFgMuted">
           <span>Still have a question?</span>
           <a
             href="#contact-us"
@@ -122,4 +131,3 @@ export const FAQ = () => {
     </section>
   );
 };
-

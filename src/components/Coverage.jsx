@@ -1,142 +1,87 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
 import { SectionLabel } from "./Primitives.jsx";
 
-const Icon = ({ children }) => (
-  <svg
-    width="30"
-    height="30"
-    viewBox="0 0 32 32"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.4"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    {children}
-  </svg>
-);
-
-const sources = [
+const daily = [
   {
     title: "Severance & seal orders",
     body: "The original signal — plus an all-clear the day a lease is back in business.",
-    tone: "red",
-    icon: (
-      <Icon>
-        <path d="M9 4h9l5 5v19H9z" />
-        <path d="M18 4v5h5" />
-        <circle cx="15" cy="19" r="3" />
-        <path d="M15 22v4" />
-      </Icon>
-    ),
   },
   {
     title: "Certified letters",
     body: "The last warning the Commission sends before a severance order. Catch it while there's still time to cure.",
-    tone: "red",
-    icon: (
-      <Icon>
-        <rect x="6" y="8" width="20" height="16" rx="1" />
-        <path d="M6 9l10 8 10-8" />
-      </Icon>
-    ),
-  },
-  {
-    title: "P-5 renewal",
-    body: "A 60 / 30 / 14 / 7-day countdown to your organization report expiry. An unrenewed P-5 severs every lease you have.",
-    tone: "cobalt",
-    icon: (
-      <Icon>
-        <path d="M25 9a10 10 0 10.5 8" />
-        <path d="M25 4v5h-5" />
-        <path d="M16 11v5l3 2" />
-      </Icon>
-    ),
-  },
-  {
-    title: "Rule 15 / inactive wells",
-    body: "5- and 10-year inactivity milestones, W-3X extension status, and wells that newly hit the inactive aging report.",
-    tone: "cobalt",
-    icon: (
-      <Icon>
-        <circle cx="13" cy="11" r="4" />
-        <path d="M6 26c0-4 3-7 7-7s7 3 7 7" />
-        <path d="M22 10l5 5M27 10l-5 5" />
-      </Icon>
-    ),
   },
   {
     title: "Proration schedules",
     body: "Delinquent codes (DLQ W-10, DLQ FORM, H-15 VIOL) and allowable changes, diffed off the schedule every day.",
-    tone: "red",
-    icon: (
-      <Icon>
-        <circle cx="16" cy="16" r="10" />
-        <path d="M16 16V6a10 10 0 019 6z" />
-        <path d="M16 16l7 5" />
-      </Icon>
-    ),
+  },
+];
+
+const weekly = [
+  {
+    title: "P-5 renewal",
+    body: "A 60 / 30 / 14 / 7-day countdown to your organization report expiry. An unrenewed P-5 severs every lease you have.",
+  },
+  {
+    title: "Rule 15 / inactive wells",
+    body: "5- and 10-year inactivity milestones, W-3X extension status, and wells that newly hit the inactive aging report.",
   },
   {
     title: "Surface commingling (P-17)",
     body: "Blast-radius monitoring — a severance on any lease sharing your commingle stops your production too.",
-    tone: "red",
-    icon: (
-      <Icon>
-        <circle cx="10" cy="12" r="3" />
-        <circle cx="22" cy="12" r="3" />
-        <circle cx="16" cy="22" r="3" />
-        <path d="M12 14l3 6M20 14l-3 6M13 12h6" />
-      </Icon>
-    ),
   },
   {
     title: "Drilling permits (W-1)",
     body: "A countdown to the 2-year no-spud expiry, verified against the wellbore record so you're only warned on undrilled permits.",
-    tone: "cobalt",
-    icon: (
-      <Icon>
-        <path d="M12 4l8 8M16 8v18M10 26h12" />
-        <path d="M13 12l-3 8M19 12l3 8" />
-      </Icon>
-    ),
   },
   {
     title: "Gatherer / purchaser (P-4)",
     body: "Lost market outlets and operator-of-record transfers the day the Commission processes them.",
-    tone: "cobalt",
-    icon: (
-      <Icon>
-        <path d="M4 18h6l2-3 3 6 2-3h5" />
-        <circle cx="24" cy="18" r="3" />
-        <path d="M6 12h8M6 24h10" />
-      </Icon>
-    ),
   },
 ];
 
-const PREVIEW_COUNT = 4;
+const CoverageColumn = ({ cadence, items, accent }) => (
+  <div className="coverage-col min-w-0">
+    <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-line pb-3">
+      <h3 className="font-display text-lg font-bold tracking-[-0.01em] text-labFg">
+        {cadence}
+      </h3>
+      <span className={`font-mono text-xs tabular-nums ${accent}`}>
+        {items.length} datasets
+      </span>
+    </div>
+    <ul className="space-y-0">
+      {items.map((item) => (
+        <li
+          key={item.title}
+          className="coverage-row border-b border-line py-5 last:border-b-0"
+        >
+          <div className="text-sm font-semibold text-labFg">{item.title}</div>
+          <p className="mt-1.5 max-w-md text-pretty text-[15px] leading-relaxed text-labFgMuted">
+            {item.body}
+          </p>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
 export const Coverage = () => {
-  const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? sources : sources.slice(0, PREVIEW_COUNT);
-
   const root = useAnimeScope(({ reduceMotion, anime }) => {
     const { utils, animate, stagger, onScroll } = anime;
-    const cards = utils.$(".coverage-card");
-    if (!cards.length || reduceMotion) return;
+    const rows = utils.$(".coverage-row");
+    if (!rows.length || reduceMotion) return;
 
-    utils.set(cards, { translateY: 16 });
-    animate(cards, {
-      translateY: [16, 0],
-      duration: 520,
+    // Scroll reveal + stagger — content stays painted if the observer misses.
+    utils.set(rows, { translateY: 12 });
+    animate(rows, {
+      translateY: [12, 0],
+      duration: 420,
       ease: "out(3)",
-      delay: stagger(90),
-      autoplay: onScroll({ target: ".coverage-grid", enter: "top 85%" }),
+      delay: stagger(55),
+      autoplay: onScroll({ target: ".coverage-board", enter: "top 85%" }),
     });
-  }, [showAll]);
+  }, []);
 
   return (
     <section
@@ -154,52 +99,24 @@ export const Coverage = () => {
             Eight datasets. One briefing.
           </h2>
           <p className="mt-5 text-pretty text-base leading-relaxed text-labFgMuted md:text-lg">
-            Every morning we scan the public RRC record across eight datasets and
-            diff them against yesterday. You only hear from us when something
-            changes — never the same standing issue twice.
+            Every morning we scan the public RRC record and diff it against
+            yesterday. You only hear from us when something changes — never the
+            same standing issue twice.
           </p>
         </div>
 
-        <div className="coverage-grid grid grid-cols-1 gap-x-12 md:grid-cols-2">
-          {visible.map((s) => (
-            <article
-              key={s.title}
-              className="coverage-card flex gap-5 border-t border-line py-6"
-            >
-              <div
-                className={`shrink-0 ${s.tone === "red" ? "text-signalRed" : "text-cobalt"}`}
-              >
-                {s.icon}
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-labFg">{s.title}</h3>
-                <p className="mt-2 text-pretty text-sm leading-relaxed text-labFgMuted">
-                  {s.body}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <button
-          type="button"
-          aria-expanded={showAll}
-          onClick={() => setShowAll((value) => !value)}
-          className="mt-6 inline-flex min-h-11 items-center border border-lineStrong px-4 text-sm font-semibold text-labFg transition-colors hover:bg-parchmentAlt"
-        >
-          {showAll
-            ? "Show fewer datasets"
-            : `View ${sources.length - PREVIEW_COUNT} more datasets`}
-        </button>
-
-        <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-labFgMuted">
-          <span className="text-labFg">Daily:</span>
-          <span>Severance · Certified · Proration</span>
-          <span className="text-lineStrong" aria-hidden>
-            /
-          </span>
-          <span className="text-labFg">Weekly:</span>
-          <span>P-5 · Rule 15 · W-1 · P-17 · P-4</span>
+        {/* Full inventory, grouped by scan cadence — nothing tucked behind a click */}
+        <div className="coverage-board grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+          <CoverageColumn
+            cadence="Daily"
+            items={daily}
+            accent="text-signalRed"
+          />
+          <CoverageColumn
+            cadence="Weekly"
+            items={weekly}
+            accent="text-cobaltText"
+          />
         </div>
       </div>
     </section>
