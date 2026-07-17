@@ -1,196 +1,178 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaCheck, FaTimes } from 'react-icons/fa';
 import { SectionLabel } from './Primitives.jsx';
+import { Button } from './ui/button.jsx';
+
+const FIELDS = [
+  { name: 'name', label: 'Full name', type: 'text', autoComplete: 'name', placeholder: 'Jane Roughneck' },
+  { name: 'operator', label: 'Operator name', type: 'text', autoComplete: 'organization', placeholder: 'Pioneer Natural Resources' },
+  { name: 'email', label: 'Work email', type: 'email', autoComplete: 'email', placeholder: 'you@operator.com' },
+  { name: 'phone', label: 'Phone', type: 'tel', autoComplete: 'tel', placeholder: '(512) 555-0134' },
+];
+
+const digits = (v) => v.replace(/\D/g, '').slice(0, 10);
+
+const formatPhone = (v) => {
+  const d = digits(v);
+  if (d.length < 4) return d;
+  if (d.length < 7) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+};
+
+const validateField = (name, value) => {
+  const v = (value || '').trim();
+  switch (name) {
+    case 'name':
+      return v.length >= 2 ? '' : 'Enter your full name.';
+    case 'operator':
+      return v.length >= 2 ? '' : 'Enter your operator or company name.';
+    case 'email':
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'Enter a valid email address.';
+    case 'phone':
+      return digits(v).length === 10 ? '' : 'Enter a 10-digit phone number.';
+    default:
+      return '';
+  }
+};
 
 export const ContactUs = () => {
   const [formState, setFormState] = useState('idle');
-  const [formData, setFormData] = useState({
-    name: '',
-    operator: '',
-    email: '',
-    phone: ''
-  });
+  const [formData, setFormData] = useState({ name: '', operator: '', email: '', phone: '' });
   const [errors, setErrors] = useState({});
-  const [validFields, setValidFields] = useState({});
+  const [touched, setTouched] = useState({});
 
   useEffect(() => {
-    if (formState === 'success') {
-      const timer = setTimeout(() => {
-        setErrors({});
-        setValidFields({});
-        setFormData({
-          name: '',
-          operator: '',
-          email: '',
-          phone: ''
-        });
-        setFormState('idle');
-      }, 60000);
-      return () => clearTimeout(timer);
-    }
+    if (formState !== 'success') return undefined;
+    const timer = setTimeout(() => {
+      setErrors({});
+      setTouched({});
+      setFormData({ name: '', operator: '', email: '', phone: '' });
+      setFormState('idle');
+    }, 60000);
+    return () => clearTimeout(timer);
   }, [formState]);
 
-  const validateField = useCallback((name, value) => {
-    switch (name) {
-      case 'name':
-      case 'operator':
-        return value.length >= 2;
-      case 'email':
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-      case 'phone':
-        return /^\d{10}$/.test(value);
-      default:
-        return false;
-    }
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    const next = name === 'phone' ? formatPhone(value) : value;
+    setFormData((prev) => ({ ...prev, [name]: next }));
+    // Only re-validate live once the field has been visited, to clear a
+    // showing error as the user fixes it — never punish first-time typing.
+    setTouched((t) => {
+      if (t[name]) setErrors((prev) => ({ ...prev, [name]: validateField(name, next) }));
+      return t;
+    });
   }, []);
 
-  const handleInputChange = useCallback((e) => {
+  const handleBlur = useCallback((e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, value) }));
+  }, []);
 
-    const isValid = validateField(name, value);
-    setValidFields(prev => ({ ...prev, [name]: isValid }));
-
-    if (isValid) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    } else {
-      let errorMessage = '';
-      switch (name) {
-        case 'name':
-        case 'operator':
-          errorMessage = `${name.charAt(0).toUpperCase() + name.slice(1)} must be at least 2 characters`;
-          break;
-        case 'email':
-          errorMessage = 'Please enter a valid email address';
-          break;
-        case 'phone':
-          errorMessage = 'Phone number must be 10 digits';
-          break;
-        default:
-          errorMessage = 'Invalid input';
-      }
-      setErrors(prev => ({ ...prev, [name]: errorMessage }));
-    }
-  }, [validateField]);
-
-  const validateForm = useCallback(() => {
-    const newErrors = {};
-    let isValid = true;
-    Object.keys(formData).forEach(field => {
-      if (!validateField(field, formData[field])) {
-        newErrors[field] = `Please enter a valid ${field}`;
-        isValid = false;
-      }
-    });
-    setErrors(newErrors);
-    return isValid;
-  }, [formData, validateField]);
-
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    setFormState('submitting');
-
-    if (!validateForm()) {
-      setFormState('error');
-      return;
-    }
-
-    try {
-      const response = await fetch('https://formcarry.com/s/t84fP1_KPoq', {
-        method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (!response.ok) throw new Error('Submission failed');
-      setFormState('success');
-      gtag_report_conversion();
-    } catch (error) {
-      console.error('Submission error:', error);
-      setFormState('error');
-    }
-  }, [formData, validateForm]);
-
-  const gtag_report_conversion = useCallback(() => {
+  const gtagReportConversion = useCallback(() => {
     if (typeof gtag === 'function') {
       gtag('event', 'conversion', {
-        'send_to': 'AW-16667114456/R0rYCLP-rMkZENj3v4s-',
-        'event_callback': () => console.log('Conversion tracked successfully')
+        send_to: 'AW-16667114456/R0rYCLP-rMkZENj3v4s-',
+        event_callback: () => {},
       });
-    } else {
-      console.warn('gtag function not available');
     }
   }, []);
 
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      const nextErrors = {};
+      FIELDS.forEach(({ name }) => {
+        const msg = validateField(name, formData[name]);
+        if (msg) nextErrors[name] = msg;
+      });
+      setErrors(nextErrors);
+      setTouched({ name: true, operator: true, email: true, phone: true });
+
+      if (Object.keys(nextErrors).length > 0) {
+        // Move focus to the first field with an error for keyboard/AT users.
+        const first = FIELDS.find(({ name }) => nextErrors[name]);
+        if (first) document.getElementById(first.name)?.focus();
+        return;
+      }
+
+      setFormState('submitting');
+      try {
+        const response = await fetch('https://formcarry.com/s/t84fP1_KPoq', {
+          method: 'POST',
+          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...formData, phone: digits(formData.phone) }),
+        });
+        if (!response.ok) throw new Error('Submission failed');
+        setFormState('success');
+        gtagReportConversion();
+      } catch (err) {
+        setFormState('error');
+      }
+    },
+    [formData, gtagReportConversion]
+  );
+
   return (
-    <section id="contact-us" className="w-full bg-ink py-16 md:py-24 relative overflow-hidden">
-      {/* Ambient glow */}
-      <div
-        className="pointer-events-none absolute -top-32 right-0 w-[34rem] h-[34rem] rounded-full opacity-30 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(224,86,14,0.4), transparent 60%)" }}
-      />
-      {/* Technical grid overlay */}
-      <div className="absolute inset-0 opacity-[0.4]">
-        <div className="w-full h-full" style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)',
-          backgroundSize: '56px 56px'
-        }} />
-      </div>
-
+    <section id="contact-us" className="w-full bg-midnight py-16 md:py-24 relative overflow-hidden">
       <div className="section-shell max-w-2xl relative z-10">
-        {/* Section label */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-5"
-        >
-          <SectionLabel number="09" label="Contact" tone="dark" />
-        </motion.div>
+        <SectionLabel label="Get started" className="mb-5" />
+        <h2 className="font-display font-extrabold text-white text-display-sm tracking-[-0.02em]">
+          Put LettersIQ on your leases.
+        </h2>
+        <p className="mt-4 max-w-xl text-white/60 text-base md:text-lg leading-relaxed">
+          Tell us who you are and we'll reach out within one business day to get your
+          portfolio monitored.
+        </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.08 }}
-          className="mb-8"
-        >
-          <h2 className="font-display font-extrabold text-white text-display-sm">Get started</h2>
-          <p className="mt-4 text-white/60 text-base md:text-lg">
-            Fill out the form below and we'll reach out within 24 hours.
-          </p>
-        </motion.div>
-
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           {formState === 'success' ? (
             <SuccessMessage key="success" />
           ) : (
-            <motion.div
+            <motion.form
               key="form"
-              initial={{ opacity: 0, y: 20 }}
+              onSubmit={handleSubmit}
+              noValidate
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.4 }}
+              className="mt-8 border border-line bg-card"
             >
+              <div className="grid gap-5 p-6 sm:grid-cols-2">
+                {FIELDS.map((f) => (
+                  <FormField
+                    key={f.name}
+                    {...f}
+                    value={formData[f.name]}
+                    error={touched[f.name] ? errors[f.name] : ''}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    full={f.name === 'name' || f.name === 'operator'}
+                  />
+                ))}
+              </div>
+
               {formState === 'error' && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mb-6 p-4 border border-red-500/50 bg-red-500/10 text-red-400 font-mono text-sm"
+                <div
+                  role="alert"
+                  className="mx-6 mb-2 border border-signalRed/40 bg-signalSoft px-4 py-3 text-sm text-signalBright"
                 >
-                  /// ERROR: Please fix the errors in the form and try again.
-                </motion.div>
+                  We couldn't send your request. Please try again; your entries are still here.
+                </div>
               )}
-              <ContactForm
-                formState={formState}
-                formData={formData}
-                errors={errors}
-                validFields={validFields}
-                handleInputChange={handleInputChange}
-                handleSubmit={handleSubmit}
-              />
-            </motion.div>
+
+              <div className="p-6 pt-2">
+                <Button type="submit" disabled={formState === 'submitting'} className="w-full">
+                  {formState === 'submitting' ? 'Sending…' : 'Request access'}
+                  {formState !== 'submitting' && <span aria-hidden>&rarr;</span>}
+                </Button>
+                <p className="mt-3 text-center text-sm text-white/65">
+                  No credit card · one business day response
+                </p>
+              </div>
+            </motion.form>
           )}
         </AnimatePresence>
       </div>
@@ -200,132 +182,53 @@ export const ContactUs = () => {
 
 const SuccessMessage = () => (
   <motion.div
-    initial={{ opacity: 0, y: 50 }}
+    initial={{ opacity: 0, y: 24 }}
     animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -50 }}
-    transition={{ duration: 0.5 }}
-    className="text-center py-12 border border-labBg/20 bg-labBg/5"
+    exit={{ opacity: 0, y: -24 }}
+    transition={{ duration: 0.4 }}
+    role="status"
+    className="mt-8 border border-cobalt/30 bg-card px-6 py-12 text-center"
   >
-    <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ duration: 0.3, delay: 0.2 }}
-      className="w-16 h-16 mx-auto mb-6 border-2 border-green-500 flex items-center justify-center"
-    >
-      <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-cobalt/50 text-cobaltText">
+      <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
       </svg>
-    </motion.div>
-    <h3 className="text-2xl font-bold text-labBg mb-4">
-      Submission Received
-    </h3>
-    <p className="text-labBg/70 mb-2">
-      We'll get back to you within 24 hours.
-    </p>
-    <p className="font-mono text-xs text-labAccent">
-      /// WELCOME TO LETTERSIQ
-    </p>
+    </div>
+    <h3 className="font-display text-2xl font-bold text-white">Request received</h3>
+    <p className="mt-3 text-white/60">We'll be in touch within one business day.</p>
   </motion.div>
 );
 
-const ContactForm = ({ formState, formData, errors, validFields, handleInputChange, handleSubmit }) => (
-  <motion.form
-    onSubmit={handleSubmit}
-    className="border border-labBg/20 bg-labBg/5"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-  >
-    {/* Form header */}
-    <div className="p-4 border-b border-labBg/20 flex items-center justify-between">
-      <span className="font-mono text-xs text-labBg/60">FORM_CONTACT</span>
-      <span className="font-mono text-xs text-labBg/60">FIELDS: 4</span>
-    </div>
-
-    <div className="p-6 space-y-6">
-      {['name', 'operator', 'email', 'phone'].map((field, index) => (
-        <FormField
-          key={field}
-          field={field}
-          value={formData[field]}
-          error={errors[field]}
-          isValid={validFields[field]}
-          onChange={handleInputChange}
-          index={index}
-        />
-      ))}
-    </div>
-
-    {/* Submit button */}
-    <div className="p-6 pt-0">
-      <motion.button
-        type="submit"
-        disabled={formState === 'submitting'}
-        className="w-full py-4 bg-ember text-white font-mono text-sm uppercase tracking-[0.12em] hover:bg-emberBright transition-colors duration-200 ease-out-strong disabled:opacity-50 disabled:cursor-not-allowed"
-        whileTap={{ scale: formState === 'submitting' ? 1 : 0.97 }}
-      >
-        {formState === 'submitting' ? '/// PROCESSING...' : 'Submit Request →'}
-      </motion.button>
-    </div>
-  </motion.form>
-);
-
-const FormField = ({ field, value, error, isValid, onChange, index }) => {
-  const labels = {
-    name: 'Full Name',
-    operator: 'Operator Name',
-    email: 'Email Address',
-    phone: 'Phone Number'
-  };
-
+const FormField = ({ name, label, type, placeholder, autoComplete, value, error, onChange, onBlur, full }) => {
+  const errorId = `${name}-error`;
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.1 }}
-    >
-      <div className="flex items-center justify-between mb-2">
-        <label htmlFor={field} className="font-mono text-xs text-labBg/60 uppercase tracking-wider">
-          {labels[field]}
-        </label>
-        <span className="font-mono text-xs text-labBg/40">
-          {String(index + 1).padStart(2, '0')}
-        </span>
-      </div>
-      <div className="relative">
-        <input
-          type={field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'}
-          id={field}
-          name={field}
-          value={value}
-          onChange={onChange}
-          placeholder={field === 'phone' ? '10 digits, no dashes' : ''}
-          className={`w-full p-4 bg-transparent border text-labBg font-mono text-sm focus:outline-none transition-colors ${
-            isValid 
-              ? 'border-green-500/50 focus:border-green-500' 
-              : error 
-                ? 'border-red-500/50 focus:border-red-500' 
-                : 'border-labBg/20 focus:border-labBg/50'
-          }`}
-        />
-        {/* Validation indicator */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2">
-          {isValid ? (
-            <FaCheck className="text-green-500 w-4 h-4" />
-          ) : error ? (
-            <FaTimes className="text-red-500 w-4 h-4" />
-          ) : null}
-        </div>
-      </div>
+    <div className={full ? 'sm:col-span-2' : ''}>
+      <label htmlFor={name} className="mb-2 block text-sm font-medium text-white/70">
+        {label}
+      </label>
+      <input
+        type={type}
+        id={name}
+        name={name}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        inputMode={type === 'tel' ? 'tel' : type === 'email' ? 'email' : 'text'}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={error ? errorId : undefined}
+        className={`w-full border bg-midnight/60 px-4 py-3.5 font-mono text-sm text-white placeholder:text-white/45 transition-colors focus:outline-none ${
+          error
+            ? 'border-signalRed/60 focus:border-signalRed'
+            : 'border-line focus:border-cobalt'
+        }`}
+      />
       {error && (
-        <motion.p
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-2 font-mono text-xs text-red-400"
-        >
-          /// {error}
-        </motion.p>
+        <p id={errorId} className="mt-2 text-[13px] text-signalBright">
+          {error}
+        </p>
       )}
-    </motion.div>
+    </div>
   );
 };

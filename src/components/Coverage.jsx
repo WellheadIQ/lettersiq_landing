@@ -1,6 +1,6 @@
 import React from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
-import { SectionLabel, StarMark } from "./Primitives.jsx";
+import { SectionLabel } from "./Primitives.jsx";
 
 const Icon = ({ children }) => (
   <svg
@@ -20,7 +20,6 @@ const Icon = ({ children }) => (
 
 const sources = [
   {
-    code: "SRC_001",
     title: "SEVERANCE & SEAL ORDERS",
     body: "The original signal — plus an all-clear the day a lease is back in business.",
     tone: "red",
@@ -34,7 +33,6 @@ const sources = [
     ),
   },
   {
-    code: "SRC_002",
     title: "CERTIFIED LETTERS",
     body: "The last warning the Commission sends before a severance order. Catch it while there's still time to cure.",
     tone: "red",
@@ -46,7 +44,6 @@ const sources = [
     ),
   },
   {
-    code: "SRC_003",
     title: "P-5 RENEWAL",
     body: "A 60 / 30 / 14 / 7-day countdown to your organization report expiry. An unrenewed P-5 severs every lease you have.",
     tone: "cobalt",
@@ -59,7 +56,6 @@ const sources = [
     ),
   },
   {
-    code: "SRC_004",
     title: "RULE 15 / INACTIVE WELLS",
     body: "5- and 10-year inactivity milestones, W-3X extension status, and wells that newly hit the inactive aging report.",
     tone: "cobalt",
@@ -72,7 +68,6 @@ const sources = [
     ),
   },
   {
-    code: "SRC_005",
     title: "PRORATION SCHEDULES",
     body: "Delinquent codes (DLQ W-10, DLQ FORM, H-15 VIOL) and allowable changes, diffed off the schedule every day.",
     tone: "red",
@@ -85,7 +80,6 @@ const sources = [
     ),
   },
   {
-    code: "SRC_006",
     title: "SURFACE COMMINGLING (P-17)",
     body: "Blast-radius monitoring — a severance on any lease sharing your commingle stops your production too.",
     tone: "red",
@@ -99,7 +93,6 @@ const sources = [
     ),
   },
   {
-    code: "SRC_007",
     title: "DRILLING PERMITS (W-1)",
     body: "A countdown to the 2-year no-spud expiry, verified against the wellbore record so you're only warned on undrilled permits.",
     tone: "cobalt",
@@ -111,7 +104,6 @@ const sources = [
     ),
   },
   {
-    code: "SRC_008",
     title: "GATHERER / PURCHASER (P-4)",
     body: "Lost market outlets and operator-of-record transfers the day the Commission processes them.",
     tone: "cobalt",
@@ -154,12 +146,11 @@ export const Coverage = () => {
       <div className="absolute top-0 left-0 right-0 h-px bg-line" />
 
       <div className="section-shell">
-        <SectionLabel number="01" label="Coverage" className="mb-5" />
+        <SectionLabel label="Coverage" className="mb-5" />
 
         <div className="max-w-3xl mb-12">
-          <div className="mono-label text-signalRed mb-4">/// EIGHT DATA SOURCES, ONE BRIEFING</div>
-          <h2 className="font-display font-extrabold text-labFg text-display-sm">
-            What we monitor
+          <h2 className="font-display font-extrabold text-labFg text-display-sm tracking-[-0.02em]">
+            Eight datasets. One briefing.
           </h2>
           <p className="mt-5 text-labFgMuted text-base md:text-lg leading-relaxed">
             Every morning we scan the public RRC record across eight datasets and
@@ -168,49 +159,34 @@ export const Coverage = () => {
           </p>
         </div>
 
-        <div className="coverage-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-line border border-line">
+        <div className="coverage-grid grid grid-cols-1 gap-x-12 md:grid-cols-2">
           {sources.map((s) => (
             <article
-              key={s.code}
-              className="coverage-card group relative bg-card p-6 flex flex-col min-h-[220px] hover:bg-parchmentAlt transition-colors"
+              key={s.title}
+              className="coverage-card flex gap-5 border-t border-line py-6"
             >
-              <span
-                className={`bracket -top-px -right-px w-3 h-3 border-r-2 border-t-2 ${
-                  s.tone === "red" ? "border-signalRed" : "border-cobalt"
-                } opacity-0 group-hover:opacity-100 transition-opacity`}
-              />
               <div
-                className={`mb-5 ${s.tone === "red" ? "text-signalRed" : "text-cobalt"}`}
+                className={`shrink-0 ${s.tone === "red" ? "text-signalRed" : "text-cobalt"}`}
               >
                 {s.icon}
               </div>
-              <h3 className="font-mono text-[13px] tracking-wide text-labFg font-semibold mb-2">
-                {s.title}
-              </h3>
-              <p className="text-labFgMuted text-sm leading-relaxed flex-1">{s.body}</p>
-              <div className="mt-5 flex items-center justify-between">
-                <span
-                  className={`font-mono text-[11px] ${
-                    s.tone === "red" ? "text-signalRed" : "text-cobalt"
-                  }`}
-                >
-                  {s.code}
-                </span>
-                <span className="font-mono text-labFgMuted group-hover:translate-x-1 transition-transform">
-                  &rarr;
-                </span>
+              <div>
+                <h3 className="text-sm font-semibold text-labFg">
+                  {s.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-labFgMuted">{s.body}</p>
               </div>
             </article>
           ))}
         </div>
 
-        {/* Footer flourish */}
-        <div className="mt-8 flex flex-wrap items-center gap-3 font-mono text-[11px] tracking-wider text-labFgMuted">
-          <StarMark size={11} className="text-signalRed" />
-          <span className="text-signalRed">{">>>>>"}</span>
-          <span>DAILY: SEVERANCE &middot; CERTIFIED &middot; PRORATION</span>
-          <span className="text-lineStrong">//</span>
-          <span>WEEKLY: P-5 &middot; RULE 15 &middot; W-1 &middot; P-17 &middot; P-4</span>
+        {/* Cadence note */}
+        <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-labFgMuted">
+          <span className="text-labFg">Daily:</span>
+          <span>Severance · Certified · Proration</span>
+          <span className="text-lineStrong">/</span>
+          <span className="text-labFg">Weekly:</span>
+          <span>P-5 · Rule 15 · W-1 · P-17 · P-4</span>
         </div>
       </div>
     </section>

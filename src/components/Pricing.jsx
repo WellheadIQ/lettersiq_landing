@@ -3,14 +3,14 @@ import { SectionLabel, StarMark } from "./Primitives.jsx";
 import { Button } from "./ui/button.jsx";
 
 const pricingFeatures = [
-  { code: "DLY", text: "Daily briefing delivered 7:00 AM CST" },
-  { code: "SEV", text: "Severance, seal & certified-letter alerts" },
-  { code: "P5", text: "P-5 renewal countdown & Rule 15 blockers" },
-  { code: "PRO", text: "Proration delinquent-code & allowable diffs" },
-  { code: "CMG", text: "Commingle blast-radius monitoring" },
-  { code: "PMT", text: "Drilling-permit expiry & P-4 change alerts" },
-  { code: "RCA", text: "Root-cause analysis on every alert" },
-  { code: "MLM", text: "Multi-lease management included" },
+  "Daily briefing delivered 7:00 AM CT",
+  "Severance, seal & certified-letter alerts",
+  "P-5 renewal countdown & Rule 15 blockers",
+  "Proration delinquent-code & allowable diffs",
+  "Commingle blast-radius monitoring",
+  "Drilling-permit expiry & P-4 change alerts",
+  "Root-cause analysis on every alert",
+  "Multi-lease management included",
 ];
 
 export const Pricing = () => {
@@ -21,7 +21,7 @@ export const Pricing = () => {
       <div className="section-shell">
         <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-end mb-10 md:mb-12">
           <div className="md:col-span-7">
-            <SectionLabel number="07" label="Pricing" className="mb-5" />
+            <SectionLabel label="Pricing" className="mb-5" />
             <h2 className="font-display font-extrabold text-labFg text-display-sm">
               One price. The whole signal.
             </h2>
@@ -32,38 +32,30 @@ export const Pricing = () => {
           </p>
         </div>
 
-        <div className="relative border-2 border-oxford bg-card shadow-panelLg">
-          <span className="bracket -top-2 -left-2 border-l-2 border-t-2 border-labFg" />
-          <span className="bracket -top-2 -right-2 border-r-2 border-t-2 border-labFg" />
-          <span className="bracket -bottom-2 -left-2 border-l-2 border-b-2 border-labFg" />
-          <span className="bracket -bottom-2 -right-2 border-r-2 border-b-2 border-labFg" />
-
-          <div className="h-1.5 bg-gradient-to-r from-signalRed via-signalRed to-cobalt" />
-          <div className="px-5 sm:px-6 py-3.5 border-b border-line flex items-center justify-between bg-parchment font-mono text-[10px] sm:text-[11px] tracking-[0.14em]">
-            <span className="text-labFg">PLAN_001 / COMPLETE COVERAGE</span>
-            <span className="flex items-center gap-2 text-cobalt">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-cobalt opacity-40 animate-ping motion-reduce:animate-none" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-cobalt" />
-              </span>
-              AVAILABLE
+        <div className="relative border-2 border-oxford bg-card">
+          <div className="h-1.5 bg-signalRed" />
+          <div className="flex items-center justify-between border-b border-line bg-parchmentAlt px-5 py-3.5 font-mono text-xs sm:px-6">
+            <span className="text-labFg">Complete coverage</span>
+            <span className="flex items-center gap-2 text-cobaltText">
+              <span className="h-2 w-2 rounded-full bg-cobalt" aria-hidden="true" />
+              Available now
             </span>
           </div>
 
           <div className="grid lg:grid-cols-[0.82fr_1.35fr]">
             <div className="bg-oxford text-white p-7 sm:p-9 lg:p-10 flex flex-col">
-              <div className="inline-flex self-start items-center gap-2 border border-white/20 px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-white/65">
+              <div className="inline-flex self-start items-center gap-2 border border-white/20 px-3 py-2 font-mono text-xs text-white/70">
                 <StarMark size={10} className="text-signalBright" />
                 EVERYTHING INCLUDED
               </div>
 
               <div className="mt-10">
-                <div className="font-mono text-[10px] tracking-[0.18em] text-white/45">
+                <div className="font-mono text-xs text-white/70">
                   PER LEASE / MONTH
                 </div>
                 <div className="mt-2 flex items-start">
                   <span className="font-display text-3xl sm:text-4xl font-bold text-signalBright mt-2">$</span>
-                  <span className="font-display text-[6.5rem] sm:text-[8rem] leading-[0.82] font-extrabold tracking-[-0.07em]">
+                  <span className="font-display text-[6.5rem] sm:text-[8rem] leading-[0.82] font-extrabold tracking-[-0.04em]">
                     4
                   </span>
                 </div>
@@ -81,31 +73,25 @@ export const Pricing = () => {
                 </a>
               </Button>
 
-              <div className="mt-4 flex items-center gap-2 font-mono text-[10px] tracking-wider text-white/45">
-                <span className="text-signalBright">///</span>
-                30-DAY GUARANTEE · CANCEL ANYTIME
+              <div className="mt-4 text-sm text-white/65">
+                30-day guarantee · cancel anytime
               </div>
             </div>
 
             <div className="p-6 sm:p-8 lg:p-10">
-              <div className="flex items-center justify-between gap-4 pb-6 border-b border-line">
-                <div>
-                  <div className="font-mono text-[10px] tracking-[0.16em] text-signalRed">
-                    COVERAGE MANIFEST
-                  </div>
-                  <h3 className="font-display text-2xl font-bold text-labFg mt-2">
-                    No feature gates.
-                  </h3>
-                </div>
-                <span className="hidden sm:block font-display text-5xl font-extrabold text-parchmentAlt">
-                  08
-                </span>
+              <div className="pb-6 border-b border-line">
+                <h3 className="font-display text-2xl font-bold text-labFg">
+                  No feature gates.
+                </h3>
+                <p className="mt-1.5 text-sm text-labFgMuted">
+                  Every dataset and alert type, on every lease you operate.
+                </p>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-x-8">
                 {pricingFeatures.map((feature) => (
                   <div
-                    key={feature.code}
+                    key={feature}
                     className="flex gap-3 py-4 border-b border-line"
                   >
                     <span className="mt-0.5 w-5 h-5 bg-signalRed text-white flex items-center justify-center shrink-0">
@@ -113,12 +99,7 @@ export const Pricing = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
-                    <div>
-                      <div className="font-mono text-[9px] tracking-[0.14em] text-cobalt mb-1">
-                        {feature.code}
-                      </div>
-                      <div className="text-labFg text-sm leading-snug">{feature.text}</div>
-                    </div>
+                    <div className="text-labFg text-sm leading-snug pt-0.5">{feature}</div>
                   </div>
                 ))}
               </div>
@@ -131,7 +112,7 @@ export const Pricing = () => {
                 ].map(([value, label]) => (
                   <div key={label} className="px-3 py-4 text-center">
                     <div className="font-display text-xl sm:text-2xl font-bold text-labFg">{value}</div>
-                    <div className="font-mono text-[8px] sm:text-[9px] tracking-[0.13em] text-labFgMuted mt-1">
+                    <div className="mt-1 text-xs text-labFgMuted">
                       {label}
                     </div>
                   </div>
@@ -141,9 +122,9 @@ export const Pricing = () => {
           </div>
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] tracking-[0.14em] text-labFgMuted">
-          <span>NO SETUP FEE / NO ANNUAL CONTRACT</span>
-          <span className="text-signalRed">&gt;&gt;&gt;&gt;&gt; MONITORING STARTS NEXT CYCLE</span>
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-2 text-sm text-labFgMuted">
+          <span>No setup fee · no annual contract</span>
+          <span className="text-labFg">Monitoring starts next cycle</span>
         </div>
       </div>
     </section>

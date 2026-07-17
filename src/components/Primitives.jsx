@@ -16,22 +16,12 @@ export const StarMark = ({ className = "", size = 14 }) => (
   </svg>
 );
 
-/**
- * Numbered section marker: NN — star — label.
- * `tone="dark"` styles it for navy surfaces.
- */
-export const SectionLabel = ({ number, label, tone = "light", className = "" }) => {
-  const dark = tone === "dark";
-  return (
-    <div
-      className={`flex items-center gap-3 mono-label ${
-        dark ? "text-white/55" : "text-labFgMuted"
-      } ${className}`}
-    >
-      <span className={dark ? "text-signalBright" : "text-signalRed"}>{number}</span>
-      <StarMark size={11} className={dark ? "text-signalBright" : "text-signalRed"} />
-      <span className={`w-8 h-px ${dark ? "bg-white/25" : "bg-lineStrong"}`} />
-      <span>{label}</span>
-    </div>
-  );
-};
+/** Quiet section marker. Sentence case avoids repetitive terminal-style eyebrows. */
+export const SectionLabel = ({ label, className = "" }) => (
+  <p
+    className={`flex items-center gap-3 text-sm font-semibold text-inkMuted ${className}`}
+  >
+    <span className="h-px w-6 bg-signalRed shrink-0" aria-hidden="true" />
+    <span>{label}</span>
+  </p>
+);

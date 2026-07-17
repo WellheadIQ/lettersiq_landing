@@ -5,61 +5,71 @@ module.exports = {
     extend: {
       colors: {
         // ============================================================
-        // Lone Star instrument-panel palette — red / white / blue
+        // Dark instrument-panel palette — deep navy canvas, rationed red,
+        // cobalt data lines. Light surface tokens are remapped to the dark
+        // canvas so the whole page reads as one control room.
         // ============================================================
-        parchment: "#F7F5F0", // page canvas (warm paper white)
-        parchmentAlt: "#EFEBE2", // alternating light band
-        card: "#FFFFFF", // card surface, one tier above canvas
-        oxford: "#0A1428", // dark instrument sections + ink on light
+        // Canvas system (was warm parchment — now near-black navy)
+        parchment: "#060D1B", // page canvas (deepest navy)
+        parchmentAlt: "#0B1526", // alternating band, one step lifted
+        card: "#0F1C34", // elevated panel surface
+
+        oxford: "#0A1428", // structural navy: emphasis panels
         midnight: "#060D1B", // deepest navy: hero stage, footer
-        slateNavy: "#132340", // elevated navy panel on dark
+        slateNavy: "#16294A", // elevated navy panel on dark
 
-        signalRed: "#C8102E", // rationed accent: CTA, critical, active, closing band
-        signalBright: "#E8354F", // brighter red for hover/alert glow
-        signalSoft: "rgba(200,16,46,0.10)", // soft red wash for badges
+        signalRed: "#C8102E", // rationed accent: CTA, critical, active
+        signalBright: "#FF3B54", // brighter red for hover/alert glow
+        signalSoft: "rgba(200,16,46,0.14)", // soft red wash for badges
 
-        cobalt: "#1F4FFF", // secondary voice: links, info, chart lines
+        cobalt: "#3D6BFF", // data lines / info (lifted for dark-bg contrast)
+        cobaltText: "#7AA0FF", // cobalt for text/links on dark
         unionBlue: "#0A3161", // deep blue linework / info-deep
-        cobaltSoft: "rgba(31,79,255,0.10)",
+        cobaltSoft: "rgba(61,107,255,0.12)",
 
-        starWhite: "#FAFBFF", // text on dark
+        starWhite: "#FAFBFF", // primary text on dark
 
-        // Neutral ink ramp (navy-biased)
-        ink: "#0A1428",
-        inkMuted: "#4A5568",
-        inkFaint: "#8A94A6",
+        // Light inset (the one intentional off-white artifact: briefing panel)
+        panelLight: "#F4F6FB",
+        panelLightAlt: "#E7ECF5",
+        panelInk: "#0A1428", // ink text ON the light inset
+        panelInkMuted: "#4A5568",
 
-        // Hairlines
-        line: "rgba(10,20,40,0.12)", // on light
-        lineStrong: "rgba(10,20,40,0.22)",
-        lineDark: "rgba(250,251,255,0.14)", // on dark
+        // Neutral ink ramp — now light-on-dark
+        ink: "#EAEEF6",
+        inkMuted: "#9AA6BC",
+        inkFaint: "#63708A",
+
+        // Hairlines — light on dark
+        line: "rgba(233,238,247,0.10)",
+        lineStrong: "rgba(233,238,247,0.20)",
+        lineDark: "rgba(250,251,255,0.14)",
         lineDarkStrong: "rgba(250,251,255,0.28)",
 
         // ------------------------------------------------------------
-        // Semantic aliases (keep legacy class names resolving to the
-        // refreshed palette so nothing renders undefined mid-migration)
+        // Semantic aliases — remapped to the dark system so legacy class
+        // names (labBg / labFg / paper…) resolve to the control-room palette.
         // ------------------------------------------------------------
-        paper: "#F7F5F0",
-        paperAlt: "#EFEBE2",
-        paperPanel: "#FFFFFF",
+        paper: "#060D1B",
+        paperAlt: "#0B1526",
+        paperPanel: "#0F1C34",
         ember: "#C8102E",
-        emberBright: "#E8354F",
-        emberSoft: "rgba(200,16,46,0.10)",
-        steel: "#1F4FFF",
-        labBg: "#F7F5F0",
-        labBgAlt: "#EFEBE2",
-        labFg: "#0A1428",
-        labFgMuted: "#4A5568",
-        labAccent: "#C8102E",
-        labAlert: "#E8354F",
-        labBorder: "rgba(10,20,40,0.12)",
-        labBorderStrong: "rgba(10,20,40,0.22)",
+        emberBright: "#FF3B54",
+        emberSoft: "rgba(200,16,46,0.14)",
+        steel: "#3D6BFF",
+        labBg: "#060D1B",
+        labBgAlt: "#0B1526",
+        labFg: "#EAEEF6", // primary text (light)
+        labFgMuted: "#9AA6BC", // muted text (light)
+        labAccent: "#FF3B54",
+        labAlert: "#FF3B54",
+        labBorder: "rgba(233,238,247,0.10)",
+        labBorderStrong: "rgba(233,238,247,0.20)",
       },
       fontFamily: {
-        sans: ["Space Grotesk", "sans-serif"],
-        display: ["Archivo", "Space Grotesk", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
-        Inter: "Inter",
+        sans: ["Archivo", "system-ui", "sans-serif"],
+        display: ["Archivo", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
       fontSize: {
         "display-sm": ["clamp(2.25rem, 6vw, 3.25rem)", { lineHeight: "0.98", letterSpacing: "-0.03em" }],

@@ -1,12 +1,10 @@
 ---
-import "@fontsource/space-grotesk/400.css";
-import "@fontsource/space-grotesk/500.css";
-import "@fontsource/space-grotesk/600.css";
-import "@fontsource/space-grotesk/700.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/500.css";
 import "@fontsource/jetbrains-mono/600.css";
 import "@fontsource/jetbrains-mono/700.css";
+import "@fontsource/archivo/400.css";
+import "@fontsource/archivo/500.css";
 import "@fontsource/archivo/600.css";
 import "@fontsource/archivo/700.css";
 import "@fontsource/archivo/800.css";
@@ -74,14 +72,16 @@ const { title } = Astro.props;
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFL6VJ9B"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
+  <a href="#home" class="skip-link">Skip to content</a>
   <Analytics client:only="react" />
   <slot />
   <style is:global>
     :root {
-      --parchment: #f7f5f0;
+      --canvas: #060d1b;
       --oxford: #0a1428;
       --signal-red: #c8102e;
-      --cobalt: #1f4fff;
+      --cobalt: #3d6bff;
+      --ink: #eaeef6;
     }
 
     * {
@@ -90,8 +90,8 @@ const { title } = Astro.props;
     }
 
     html {
-      font-family: 'Space Grotesk', sans-serif;
-      background-color: var(--parchment);
+      font-family: 'Archivo', system-ui, sans-serif;
+      background-color: var(--canvas);
       overflow-x: hidden;
       scroll-behavior: smooth;
       scroll-padding-top: 7rem;
@@ -99,58 +99,62 @@ const { title } = Astro.props;
     }
 
     body {
-      background-color: var(--parchment);
-      color: var(--oxford);
+      background-color: var(--canvas);
+      color: var(--ink);
       position: relative;
       overflow-x: hidden;
     }
 
-    /* Technical blueprint grid — only behind light areas */
-    body::before {
-      content: '';
+    /* Skip-to-content — visible only on keyboard focus */
+    .skip-link {
       position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(10,20,40,0.030) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(10,20,40,0.030) 1px, transparent 1px);
-      background-size: 56px 56px;
-      pointer-events: none;
-      z-index: 0;
-      mask-image: radial-gradient(120% 80% at 50% 0%, #000 35%, transparent 100%);
-      -webkit-mask-image: radial-gradient(120% 80% at 50% 0%, #000 35%, transparent 100%);
+      top: 0;
+      left: 50%;
+      z-index: 100;
+      transform: translate(-50%, -120%);
+      background: var(--signal-red);
+      color: #fff;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 18px;
+      transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
     }
-
-    /* Keep section content above the grid */
-    body > * {
-      position: relative;
-      z-index: 1;
+    .skip-link:focus-visible {
+      transform: translate(-50%, 8px);
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .skip-link { transition: none; }
     }
 
     /* Monospace utility */
     .font-mono {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
     }
 
     /* Display face utility */
     .font-display {
-      font-family: 'Archivo', 'Space Grotesk', sans-serif;
+      font-family: 'Archivo', system-ui, sans-serif;
     }
 
-    /* Custom scrollbar */
+    /* Custom scrollbar — dark */
     ::-webkit-scrollbar {
       width: 10px;
       height: 10px;
     }
     ::-webkit-scrollbar-track {
-      background: #efebe2;
+      background: #0a1428;
     }
     ::-webkit-scrollbar-thumb {
-      background: #b9c0cc;
-      border: 2px solid #efebe2;
+      background: #24334f;
+      border: 2px solid #0a1428;
       border-radius: 999px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #0a1428;
+      background: #3a4d70;
     }
 
     /* Text selection */

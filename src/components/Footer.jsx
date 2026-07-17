@@ -4,9 +4,10 @@ import wellheadiqLogo from "../assets/icons/wellheadiq_logo.png";
 import { StarMark } from "./Primitives.jsx";
 
 const navLinks = [
+  { label: "Blast Radius", href: "#blast-radius" },
+  { label: "How it works", href: "#how-it-works" },
   { label: "Coverage", href: "#coverage" },
   { label: "Features", href: "#features" },
-  { label: "Blast Radius", href: "#blast-radius" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#FAQ" },
   { label: "Contact", href: "#contact-us" },
@@ -26,8 +27,8 @@ export const Footer = () => {
               <div className="font-display font-extrabold text-white text-2xl md:text-4xl leading-none">
                 Stop severances before the letter.
               </div>
-              <div className="font-mono text-[11px] tracking-[0.16em] text-white/80 mt-2">
-                /// ONE BRIEFING. EVERY OPERATOR. EVERY MORNING.
+              <div className="mt-2 text-sm text-white/80">
+                One briefing. Every operator. Every morning.
               </div>
             </div>
           </div>
@@ -60,17 +61,14 @@ export const Footer = () => {
 
             {/* Navigation */}
             <div className="md:col-span-4">
-              <div className="mono-label text-white/45 mb-5">/// NAVIGATION</div>
+              <div className="mono-label text-white/60 mb-5">Navigation</div>
               <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-                {navLinks.map((link, index) => (
+                {navLinks.map((link) => (
                   <a
                     key={link.label}
                     href={link.href}
-                    className="text-white/65 hover:text-white text-sm transition-colors flex items-center gap-2 group"
+                    className="flex min-h-11 items-center text-sm text-white/65 transition-colors hover:text-white"
                   >
-                    <span className="font-mono text-[11px] text-white/30 group-hover:text-signalRed transition-colors">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
                     {link.label}
                   </a>
                 ))}
@@ -79,7 +77,7 @@ export const Footer = () => {
 
             {/* Powered by */}
             <div className="md:col-span-3">
-              <div className="mono-label text-white/45 mb-5">POWERED BY</div>
+              <div className="mono-label text-white/60 mb-5">Powered by</div>
               <a
                 href="https://www.wellheadiq.com/"
                 target="_blank"
@@ -87,7 +85,7 @@ export const Footer = () => {
                 className="inline-flex items-center gap-3 p-3 border border-white/15 hover:border-white/45 transition-colors group"
               >
                 <img src={wellheadiqLogo} alt="WellheadIQ" className="h-6" />
-                <span className="font-mono text-[11px] tracking-wider text-white/55 group-hover:text-white">
+                <span className="text-sm text-white/65 group-hover:text-white">
                   WELLHEADIQ
                 </span>
               </a>
@@ -96,22 +94,16 @@ export const Footer = () => {
 
           <div className="pt-8 border-t border-white/10">
             <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-              <div className="font-mono text-[11px] tracking-wider text-white/45">
+              <div className="text-sm text-white/65">
                 &copy; {currentYear} LettersIQ. All rights reserved.
               </div>
-              <div className="font-mono text-[11px] tracking-wider text-white/45 text-center md:text-right">
-                <a href="/privacy-policy" className="hover:text-white transition-colors">
+              <div className="text-center text-sm text-white/65 md:text-right">
+                <a href="/privacy-policy" className="inline-flex min-h-11 items-center transition-colors hover:text-white">
                   Privacy
                 </a>
                 <span className="mx-3 text-white/20">|</span>
                 Not affiliated with the Texas Railroad Commission.
               </div>
-            </div>
-
-            <div className="mt-8 flex items-center justify-center gap-4 font-mono text-[11px] tracking-wider text-white/20">
-              <span className="text-signalRed/50">{">>>>>"}</span>
-              <span>END OF DOCUMENT</span>
-              <span className="text-signalRed/50">{"<<<<<"}</span>
             </div>
           </div>
         </div>

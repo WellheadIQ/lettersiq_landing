@@ -1,46 +1,54 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import React from 'react';
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import React from "react";
 
 export const ScrollUpButton = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [contactInView, setContactInView] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    window.addEventListener("scroll", toggleVisible);
-    return () => {
-      window.removeEventListener("scroll", toggleVisible);
+    const toggleVisible = () => {
+      setIsScrolled(document.documentElement.scrollTop > 300);
     };
+    toggleVisible();
+    window.addEventListener("scroll", toggleVisible, { passive: true });
+    return () => window.removeEventListener("scroll", toggleVisible);
   }, []);
 
-  const toggleVisible = () => {
-    const scrolled = document.documentElement.scrollTop;
-    if (scrolled > 300) {
-      setIsVisible(true);
-    } else if (scrolled <= 300) {
-      setIsVisible(false);
-    }
-  };
+  // Hide the button once the contact/footer region is on screen so it never
+  // collides with the form's fields or submit button on mobile.
+  useEffect(() => {
+    const target = document.getElementById("contact-us");
+    if (!target || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setContactInView(entry.isIntersecting),
+      { rootMargin: "0px 0px -20% 0px" }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   };
 
+  const isVisible = isScrolled && !contactInView;
+  const offset = reduceMotion ? 0 : 12;
+
   return (
-    <>
+    <AnimatePresence initial={false}>
       {isVisible && (
         <motion.button
           type="button"
           aria-label="Scroll to top"
-          className="w-12 h-12 fixed bottom-6 right-6 border border-lineStrong bg-card shadow-panel hover:bg-oxford hover:border-oxford cursor-pointer flex justify-center items-center transition-colors z-50 group"
+          className="w-12 h-12 fixed bottom-6 right-6 border border-lineStrong bg-card hover:bg-oxford hover:border-oxford cursor-pointer flex justify-center items-center z-50 group [transition:background-color_200ms_ease,border-color_200ms_ease]"
           onClick={scrollToTop}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: offset }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
+          exit={{ opacity: 0, y: offset }}
           transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-          whileTap={{ scale: 0.94 }}
+          whileTap={{ scale: 0.96 }}
         >
           <svg
             fill="none"
@@ -48,7 +56,7 @@ export const ScrollUpButton = () => {
             width="20"
             height="20"
             viewBox="0 0 24 24"
-            className="text-labFg group-hover:text-white transition-colors"
+            className="text-labFg group-hover:text-white [transition:color_200ms_ease]"
           >
             <path
               d="M18 15L12 9L6 15"
@@ -60,6 +68,6 @@ export const ScrollUpButton = () => {
           </svg>
         </motion.button>
       )}
-    </>
+    </AnimatePresence>
   );
 };

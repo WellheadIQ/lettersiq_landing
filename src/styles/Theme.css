@@ -79,7 +79,7 @@ html {
 
 /* Display face for monumental headlines */
 .font-display {
-  font-family: "Archivo", "Space Grotesk", sans-serif;
+  font-family: "Archivo", system-ui, sans-serif;
 }
 
 /* Monospace data/eyebrow label */
@@ -97,7 +97,6 @@ html {
   @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 bg-signalRed text-white;
   border-radius: 2px;
   transition: background-color 160ms cubic-bezier(0.23, 1, 0.32, 1),
-    box-shadow 160ms cubic-bezier(0.23, 1, 0.32, 1),
     transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .btn-ember:active {
@@ -114,8 +113,8 @@ html {
     transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .btn-ghost:hover {
-  border-color: #0a1428;
-  background-color: #0a1428;
+  border-color: rgba(250, 251, 255, 0.9);
+  background-color: rgba(250, 251, 255, 0.08);
   color: #fafbff;
 }
 .btn-ghost:active {
@@ -142,18 +141,8 @@ html {
 @media (hover: hover) and (pointer: fine) {
   .btn-ember:hover {
     background-color: #e8354f;
-    box-shadow: 0 16px 40px -16px rgba(200, 16, 46, 0.7);
     transform: translateY(-1px);
   }
-}
-
-/* Corner-bracket frame */
-.bracket {
-  position: absolute;
-  width: 1.25rem;
-  height: 1.25rem;
-  z-index: 10;
-  pointer-events: none;
 }
 
 /* Fine animated underline for links */
@@ -185,7 +174,7 @@ html {
 
 /* Preventing FOUC */
 @font-face {
-  font-display: var(--fontsource-Space-Grotesk-font-display, optional);
+  font-display: var(--fontsource-Archivo-font-display, optional);
 }
 
 /* Respect reduced motion */

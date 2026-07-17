@@ -11,7 +11,7 @@ const AccordionItem = React.forwardRef(({ className, ...props }, ref) => (
 ));
 AccordionItem.displayName = "AccordionItem";
 
-const AccordionTrigger = React.forwardRef(({ className, children, index, code, ...props }, ref) => (
+const AccordionTrigger = React.forwardRef(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       ref={ref}
@@ -23,14 +23,8 @@ const AccordionTrigger = React.forwardRef(({ className, children, index, code, .
       )}
       {...props}
     >
-      {typeof index === "number" && (
-        <span className="font-mono text-[11px] text-signalRed pt-1 shrink-0">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-      )}
-      <h3 className="flex-1 text-base md:text-lg text-labFg font-medium pr-2">{children}</h3>
-      <div className="flex items-center gap-4 shrink-0">
-        {code && <span className="font-mono text-[11px] text-labFgMuted hidden md:block">{code}</span>}
+      <span className="flex-1 text-base md:text-lg text-labFg font-medium pr-2">{children}</span>
+      <div className="flex items-center shrink-0">
         <span className="w-7 h-7 border border-line flex items-center justify-center transition-colors duration-150 ease-out-strong group-hover:border-labFg group-data-[state=open]:border-labFg">
           <svg
             width="12"

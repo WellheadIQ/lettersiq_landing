@@ -11,7 +11,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-signalRed text-white hover:bg-signalBright shadow-redGlow",
+        default: "bg-signalRed text-white hover:bg-signalBright",
         outline:
           "border border-lineStrong bg-transparent text-labFg hover:border-labFg hover:bg-parchmentAlt",
         ghost: "bg-transparent text-labFg hover:bg-parchmentAlt",
@@ -20,7 +20,7 @@ const buttonVariants = cva(
       },
       size: {
         default: "px-7 py-4 text-sm",
-        sm: "px-4 py-2.5 text-[11px]",
+        sm: "px-4 py-2.5 text-xs",
         lg: "px-9 py-5 text-base",
         icon: "h-11 w-11",
       },

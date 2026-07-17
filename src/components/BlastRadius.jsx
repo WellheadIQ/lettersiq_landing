@@ -100,29 +100,13 @@ export const BlastRadius = () => {
       id="blast-radius"
       className="w-full bg-midnight py-16 md:py-28 relative overflow-hidden"
     >
-      <div
-        className="pointer-events-none absolute top-0 right-0 w-[40rem] h-[40rem] rounded-full opacity-25 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(200,16,46,0.4), transparent 60%)" }}
-      />
-      <div className="absolute inset-0 opacity-[0.4]">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(250,251,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(250,251,255,0.05) 1px, transparent 1px)",
-            backgroundSize: "56px 56px",
-          }}
-        />
-      </div>
-
       <div className="section-shell relative z-10">
-        <SectionLabel number="06" label="Blast Radius" tone="dark" className="mb-12" />
+        <SectionLabel label="Blast Radius" className="mb-6" />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Copy */}
           <div>
-            <div className="mono-label text-signalBright mb-4">/// NO ONE ELSE DOES THIS</div>
-            <h2 className="font-display font-extrabold text-white text-display-sm leading-[1.0]">
+            <h2 className="font-display font-extrabold text-white text-display-sm leading-[1.0] tracking-[-0.02em]">
               You can be shut in by someone else's violation.
             </h2>
             <p className="mt-6 text-white/60 text-base md:text-lg leading-relaxed max-w-xl">
@@ -136,52 +120,45 @@ export const BlastRadius = () => {
               then watches your neighbors' leases the same way it watches yours.
             </p>
 
-            {/* Terminal readout */}
-            <div className="mt-8 border border-signalRed/50 bg-black/40 shadow-redGlow">
-              <div className="px-5 py-3 border-b border-signalRed/30 flex items-center justify-between font-mono text-[11px] sm:text-xs">
-                <span className="text-white/80">
-                  ALERT_ID: <span className="text-signalBright">BLAST_RADIUS_SEVERANCE</span>
-                </span>
-                <span className="text-white/60 flex items-center gap-1.5">
-                  SEVERITY:{" "}
-                  <span className="text-signalBright flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-signalBright" /> CRITICAL
-                  </span>
+            {/* Example alert — faithful product copy without decorative terminal syntax */}
+            <div className="mt-8 border border-signalRed/45 bg-signalSoft">
+              <div className="flex items-center justify-between border-b border-signalRed/25 px-5 py-3">
+                <span className="text-sm font-semibold text-white">Example alert</span>
+                <span className="font-mono text-xs font-semibold text-signalBright">
+                  Critical
                 </span>
               </div>
-              <div className="px-5 py-4 font-mono text-[11px] sm:text-[12px] leading-relaxed space-y-3">
-                <p className="text-white/75">
+              <div className="space-y-3 px-5 py-4 text-sm leading-relaxed">
+                <p className="text-white/80">
                   Third-party lease 08-12345 MCFADDIN TRUST (operator: SOMEONE ELSE LLC)
                   on your shared surface commingle CLAM LAKE (18458001) is under an
                   outstanding severance.
                 </p>
-                <p className="text-signalBright">
+                <p className="font-semibold text-signalBright">
                   Commingled leases cannot produce or move stock until it clears.
                 </p>
-                <p className="text-[#F0B429]">YOUR AFFECTED LEASES: 08-08559, 08-09012</p>
+                <p className="text-white/80">
+                  <span className="font-semibold text-[#F0B429]">Your affected leases:</span>{" "}
+                  08-08559, 08-09012
+                </p>
               </div>
             </div>
           </div>
 
           {/* Graph */}
           <div className="blast-graph relative">
-            <span className="bracket -top-2 -left-2 border-l-2 border-t-2 border-white/30" />
-            <span className="bracket -top-2 -right-2 border-r-2 border-t-2 border-white/30" />
-            <span className="bracket -bottom-2 -left-2 border-l-2 border-b-2 border-white/30" />
-            <span className="bracket -bottom-2 -right-2 border-r-2 border-b-2 border-white/30" />
             <div className="border border-white/15 bg-white/[0.02] p-4">
               <CommingleGraph />
             </div>
-            <div className="mt-4 flex items-center justify-between font-mono text-[11px] tracking-wider text-white/45">
-              <span>FIG.08 — COMMINGLE GRAPH</span>
-              <span className="text-signalBright">/// P-17</span>
+            <div className="mt-4 flex items-center justify-between text-sm text-white/65">
+              <span>Commingle graph</span>
+              <span className="text-white/70">Source: RRC Form P-17</span>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/10 font-mono text-[11px] tracking-wider text-white/45">
-          /// CHECKING THIS BY HAND MEANS CROSS-REFERENCING TWO DISCONNECTED RRC
-          SYSTEMS, EVERY DAY.
+        <div className="mt-12 border-t border-white/10 pt-6 text-sm text-white/65">
+          By hand, this means cross-referencing two disconnected RRC systems — every day.
         </div>
       </div>
     </section>

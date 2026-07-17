@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import LettersIQLogo from "/lettersiqlogo.png";
-import { StarMark } from "./Primitives.jsx";
 import { Button } from "./ui/button.jsx";
 
 const navbarLinks = [
-  { label: "Coverage", href: "#coverage" },
-  { label: "Features", href: "#features" },
   { label: "Blast Radius", href: "#blast-radius" },
+  { label: "How it works", href: "#how-it-works" },
+  { label: "Coverage", href: "#coverage" },
   { label: "Pricing", href: "#pricing" },
-  { label: "FAQ", href: "#FAQ" },
 ];
 
 export const Navbar = () => {
@@ -43,12 +41,9 @@ export const Navbar = () => {
     <nav className="w-full fixed top-0 left-0 right-0 z-50">
       {/* Announcement bar — rationed red */}
       <div className="w-full bg-signalRed text-white">
-        <div className="section-shell h-9 flex items-center justify-center gap-3 font-mono text-[10px] sm:text-[11px] tracking-[0.18em] uppercase">
-          <StarMark size={10} className="text-white/90 shrink-0" />
-          <span className="truncate">
-            /// Now monitoring 8 RRC datasets — predictive alerts live
-          </span>
-          <span className="hidden sm:inline text-white/70">v 2.0</span>
+        <div className="section-shell flex h-9 items-center justify-center gap-2.5 font-mono text-xs">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-white" aria-hidden="true" />
+          <span className="truncate">Daily scans across 8 RRC datasets — latest 07:00 CT</span>
         </div>
       </div>
 
@@ -70,8 +65,8 @@ export const Navbar = () => {
             transition={{ duration: 0.5 }}
           >
             <img src={LettersIQLogo} alt="LettersIQ" className="h-9 md:h-10 w-auto" />
-            <span className="hidden lg:inline-block mono-label text-white/45">
-              /// RRC&nbsp;MONITORING
+            <span className="hidden border-l border-white/15 pl-3 font-mono text-xs text-white/65 lg:inline-block">
+              RRC&nbsp;Monitoring
             </span>
           </motion.a>
 
@@ -86,7 +81,7 @@ export const Navbar = () => {
               <a
                 key={label}
                 href={href}
-                className="font-mono text-[13px] text-white/70 hover:text-white px-4 py-2 transition-colors duration-200 link-underline"
+                className="link-underline flex min-h-11 items-center px-4 font-mono text-[13px] text-white/70 transition-colors duration-200 hover:text-white"
               >
                 {label}
               </a>
@@ -104,7 +99,7 @@ export const Navbar = () => {
             type="button"
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
-            className="lg:hidden cursor-pointer p-2.5 border border-white/20 hover:border-white/50 transition-colors text-white"
+            className="flex h-11 w-11 items-center justify-center border border-white/20 text-white transition-colors hover:border-white/50 lg:hidden"
             onClick={toggleMenu}
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -121,7 +116,7 @@ export const Navbar = () => {
         {/* Scroll progress */}
         <motion.div
           style={{ scaleX: progress }}
-          className="h-px origin-left bg-gradient-to-r from-signalRed via-cobalt to-signalRed"
+          className="h-px origin-left bg-signalRed"
         />
       </motion.div>
 
@@ -144,21 +139,19 @@ export const Navbar = () => {
               className="lg:hidden fixed top-[100px] left-0 right-0 bg-midnight border-b border-white/10 z-50 overflow-hidden"
             >
               <div className="section-shell py-4">
-                {[...navbarLinks, { label: "Contact Us", href: "#contact-us" }].map(
+                {navbarLinks.map(
                   ({ label, href }, index) => (
                     <motion.a
                       key={href}
                       href={href}
                       onClick={toggleMenu}
-                      className="flex items-center gap-3 px-1 py-3.5 font-mono text-base text-white/80 hover:text-white transition-colors border-l-2 border-transparent hover:border-signalRed hover:pl-3"
+                      className="flex items-center justify-between px-1 py-3.5 font-mono text-base text-white/80 hover:text-white transition-colors border-b border-white/5"
                       initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
                     >
-                      <span className="text-signalRed/80 text-xs">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
                       {label}
+                      <span aria-hidden className="text-white/25">&rarr;</span>
                     </motion.a>
                   )
                 )}
