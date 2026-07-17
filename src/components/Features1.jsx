@@ -2,154 +2,211 @@ import React from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
 import { SectionLabel } from "./Primitives.jsx";
 
-const features = [
+const outcomes = [
   {
-    text: "One ranked briefing",
-    desc: "Daily at 7:00 AM CT, with lease, violation, remarks, and a weekly activity summary.",
+    title: "Warns early",
+    body: "Certified letters, P-5 countdowns, and delinquent proration codes surface weeks before a severance order.",
   },
   {
-    text: "Early warning",
-    desc: "Certified letters, P-5 countdowns, and delinquent proration codes surface problems weeks before a severance order.",
+    title: "Explains the hit",
+    body: "Every alert names the cause — P-5 lapse, delinquent W-10, Rule 15 — and the purchasers or gatherers tied to it.",
   },
   {
-    text: "Root cause to next action",
-    desc: "Every alert explains why a lease was hit, who to call, and which filing stands between the well and first revenue.",
+    title: "Names the next filing",
+    body: "When a well is producing with no allowable, you get the exact missing dependency standing between you and first revenue.",
   },
 ];
 
 const checklist = [
-  { label: "W-2/G-1 completion report", status: "ACCEPTED", tone: "ok" },
-  { label: "W-12 directional survey", status: "MISSING (required for horizontal wellbore)", tone: "bad" },
-  { label: "L-1 electric log", status: "ON FILE", tone: "ok" },
-  { label: "W-15 cementing report", status: "PENDING", tone: "warn" },
-  { label: "P-15 / plat", status: "ON FILE", tone: "ok" },
+  {
+    label: "W-2/G-1 completion report",
+    status: "Accepted",
+    tone: "ok",
+  },
+  {
+    label: "W-12 directional survey",
+    status: "Missing — required for horizontal wellbore",
+    tone: "bad",
+  },
+  {
+    label: "L-1 electric log",
+    status: "On file",
+    tone: "ok",
+  },
+  {
+    label: "W-15 cementing report",
+    status: "Pending",
+    tone: "warn",
+  },
+  {
+    label: "P-15 / plat",
+    status: "On file",
+    tone: "ok",
+  },
 ];
 
-const StatusIcon = ({ tone }) => {
-  if (tone === "ok")
+const statusStyle = {
+  ok: "text-cobalt",
+  bad: "text-signalRed",
+  warn: "text-panelInkMuted",
+};
+
+const StatusMark = ({ tone }) => {
+  if (tone === "ok") {
     return (
-      <span className="w-7 h-7 rounded-full border-2 border-cobalt text-cobalt flex items-center justify-center shrink-0">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <span
+        className="flex h-6 w-6 shrink-0 items-center justify-center border border-cobalt text-cobalt"
+        aria-hidden="true"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M5 13l4 4L19 7"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </span>
     );
-  if (tone === "bad")
+  }
+  if (tone === "bad") {
     return (
-      <span className="w-7 h-7 rounded-full border-2 border-signalRed text-signalRed flex items-center justify-center shrink-0">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" /></svg>
+      <span
+        className="flex h-6 w-6 shrink-0 items-center justify-center border border-signalRed text-signalRed"
+        aria-hidden="true"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M6 6l12 12M18 6L6 18"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+        </svg>
       </span>
     );
+  }
   return (
-    <span className="w-7 h-7 rounded-full border-2 border-labFgMuted text-labFgMuted flex items-center justify-center shrink-0">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 12h12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" /></svg>
+    <span
+      className="flex h-6 w-6 shrink-0 items-center justify-center border border-panelInkMuted text-panelInkMuted"
+      aria-hidden="true"
+    >
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+        <path d="M6 12h12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+      </svg>
     </span>
   );
 };
 
+/** Product artifact: the revenue-blocker checklist from a real briefing. */
 const AllowableChecklist = () => (
-  <div className="w-full border border-lineStrong bg-card">
-    <div className="px-5 py-4 border-b border-line">
-      <div className="font-mono text-[13px] font-semibold text-signalRed tracking-wide">
-        ALLOWABLE BLOCKER — WHY NO ALLOWABLE?
+  <figure className="w-full">
+    <div className="overflow-hidden rounded-[3px] border border-white/20 bg-panelLight text-panelInk">
+      <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
+        <div className="flex items-center gap-2 text-sm font-semibold tracking-tight">
+          <span className="h-2 w-2 bg-signalRed" aria-hidden="true" />
+          Allowable blocker
+        </div>
+        <span className="font-mono text-xs font-semibold text-signalRed">Blocking</span>
       </div>
-    </div>
-    <div className="px-5 py-4 border-b border-line">
-      <div className="mb-1 font-mono text-xs text-labFgMuted">Lease</div>
-      <div className="font-mono text-sm text-labFg mb-3">03-00701 MCFADDIN STATE — Well 14D</div>
-      <span className="inline-block border border-signalRed/50 bg-signalSoft px-3 py-1.5 font-mono text-xs text-signalRed">
-        NO ALLOWABLE (DLQ W-10)
-      </span>
-    </div>
-    <div className="px-5 py-3">
-      <div className="mb-2 font-mono text-xs text-labFgMuted">Filing dependencies</div>
-      <div className="divide-y divide-line">
-        {checklist.map((row) => (
-          <div key={row.label} className="flex items-center gap-3 py-3">
-            <StatusIcon tone={row.tone} />
-            <div className="min-w-0">
-              <div className="text-labFg text-sm">{row.label}</div>
-              <div
-                className={`font-mono text-xs ${
-                  row.tone === "ok"
-                    ? "text-cobalt"
-                    : row.tone === "bad"
-                    ? "text-signalRed"
-                    : "text-labFgMuted"
-                }`}
-              >
-                {row.status}
+
+      <div className="border-b border-black/10 px-5 py-4">
+        <div className="text-xs text-panelInkMuted">Lease</div>
+        <div className="mt-1 font-mono text-sm font-medium tabular-nums">
+          03-00701 MCFADDIN STATE — Well 14D
+        </div>
+        <p className="mt-3 inline-block border border-signalRed/40 bg-signalSoft px-3 py-1.5 text-xs font-semibold text-signalRed">
+          No allowable (DLQ W-10)
+        </p>
+      </div>
+
+      <div className="px-5 py-2">
+        <div className="pt-2 text-xs text-panelInkMuted">Filing dependencies</div>
+        <ul className="divide-y divide-black/[0.07]">
+          {checklist.map((row) => (
+            <li key={row.label} className="flex items-start gap-3 py-3.5">
+              <StatusMark tone={row.tone} />
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-medium text-panelInk">{row.label}</div>
+                <div className={`mt-0.5 font-mono text-xs ${statusStyle[row.tone]}`}>
+                  {row.status}
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="border-t border-black/10 px-5 py-3.5 text-sm font-medium text-signalRed">
+        1 filing blocking first revenue — chase the W-12.
       </div>
     </div>
-    <div className="flex items-center gap-2 border-t border-line px-5 py-4 text-sm text-signalRed">
-      <span>(!)</span>
-      <span>1 filing blocking first revenue.</span>
-    </div>
-  </div>
+    <figcaption className="mt-4 text-sm text-labFgMuted">
+      Example from a producing well with no allowable
+    </figcaption>
+  </figure>
 );
 
 export const Features1 = () => {
   const root = useAnimeScope(({ reduceMotion, anime }) => {
     const { utils, animate, stagger, onScroll } = anime;
+    const beats = utils.$(".outcome-beat");
+    if (!beats.length || reduceMotion) return;
 
-    const cards = utils.$(".feature-card");
-    if (cards.length) {
-      if (!reduceMotion) {
-        // Never hide product copy behind JavaScript. The scroll animation adds
-        // spatial polish, while the visible default remains resilient.
-        utils.set(cards, { translateY: 14 });
-        animate(cards, {
-          translateY: [14, 0],
-          duration: 500,
-          ease: "out(3)",
-          delay: stagger(50),
-          autoplay: onScroll({ target: ".features-grid", enter: "top 85%" }),
-        });
-      }
-    }
-
+    utils.set(beats, { translateY: 12 });
+    animate(beats, {
+      translateY: [12, 0],
+      duration: 420,
+      ease: "out(3)",
+      delay: stagger(70),
+      autoplay: onScroll({ target: ".outcomes-list", enter: "top 85%" }),
+    });
   }, []);
 
   return (
-    <section ref={root} className="w-full bg-parchment py-16 md:py-24 relative" id="features">
-      <div className="absolute top-0 left-0 right-0 h-px bg-line" />
+    <section
+      ref={root}
+      id="features"
+      className="relative w-full bg-parchment py-16 md:py-24"
+    >
+      <div className="absolute left-0 right-0 top-0 h-px bg-line" />
 
       <div className="section-shell">
         <SectionLabel label="What you get" className="mb-5" />
 
-        <div className="max-w-3xl mb-12">
-          <h2 className="font-display font-extrabold text-labFg text-display-sm tracking-[-0.02em]">
-            More than a mailbox.
-          </h2>
-          <p className="mt-5 text-labFgMuted text-base md:text-lg leading-relaxed">
-            We watch the Commission so you don't have to — then explain every alert,
-            trace its root cause, and hand you the exact filings that stand between a
-            well and first revenue.
-          </p>
-        </div>
+        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+          {/* Narrative — one job: explain why this is more than mail */}
+          <div>
+            <h2 className="max-w-xl font-display text-display-sm font-extrabold tracking-[-0.02em] text-labFg">
+              More than a mailbox.
+            </h2>
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-labFgMuted md:text-lg">
+              We watch the Commission so you don't have to — then explain every
+              alert, trace its root cause, and hand you the exact filing that
+              stands between a well and first revenue.
+            </p>
 
-        {/* Outcome-led feature list */}
-        <div className="features-grid grid grid-cols-1 gap-x-12 md:grid-cols-2">
-          {features.map((f) => (
-            <div
-              key={f.text}
-              className="feature-card border-t border-line py-6"
-            >
-              <h3 className="font-semibold text-labFg">{f.text}</h3>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-labFgMuted">{f.desc}</p>
-            </div>
-          ))}
-        </div>
+            <ul className="outcomes-list mt-10 space-y-0 border-t border-line">
+              {outcomes.map((item) => (
+                <li
+                  key={item.title}
+                  className="outcome-beat border-b border-line py-5"
+                >
+                  <h3 className="font-display text-lg font-bold tracking-[-0.01em] text-labFg">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 max-w-md text-[15px] leading-relaxed text-labFgMuted">
+                    {item.body}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* One concrete product artifact; the preceding primer already explains the pipeline. */}
-        <div className="mt-14 max-w-3xl">
-          <div className="relative">
+          {/* Artifact — the proof */}
+          <div className="lg:pt-2">
             <AllowableChecklist />
-            <div className="mt-4 text-sm text-labFgMuted">
-              Why a producing well earns nothing
-            </div>
           </div>
         </div>
       </div>
