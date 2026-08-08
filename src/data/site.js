@@ -1,6 +1,9 @@
 export const site = {
   name: "LettersIQ",
-  url: "https://lettersiq.com",
+  // Must match the domain Vercel actually serves: the apex 308-redirects to www,
+  // so canonicals/sitemap/og:url all have to be www or they point at a redirect.
+  // Flip this (and the Vercel primary domain) together if apex ever becomes canonical.
+  url: "https://www.lettersiq.com",
   parent: {
     name: "WellheadIQ",
     url: "https://www.wellheadiq.com/",
