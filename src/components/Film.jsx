@@ -77,16 +77,19 @@ export const Film = () => {
       <div className="absolute left-0 right-0 top-0 h-px bg-white/10" />
 
       <div className="section-shell relative z-10">
-        <SectionLabel label="One morning in 55 seconds" className="mb-5" />
+        <SectionLabel
+          label="Regulatory operations intelligence · 55 seconds"
+          className="mb-5"
+        />
 
         <div className="grid grid-cols-1 items-end gap-6 lg:grid-cols-[1fr_auto] lg:gap-16">
           <h2 className="max-w-2xl text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-white">
-            What did the RRC change overnight?
+            See how one overnight change becomes an operating decision.
           </h2>
           <p className="max-w-md text-pretty text-base leading-relaxed text-white/65">
-            By the time your team starts the day, LettersIQ has checked eight
-            disconnected systems, connected the affected records, and ranked the
-            exceptions that deserve attention.
+            LettersIQ checks eight RRC systems, connects changes to the leases,
+            wells, permits, and commingles they affect, then ranks what can interrupt
+            production or delay first sales.
           </p>
         </div>
 
@@ -107,9 +110,9 @@ export const Film = () => {
             >
               <source src="/film/lettersiq-film.webm" type="video/webm" />
               <source src="/film/lettersiq-film.mp4" type="video/mp4" />
-              Your browser cannot play this video. It shows eight Texas Railroad
-              Commission datasets being scanned and joined into a single 7:00 AM
-              briefing email.
+              Your browser cannot play this video. It shows LettersIQ connecting
+              Texas Railroad Commission changes to affected operations and ranking
+              the actions in a 7:00 AM briefing.
             </video>
           </div>
 
