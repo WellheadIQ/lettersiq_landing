@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
+import { usePointerTilt } from "../hooks/usePointerTilt.js";
+import { settle } from "../lib/motion.js";
+import { animeSmoothOut, distance, duration } from "../lib/motionTokens.js";
 import { SectionLabel } from "./Primitives.jsx";
+import { Modal } from "./ui/modal.jsx";
+import dashboardInterface from "../assets/images/liq-dashboard-interface.jpg";
 
 const steps = [
   {
@@ -178,18 +183,20 @@ const SignalLoopDiagram = () => (
 );
 
 export const HowItWorks = () => {
-  const root = useAnimeScope(({ reduceMotion, anime }) => {
-    const { utils, animate, stagger, onScroll, svg, createTimeline } = anime;
+  const loopPanel = usePointerTilt({ max: 3.5, lift: 8 });
+  const [dashboardOpen, setDashboardOpen] = useState(false);
 
-    const stepsEls = utils.$(".how-step");
-    if (stepsEls.length && !reduceMotion) {
-      utils.set(stepsEls, { translateY: 12 });
-      animate(stepsEls, {
-        translateY: [12, 0],
-        duration: 420,
-        delay: stagger(100),
-        ease: "out(3)",
-        autoplay: onScroll({ target: ".how-steps", enter: "top 85%" }),
+  const root = useAnimeScope(({ reduceMotion, anime }) => {
+    const { utils, stagger, svg, createTimeline } = anime;
+
+    if (!reduceMotion) {
+      settle(anime, utils.$(".how-step"), {
+        trigger: ".how-steps",
+        stagger: duration.micro,
+      });
+      settle(anime, utils.$(".how-figure"), {
+        trigger: ".how-figure",
+        enter: "90% top",
       });
     }
 
@@ -216,18 +223,22 @@ export const HowItWorks = () => {
         if (rails.length) utils.set(rails, { opacity: 0.2 });
         if (briefRows.length) utils.set(briefRows, { translateX: 6, opacity: 0.25 });
 
-        const tl = createTimeline({ defaults: { ease: "out(3)" } });
+        const tl = createTimeline({ defaults: { ease: animeSmoothOut(anime) } });
+        // 700ms stroke draw is a one-shot explanatory beat with no counterpart
+        // on the motion-token scale; only the stagger is tokenised.
         tl.add(paths, {
           draw: "0 1",
           duration: 700,
-          delay: stagger(120),
+          delay: stagger(duration.micro),
         });
         if (rails.length) {
+          // 8 rails at the 40ms token would total 320ms, past the point where
+          // the last one reads as late — 35ms keeps the group under 280ms.
           tl.add(
             rails,
             {
               opacity: [0.2, 1],
-              duration: 320,
+              duration: duration.fast,
               delay: stagger(35),
             },
             "-=500"
@@ -237,10 +248,10 @@ export const HowItWorks = () => {
           tl.add(
             briefRows,
             {
-              translateX: [6, 0],
+              translateX: [distance.small, 0],
               opacity: [0.25, 1],
-              duration: 360,
-              delay: stagger(55),
+              duration: duration.fast,
+              delay: stagger(duration.stagger),
             },
             "-=200"
           );
@@ -291,8 +302,11 @@ export const HowItWorks = () => {
             </ol>
           </div>
 
-          <figure className="w-full lg:pt-2">
-            <div className="overflow-hidden rounded-[3px] border border-white/15 bg-white/[0.03] px-4 py-6 sm:px-6">
+          <figure className="how-figure w-full lg:pt-2">
+            <div
+              ref={loopPanel}
+              className="tilt-surface overflow-hidden rounded-[3px] border border-white/15 bg-white/[0.03] px-4 py-6 shadow-float sm:px-6"
+            >
               <div className="mb-4 flex items-center justify-between px-1">
                 <div className="flex items-center gap-2 text-sm font-semibold text-white">
                   <span className="h-2 w-2 bg-signalRed" aria-hidden="true" />
@@ -302,12 +316,36 @@ export const HowItWorks = () => {
               </div>
               <SignalLoopDiagram />
             </div>
-            <figcaption className="mt-4 text-sm text-labFgMuted">
-              Public filings in → one ranked briefing out
+            <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-labFgMuted">
+              <span>Public filings in → one ranked briefing out</span>
+              <button
+                type="button"
+                onClick={() => setDashboardOpen(true)}
+                className="link-underline font-mono text-xs text-labFg transition-colors hover:text-signalRed"
+              >
+                See the dashboard &rarr;
+              </button>
             </figcaption>
           </figure>
         </div>
       </div>
+
+      <Modal
+        open={dashboardOpen}
+        onClose={() => setDashboardOpen(false)}
+        title="The LettersIQ dashboard"
+        caption="Every alert behind the briefing, filterable by type and severity"
+        width="wide"
+      >
+        <img
+          src={dashboardInterface}
+          alt="The LettersIQ monitoring dashboard: 8 datasets, 25+ alert types and 3 open alerts across a lease monitoring table, with a filter panel for severance, certified letter, P-5 renewal, Rule 15, proration, commingle, drilling permit and P-4 alerts."
+          width="1400"
+          height="933"
+          decoding="async"
+          className="mx-auto h-auto w-full rounded-[2px] border border-white/10"
+        />
+      </Modal>
     </section>
   );
 };

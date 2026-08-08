@@ -2,6 +2,34 @@ import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SectionLabel } from './Primitives.jsx';
 import { Button } from './ui/button.jsx';
+import { IconSwap } from './ui/icon-swap.jsx';
+import { blur, distance, duration, easeSmoothOut } from '../lib/motionTokens.js';
+
+// Panel reveal: opening is the invitation and carries the blur, closing gets
+// out of the way faster and drops it.
+const panelEnter = {
+  y: 0,
+  filter: 'blur(0px)',
+  transition: { duration: duration.slow / 1000, ease: easeSmoothOut },
+};
+const panelExit = (y) => ({
+  y,
+  transition: { duration: duration.medium / 1000, ease: easeSmoothOut },
+});
+
+const ArrowIcon = () => <span className="block leading-none">&rarr;</span>;
+
+const SpinnerIcon = () => (
+  <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.3" strokeWidth="2.5" />
+    <path
+      d="M21 12a9 9 0 0 0-9-9"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 
 const FIELDS = [
   { name: 'name', label: 'Full name', type: 'text', autoComplete: 'name', placeholder: 'Jane Roughneck' },
@@ -130,10 +158,9 @@ export const ContactUs = () => {
               key="form"
               onSubmit={handleSubmit}
               noValidate
-              initial={{ y: 12 }}
-              animate={{ y: 0 }}
-              exit={{ y: -8 }}
-              transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+              initial={{ y: distance.medium, filter: `blur(${blur.small}px)` }}
+              animate={panelEnter}
+              exit={panelExit(-distance.base)}
               className="mt-8 border border-line bg-card"
             >
               <div className="grid gap-5 p-6 sm:grid-cols-2">
@@ -169,7 +196,11 @@ export const ContactUs = () => {
               <div className="p-6 pt-2">
                 <Button type="submit" disabled={formState === 'submitting'} className="w-full">
                   {formState === 'submitting' ? 'Sending…' : 'Request access'}
-                  {formState !== 'submitting' && <span aria-hidden>&rarr;</span>}
+                  <IconSwap
+                    state={formState === 'submitting' ? 'b' : 'a'}
+                    a={<ArrowIcon />}
+                    b={<SpinnerIcon />}
+                  />
                 </Button>
                 <p className="mt-3 text-center text-sm text-white/65">
                   No credit card · one business day response
@@ -185,10 +216,9 @@ export const ContactUs = () => {
 
 const SuccessMessage = ({ onReset }) => (
   <motion.div
-    initial={{ y: 16 }}
-    animate={{ y: 0 }}
-    exit={{ y: -12 }}
-    transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+    initial={{ y: distance.medium, filter: `blur(${blur.small}px)` }}
+    animate={panelEnter}
+    exit={panelExit(-distance.medium)}
     role="status"
     className="mt-8 border border-cobalt/30 bg-card px-6 py-12 text-center"
   >

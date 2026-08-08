@@ -1,5 +1,8 @@
 import React from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
+import { usePointerTilt } from "../hooks/usePointerTilt.js";
+import { settle } from "../lib/motion.js";
+import { animeSmoothOut, distance, duration } from "../lib/motionTokens.js";
 import { SectionLabel } from "./Primitives.jsx";
 
 const CENTER = { x: 180, y: 168, label: "Clam Lake", sub: "18458001" };
@@ -170,32 +173,28 @@ const CommingleGraph = () => (
 );
 
 export const BlastRadius = () => {
+  const graphPanel = usePointerTilt({ max: 3.5, lift: 8 });
+
   const root = useAnimeScope(({ reduceMotion, anime }) => {
     const { utils, animate, stagger, onScroll, svg } = anime;
 
-    // Staggered scroll reveal on narrative beats — translate only so content
-    // never blanks if the observer misses.
-    const beats = utils.$(".blast-beat");
-    if (beats.length && !reduceMotion) {
-      utils.set(beats, { translateY: 12 });
-      animate(beats, {
-        translateY: [12, 0],
-        duration: 420,
-        delay: stagger(90),
-        ease: "out(3)",
-        autoplay: onScroll({ target: ".blast-beats", enter: "top 85%" }),
+    if (!reduceMotion) {
+      settle(anime, utils.$(".blast-beat"), {
+        trigger: ".blast-beats",
+        stagger: duration.micro,
       });
+      settle(anime, utils.$(".blast-graph"), { trigger: ".blast-graph", enter: "90% top" });
     }
 
     const nodesEls = utils.$(".graph-node");
     if (nodesEls.length && !reduceMotion) {
-      utils.set(nodesEls, { translateY: 10 });
+      utils.set(nodesEls, { translateY: distance.medium });
       animate(nodesEls, {
-        translateY: [10, 0],
-        duration: 420,
-        delay: stagger(55),
-        ease: "out(3)",
-        autoplay: onScroll({ target: ".blast-graph", enter: "top 82%" }),
+        translateY: [distance.medium, 0],
+        duration: duration.verySlow,
+        delay: stagger(duration.stagger),
+        ease: animeSmoothOut(anime),
+        autoplay: onScroll({ target: ".blast-graph", enter: "82% top" }),
       });
     }
 
@@ -215,11 +214,13 @@ export const BlastRadius = () => {
         drawn = true;
         observer.disconnect();
         utils.set(edges, { draw: "0 0" });
+        // 700ms stroke draw is a one-shot explanatory beat with no counterpart
+        // on the motion-token scale; only the stagger is tokenised.
         animate(edges, {
           draw: "0 1",
           duration: 700,
-          delay: stagger(80),
-          ease: "out(3)",
+          delay: stagger(duration.stagger),
+          ease: animeSmoothOut(anime),
         });
       },
       { threshold: 0.35, rootMargin: "0px 0px -8% 0px" }
@@ -274,7 +275,10 @@ export const BlastRadius = () => {
           </div>
 
           <figure className="blast-graph w-full lg:pt-2">
-            <div className="overflow-hidden rounded-[3px] border border-white/15 bg-white/[0.03]">
+            <div
+              ref={graphPanel}
+              className="tilt-surface overflow-hidden rounded-[3px] border border-white/15 bg-white/[0.03] shadow-float"
+            >
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-3.5">
                 <div className="flex items-center gap-2 text-sm font-semibold text-white">
                   <span className="h-2 w-2 bg-signalRed" aria-hidden="true" />

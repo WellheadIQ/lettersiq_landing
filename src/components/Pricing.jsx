@@ -1,4 +1,6 @@
 import React from "react";
+import { useAnimeScope } from "../hooks/useAnimeScope.js";
+import { settle } from "../lib/motion.js";
 import { SectionLabel, StarMark } from "./Primitives.jsx";
 import { Button } from "./ui/button.jsx";
 
@@ -14,8 +16,20 @@ const pricingFeatures = [
 ];
 
 export const Pricing = () => {
+  const root = useAnimeScope(({ reduceMotion, anime }) => {
+    if (reduceMotion) return;
+    settle(anime, anime.utils.$(".pricing-card"), {
+      trigger: ".pricing-card",
+      enter: "92% top",
+    });
+  }, []);
+
   return (
-    <section id="pricing" className="w-full bg-parchmentAlt py-16 md:py-24 relative overflow-hidden">
+    <section
+      ref={root}
+      id="pricing"
+      className="w-full bg-parchmentAlt py-16 md:py-24 relative overflow-hidden"
+    >
       <div className="absolute top-0 left-0 right-0 h-px bg-line" />
 
       <div className="section-shell">
@@ -32,7 +46,7 @@ export const Pricing = () => {
           </p>
         </div>
 
-        <div className="relative border-2 border-oxford bg-card">
+        <div className="pricing-card relative border-2 border-oxford bg-card shadow-float">
           <div className="h-1.5 bg-signalRed" />
           <div className="flex items-center justify-between border-b border-line bg-parchmentAlt px-5 py-3.5 font-mono text-xs sm:px-6">
             <span className="text-labFg">Complete coverage</span>

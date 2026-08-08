@@ -1,8 +1,8 @@
-import { motion, useReducedMotion } from "framer-motion";
 import React from "react";
+import { useAnimeScope } from "../hooks/useAnimeScope.js";
+import { settle } from "../lib/motion.js";
+import { duration } from "../lib/motionTokens.js";
 import { SectionLabel } from "./Primitives.jsx";
-
-const easeOutExpo = [0.16, 1, 0.3, 1];
 
 const testimonialsData = [
   {
@@ -26,10 +26,16 @@ const testimonialsData = [
 ];
 
 export const Testimonials = () => {
-  const reduceMotion = useReducedMotion();
+  const root = useAnimeScope(({ reduceMotion, anime }) => {
+    if (reduceMotion) return;
+    settle(anime, anime.utils.$(".quote-card"), {
+      trigger: ".quote-grid",
+      stagger: duration.micro,
+    });
+  }, []);
 
   return (
-    <section className="w-full bg-parchment py-16 md:py-24 relative">
+    <section ref={root} className="w-full bg-parchment py-16 md:py-24 relative">
       <div className="absolute -top-16" id="feedback" />
       <div className="absolute top-0 left-0 right-0 h-px bg-line" />
 
@@ -43,19 +49,11 @@ export const Testimonials = () => {
         </h2>
 
         {/* Borderless, hairline-divided quotes — deliberately not a bordered card grid */}
-        <div className="grid grid-cols-1 gap-px bg-line border-y border-line md:grid-cols-3">
+        <div className="quote-grid grid grid-cols-1 gap-px bg-line border-y border-line md:grid-cols-3">
           {testimonialsData.map((t, index) => (
-            <motion.figure
+            <figure
               key={`${t.customerName}-${index}`}
-              className="flex flex-col bg-parchment px-6 py-8 md:px-8"
-              initial={reduceMotion ? false : { y: 16 }}
-              whileInView={reduceMotion ? undefined : { y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{
-                duration: 0.42,
-                delay: index * 0.1,
-                ease: easeOutExpo,
-              }}
+              className="quote-card flex flex-col bg-parchment px-6 py-8 md:px-8"
             >
               <span aria-hidden className="mb-5 block h-1 w-8 bg-signalRed" />
               <blockquote className="flex-1 text-pretty text-[15px] leading-relaxed text-labFg">
@@ -67,7 +65,7 @@ export const Testimonials = () => {
                   {t.customerTitle}
                 </div>
               </figcaption>
-            </motion.figure>
+            </figure>
           ))}
         </div>
       </div>

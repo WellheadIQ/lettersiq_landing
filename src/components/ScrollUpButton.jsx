@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import React from "react";
+import { distance, duration, easeSmoothOut } from "../lib/motionTokens.js";
 
 export const ScrollUpButton = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,7 +35,7 @@ export const ScrollUpButton = () => {
   };
 
   const isVisible = isScrolled && !contactInView;
-  const offset = reduceMotion ? 0 : 12;
+  const offset = reduceMotion ? 0 : distance.medium;
 
   return (
     <AnimatePresence initial={false}>
@@ -42,12 +43,19 @@ export const ScrollUpButton = () => {
         <motion.button
           type="button"
           aria-label="Scroll to top"
-          className="w-12 h-12 fixed bottom-6 right-6 border border-lineStrong bg-card hover:bg-oxford hover:border-oxford cursor-pointer flex justify-center items-center z-50 group [transition:background-color_200ms_ease,border-color_200ms_ease]"
+          className="w-12 h-12 fixed bottom-6 right-6 border border-lineStrong bg-card hover:bg-oxford hover:border-oxford cursor-pointer flex justify-center items-center z-50 group transition-colors duration-150 ease-out-strong"
           onClick={scrollToTop}
           initial={{ opacity: 0, y: offset }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: offset }}
-          transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            transition: { duration: duration.fast / 1000, ease: easeSmoothOut },
+          }}
+          exit={{
+            opacity: 0,
+            y: offset,
+            transition: { duration: duration.quick / 1000, ease: easeSmoothOut },
+          }}
           whileTap={{ scale: 0.96 }}
         >
           <svg
@@ -56,7 +64,7 @@ export const ScrollUpButton = () => {
             width="20"
             height="20"
             viewBox="0 0 24 24"
-            className="text-labFg group-hover:text-white [transition:color_200ms_ease]"
+            className="text-labFg group-hover:text-white transition-colors duration-150 ease-out-strong"
           >
             <path
               d="M18 15L12 9L6 15"

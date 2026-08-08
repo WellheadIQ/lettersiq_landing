@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
+import { usePointerTilt } from "../hooks/usePointerTilt.js";
 import { Button } from "./ui/button.jsx";
-
-// Approximate Lone Star State silhouette (decorative, low-opacity motif).
-const TEXAS_PATH =
-  "M40,34 L96,34 L96,26 L132,26 L134,58 L162,64 L182,92 L176,104 L188,120 L182,150 L150,150 L146,150 L138,176 L120,150 L96,150 L96,120 L58,120 L58,78 L40,78 Z";
+import { Modal } from "./ui/modal.jsx";
+import { HeroScene } from "./HeroScene.jsx";
+import { animeSmoothOut, distance, duration } from "../lib/motionTokens.js";
+import briefingEmail from "../assets/images/liq-daily-briefing-email.jpg";
 
 // The 7:00 AM briefing — real product artifact, authored as semantic markup.
 const briefingStats = [
@@ -49,8 +50,11 @@ const severity = {
 };
 
 export const Hero = () => {
+  const panel = usePointerTilt({ max: 4.5, lift: 12 });
+  const [briefingOpen, setBriefingOpen] = useState(false);
+
   const root = useAnimeScope(({ reduceMotion, anime }) => {
-    const { utils, createTimeline, svg } = anime;
+    const { utils, createTimeline } = anime;
 
     const bootTargets = utils.$(".boot-in");
 
@@ -58,33 +62,30 @@ export const Hero = () => {
     if (reduceMotion) {
       utils.set(bootTargets, { translateY: 0 });
       utils.set(".boot-underline", { scaleX: 1 });
-      utils.set(".hero-draw", { opacity: 0.5 });
       return;
     }
 
-    createTimeline({ defaults: { ease: "out(3)" } })
-      .add(".boot-eyebrow", { translateY: [12, 0], duration: 450 })
-      .add(".boot-headline", { translateY: [18, 0], duration: 560 }, "-=200")
-      .add(".boot-underline", { scaleX: [0, 1], duration: 560 }, "-=320")
-      .add(".boot-sub", { translateY: [12, 0], duration: 420 }, "-=340")
-      .add(".boot-cta", { translateY: [10, 0], duration: 400 }, "-=280")
-      .add(".boot-panel", { translateY: [16, 0], duration: 560 }, "-=420")
+    // One reveal duration for the whole entrance; the rhythm comes from the
+    // overlaps, not from six slightly different durations.
+    const rise = distance.medium;
+    createTimeline({
+      defaults: { ease: animeSmoothOut(anime), duration: duration.verySlow },
+    })
+      .add(".boot-eyebrow", { translateY: [rise, 0] })
+      .add(".boot-headline", { translateY: [rise, 0] }, "-=200")
+      .add(".boot-underline", { scaleX: [0, 1] }, "-=320")
+      .add(".boot-sub", { translateY: [rise, 0] }, "-=340")
+      .add(".boot-cta", { translateY: [rise, 0] }, "-=280")
+      .add(".boot-panel", { translateY: [rise, 0] }, "-=420")
       .add(
         ".boot-row",
-        { translateX: [8, 0], duration: 320, delay: anime.stagger(55) },
+        {
+          translateX: [distance.base, 0],
+          duration: duration.fast,
+          delay: anime.stagger(duration.stagger),
+        },
         "-=360"
       );
-
-    if (svg && svg.createDrawable) {
-      const drawables = svg.createDrawable(".hero-draw");
-      utils.set(drawables, { opacity: 0.42 });
-      anime.animate(drawables, {
-        draw: ["0 0", "0 1"],
-        duration: 2400,
-        delay: anime.stagger(120),
-        ease: "inOut(2)",
-      });
-    }
   }, []);
 
   const scrollToContactUs = () => {
@@ -97,28 +98,10 @@ export const Hero = () => {
       className="relative w-full overflow-hidden bg-midnight pt-[100px]"
       id="home"
     >
-      {/* Decorative Texas outline motif */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-[46rem] max-w-[70%] opacity-60 hidden md:block">
-        <svg viewBox="0 0 220 200" className="w-full h-full" fill="none" aria-hidden="true">
-          <path
-            className="hero-draw"
-            d={TEXAS_PATH}
-            stroke="rgba(122,160,255,0.30)"
-            strokeWidth="0.8"
-          />
-          {[70, 100, 130].map((y, i) => (
-            <path
-              key={i}
-              className="hero-draw"
-              d={`M0,${y} C60,${y - 16} 120,${y + 14} 220,${y - 8}`}
-              stroke="rgba(200,16,46,0.35)"
-              strokeWidth="0.6"
-            />
-          ))}
-        </svg>
-      </div>
+      {/* Eight dataset planes over the Texas base plate — real geometry, real depth */}
+      <HeroScene />
 
-      <div className="section-shell relative pb-16 pt-10 md:pb-24 md:pt-14">
+      <div className="section-shell relative pb-16 pt-10 md:pb-32 md:pt-16 lg:pb-40">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           {/* ---------- Left: message ---------- */}
           <div>
@@ -160,83 +143,113 @@ export const Hero = () => {
           </div>
 
           {/* ---------- Right: 7 AM briefing panel (light instrument inset) ---------- */}
-          <figure
-            className="boot-in boot-panel relative"
-          >
+          <figure className="boot-in boot-panel relative">
             <figcaption className="sr-only">Example LettersIQ 7:00 AM briefing</figcaption>
-            <div className="overflow-hidden rounded-[3px] border border-white/20 bg-panelLight text-panelInk">
-              {/* Panel header */}
-              <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
-                <div className="flex items-center gap-2 font-mono text-[12px] font-semibold tracking-tight text-panelInk">
-                  <span className="h-2 w-2 bg-signalRed" aria-hidden="true" />
-                  7:00 AM Briefing
-                </div>
-                <span className="font-mono text-xs text-panelInkMuted">
-                  07:00 CT
-                </span>
-              </div>
 
-              {/* Stat strip */}
-              <div className="grid grid-cols-3 divide-x divide-black/10 border-b border-black/10">
-                {briefingStats.map((s) => (
-                  <div key={s.label} className="px-4 py-3.5">
-                    <div className="font-mono text-xs text-panelInkMuted">
-                      {s.label}
-                    </div>
-                    <div
-                      className={`mt-1 font-display text-2xl font-extrabold tabular-nums tracking-tight ${
-                        s.alert ? "text-signalRed" : "text-panelInk"
-                      }`}
-                    >
-                      {s.value}
-                    </div>
+            <div ref={panel} className="tilt-surface relative">
+              {/* Back plate — the sheet under today's briefing */}
+              <span
+                className="pointer-events-none absolute -inset-x-3 -inset-y-3 rounded-[4px] border border-white/[0.07] [transform:translateZ(-30px)]"
+                aria-hidden="true"
+              />
+
+              <div className="relative overflow-hidden rounded-[3px] border border-white/20 bg-panelLight text-panelInk shadow-float">
+                {/* Panel header */}
+                <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
+                  <div className="flex items-center gap-2 font-mono text-[12px] font-semibold tracking-tight text-panelInk">
+                    <span className="h-2 w-2 bg-signalRed" aria-hidden="true" />
+                    7:00 AM Briefing
                   </div>
-                ))}
-              </div>
+                  <span className="font-mono text-xs text-panelInkMuted">
+                    07:00 CT
+                  </span>
+                </div>
 
-              {/* Alert rows */}
-              <ul className="divide-y divide-black/[0.07]">
-                {briefingRows.map((r) => (
-                  <li
-                    key={r.title}
-                    className={`boot-row flex items-center gap-3 px-5 py-3.5 ${
-                      r.sev === "critical" ? "bg-signalSoft" : ""
-                    }`}
-                  >
-                    <span
-                      className={`w-[4.5rem] shrink-0 font-mono text-xs font-semibold ${severity[r.sev].className}`}
-                    >
-                      {severity[r.sev].label}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13px] font-medium text-panelInk">
-                        {r.title}
-                      </span>
-                    </span>
-                    <span
-                      className={`shrink-0 font-mono text-xs tabular-nums ${
-                        r.sev === "critical" ? "font-semibold text-signalRed" : "text-panelInkMuted"
+                {/* Stat strip */}
+                <div className="grid grid-cols-3 divide-x divide-black/10 border-b border-black/10">
+                  {briefingStats.map((s) => (
+                    <div key={s.label} className="px-4 py-3.5">
+                      <div className="font-mono text-xs text-panelInkMuted">
+                        {s.label}
+                      </div>
+                      <div
+                        className={`mt-1 font-display text-2xl font-extrabold tabular-nums tracking-tight ${
+                          s.alert ? "text-signalRed" : "text-panelInk"
+                        }`}
+                      >
+                        {s.value}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Alert rows */}
+                <ul className="divide-y divide-black/[0.07]">
+                  {briefingRows.map((r) => (
+                    <li
+                      key={r.title}
+                      className={`boot-row flex items-center gap-3 px-5 py-3.5 ${
+                        r.sev === "critical" ? "bg-signalSoft" : ""
                       }`}
                     >
-                      {r.meta}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                      <span
+                        className={`w-[4.5rem] shrink-0 font-mono text-xs font-semibold ${severity[r.sev].className}`}
+                      >
+                        {severity[r.sev].label}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[13px] font-medium text-panelInk">
+                          {r.title}
+                        </span>
+                      </span>
+                      <span
+                        className={`shrink-0 font-mono text-xs tabular-nums ${
+                          r.sev === "critical" ? "font-semibold text-signalRed" : "text-panelInkMuted"
+                        }`}
+                      >
+                        {r.meta}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
 
-              {/* Panel footer */}
-              <div className="flex items-center justify-between border-t border-black/10 px-5 py-3.5">
-                <span className="font-mono text-xs text-panelInkMuted">
-                  8 datasets · diffed daily
-                </span>
-                <span className="font-mono text-xs text-panelInkMuted">
-                  Example portfolio
-                </span>
+                {/* Panel footer */}
+                <div className="flex items-center justify-between border-t border-black/10 px-5 py-3.5">
+                  <span className="font-mono text-xs text-panelInkMuted">
+                    8 datasets · diffed daily
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setBriefingOpen(true)}
+                    className="link-underline font-mono text-xs font-semibold text-panelInk transition-colors hover:text-signalRed"
+                  >
+                    See the real email &rarr;
+                  </button>
+                </div>
+
+                {/* Glancing light that tracks the pointer across the surface */}
+                <span className="tilt-sheen" aria-hidden="true" />
               </div>
             </div>
           </figure>
         </div>
       </div>
+
+      <Modal
+        open={briefingOpen}
+        onClose={() => setBriefingOpen(false)}
+        title="The 7:00 AM briefing"
+        caption="Example portfolio · delivered daily at 07:00 CT"
+      >
+        <img
+          src={briefingEmail}
+          alt="A LettersIQ daily briefing email listing four RRC alerts for McFaddin Operating: a critical certified pre-severance letter, a P-5 expiring in 14 days, a proration status change, and a resolved severance."
+          width="1100"
+          height="1650"
+          decoding="async"
+          className="mx-auto h-auto w-full max-w-[640px] rounded-[2px] border border-white/10"
+        />
+      </Modal>
     </section>
   );
 };

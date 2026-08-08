@@ -94,10 +94,15 @@ module.exports = {
         panel: "0 1px 2px rgba(10,20,40,0.05), 0 14px 44px -18px rgba(10,20,40,0.22)",
         panelLg: "0 1px 2px rgba(10,20,40,0.06), 0 34px 90px -28px rgba(10,20,40,0.32)",
         redGlow: "0 16px 44px -16px rgba(200,16,46,0.55)",
+        // Depth on a near-black canvas: a tight contact shadow plus a long,
+        // very soft cast — a single blurry shadow just reads as haze.
+        float:
+          "0 2px 4px rgba(0,0,0,0.45), 0 12px 24px -12px rgba(0,0,0,0.7), 0 44px 90px -36px rgba(0,0,0,0.95)",
       },
       transitionTimingFunction: {
-        // Emil Kowalski's stronger custom curves — built-in CSS easings lack punch
-        "out-strong": "cubic-bezier(0.23, 1, 0.32, 1)",
+        // Single source of truth: the transitions.dev --ease-smooth-out token,
+        // defined in src/styles/transitions.css.
+        "out-strong": "var(--ease-smooth-out)",
         "in-out-strong": "cubic-bezier(0.77, 0, 0.175, 1)",
         drawer: "cubic-bezier(0.32, 0.72, 0, 1)",
       },
@@ -122,9 +127,10 @@ module.exports = {
       animation: {
         marquee: "marquee 38s linear infinite",
         sweep: "sweep 2.8s ease-in-out infinite",
-        // enter deliberate, exit snappy — asymmetric per Emil's guidance
-        "accordion-down": "accordion-down 240ms cubic-bezier(0.23, 1, 0.32, 1)",
-        "accordion-up": "accordion-up 180ms cubic-bezier(0.23, 1, 0.32, 1)",
+        // Symmetric on purpose: an accordion reads as one reversible motion,
+        // not an open/close pair, so both halves share duration and easing.
+        "accordion-down": "accordion-down var(--duration-fast) var(--ease-smooth-out)",
+        "accordion-up": "accordion-up var(--duration-fast) var(--ease-smooth-out)",
       },
       screens: {
         xs: "480px",

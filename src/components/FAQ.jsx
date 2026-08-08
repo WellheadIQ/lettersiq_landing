@@ -1,5 +1,7 @@
 import React from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
+import { settle } from "../lib/motion.js";
+import { duration } from "../lib/motionTokens.js";
 import { SectionLabel } from "./Primitives.jsx";
 
 const FAQData = [
@@ -66,17 +68,11 @@ const FAQData = [
 
 export const FAQ = () => {
   const root = useAnimeScope(({ reduceMotion, anime }) => {
-    const { utils, animate, stagger, onScroll } = anime;
-    const items = utils.$(".faq-item");
-    if (!items.length || reduceMotion) return;
-
-    utils.set(items, { translateY: 12 });
-    animate(items, {
-      translateY: [12, 0],
-      duration: 400,
-      ease: "out(3)",
-      delay: stagger(45),
-      autoplay: onScroll({ target: ".faq-list", enter: "top 88%" }),
+    if (reduceMotion) return;
+    settle(anime, anime.utils.$(".faq-item"), {
+      trigger: ".faq-list",
+      stagger: duration.stagger,
+      enter: "88% top",
     });
   }, []);
 

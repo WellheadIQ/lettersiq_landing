@@ -1,5 +1,7 @@
 import React from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
+import { settle } from "../lib/motion.js";
+import { duration } from "../lib/motionTokens.js";
 import { SectionLabel } from "./Primitives.jsx";
 
 const daily = [
@@ -68,18 +70,10 @@ const CoverageColumn = ({ cadence, items, accent }) => (
 
 export const Coverage = () => {
   const root = useAnimeScope(({ reduceMotion, anime }) => {
-    const { utils, animate, stagger, onScroll } = anime;
-    const rows = utils.$(".coverage-row");
-    if (!rows.length || reduceMotion) return;
-
-    // Scroll reveal + stagger — content stays painted if the observer misses.
-    utils.set(rows, { translateY: 12 });
-    animate(rows, {
-      translateY: [12, 0],
-      duration: 420,
-      ease: "out(3)",
-      delay: stagger(55),
-      autoplay: onScroll({ target: ".coverage-board", enter: "top 85%" }),
+    if (reduceMotion) return;
+    settle(anime, anime.utils.$(".coverage-row"), {
+      trigger: ".coverage-board",
+      stagger: duration.stagger,
     });
   }, []);
 

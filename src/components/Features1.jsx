@@ -1,5 +1,8 @@
 import React from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
+import { usePointerTilt } from "../hooks/usePointerTilt.js";
+import { settle } from "../lib/motion.js";
+import { duration } from "../lib/motionTokens.js";
 import { SectionLabel } from "./Primitives.jsx";
 
 const outcomes = [
@@ -100,9 +103,15 @@ const StatusMark = ({ tone }) => {
 };
 
 /** Product artifact: the revenue-blocker checklist from a real briefing. */
-const AllowableChecklist = () => (
-  <figure className="w-full">
-    <div className="overflow-hidden rounded-[3px] border border-white/20 bg-panelLight text-panelInk">
+const AllowableChecklist = () => {
+  const panel = usePointerTilt({ max: 3.5, lift: 10 });
+
+  return (
+  <figure className="blocker-figure w-full">
+    <div
+      ref={panel}
+      className="tilt-surface relative overflow-hidden rounded-[3px] border border-white/20 bg-panelLight text-panelInk shadow-float"
+    >
       <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
         <div className="flex items-center gap-2 text-sm font-semibold tracking-tight">
           <span className="h-2 w-2 bg-signalRed" aria-hidden="true" />
@@ -141,27 +150,26 @@ const AllowableChecklist = () => (
       <div className="border-t border-black/10 px-5 py-3.5 text-sm font-medium text-signalRed">
         1 filing blocking first revenue — chase the W-12.
       </div>
+
+      <span className="tilt-sheen" aria-hidden="true" />
     </div>
     <figcaption className="mt-4 text-sm text-labFgMuted">
       Example from a producing well with no allowable
     </figcaption>
   </figure>
-);
+  );
+};
 
 export const Features1 = () => {
   const root = useAnimeScope(({ reduceMotion, anime }) => {
-    const { utils, animate, stagger, onScroll } = anime;
-    const beats = utils.$(".outcome-beat");
-    if (!beats.length || reduceMotion) return;
-
-    // Staggered scroll reveal — ~100ms cascade, ease-out, no opacity gate.
-    utils.set(beats, { translateY: 12 });
-    animate(beats, {
-      translateY: [12, 0],
-      duration: 420,
-      ease: "out(3)",
-      delay: stagger(100),
-      autoplay: onScroll({ target: ".outcomes-list", enter: "top 85%" }),
+    if (reduceMotion) return;
+    settle(anime, anime.utils.$(".outcome-beat"), {
+      trigger: ".outcomes-list",
+      stagger: duration.micro,
+    });
+    settle(anime, anime.utils.$(".blocker-figure"), {
+      trigger: ".blocker-figure",
+      enter: "90% top",
     });
   }, []);
 
