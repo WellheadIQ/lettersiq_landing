@@ -6,64 +6,43 @@
  */
 export const faq = [
   {
-    question: "What is well severance, and why should I be concerned about it?",
+    question: "What is LettersIQ?",
     answer:
-      "Well severance occurs when the Texas Railroad Commission shuts in or seals a well due to violations of statutes, rules, permits, or orders. This action can halt production and lead to significant financial losses, making it crucial for operators to stay compliant and avoid severance actions.",
+      "LettersIQ is a regulatory operations intelligence service for Texas oil and gas operators. It monitors public Texas Railroad Commission records, connects related filings across systems, and delivers a prioritized morning briefing showing what changed, what it affects, why it matters, and what needs attention.",
   },
   {
-    question: "How do I sign up?",
+    question: "What does LettersIQ monitor?",
     answer:
-      "Click the 'Get Started' button at the top of this page and we'll reach out right away.",
+      "Eight public RRC systems: severance and seal orders, certified pre-severance letters, P-5 organization status, Rule 15 inactive wells, proration schedules and allowables, surface commingling permits (P-17), drilling permits (W-1), and gatherer or purchaser filings (P-4).",
   },
   {
-    question: "What time does the report get delivered to me?",
+    question: "What appears in the morning briefing?",
     answer:
-      "We deliver the report around 7:00 AM CT every day, right to your inbox.",
+      "The briefing contains new regulatory activity since the previous scan, the leases and records connected to each issue, the likely operational impact, and the filing, deadline, or underlying problem your team should investigate. It is delivered around 7:00 AM CT.",
   },
   {
-    question: "How do early notifications benefit our compliance efforts?",
+    question: "How is this different from checking an operator number?",
     answer:
-      "Receiving early notifications, instead of waiting for traditional certified mail, gives you more time to respond to potential compliance issues. No more running the query manually, worrying about the mail on vacation, or waiting at the post office. Check the daily briefing and act on what changed.",
-  },
-  {
-    question: "What's your refund policy?",
-    answer:
-      "We offer a 30-day money-back guarantee. If you're not satisfied with our service, simply contact our support team within 30 days of purchase for a full refund.",
-  },
-  {
-    question: "What kind of alerts and updates does your service provide?",
-    answer:
-      "We deliver notifications regarding any operational actions that may violate statutes, rules, or commission orders. This includes, but is not limited to, delinquent H-10 filings, fee dues, and any operational activities that need immediate attention to prevent severance. Right now, we focus on delivering Texas Railroad Commission notifications.",
-  },
-  {
-    question: "What does LettersIQ monitor besides severance letters?",
-    answer:
-      "Eight public RRC datasets: severance and seal orders, certified (pre-severance) letters, P-5 organization renewal status, the Rule 15 inactive-well aging report, monthly proration schedules, surface commingling permits (P-17), drilling permits (W-1), and gatherer/purchaser filings (P-4). We diff each one and email only what changed.",
-  },
-  {
-    question: "How can you warn me before a severance happens?",
-    answer:
-      "Most severances are preceded by public signals: a certified letter, a P-5 expiring, a delinquent W-10 on the proration schedule, or an unresolved Rule 15 well. We watch those upstream signals and give you a countdown, so you can cure the issue before the severance order is ever issued.",
+      "An operator-number search only returns records filed against that operator. LettersIQ also maps relationships across datasets, so it can surface risks created by another operator, a shared P-17 commingle, or a filing dependency that lives in a different RRC system.",
   },
   {
     question: "What is commingle blast radius?",
     answer:
-      "If several leases share one surface commingling permit (P-17), a severance on any of them stops production on all of them — even leases you don't operate. Because the severance is filed against the other operator, it never appears in your own records. LettersIQ maps your commingles and watches every co-member lease, so you're alerted the moment a neighbor's problem becomes yours.",
+      "If several leases share one surface commingling permit (P-17), a severance on one co-member can stop production across the commingle. The triggering record may sit under another operator. LettersIQ maps the P-17 relationship and watches every connected lease so that hidden exposure reaches your briefing.",
   },
   {
-    question:
-      "My well is producing but has no allowable — can you tell me why?",
+    question: "Can LettersIQ help explain why a well has no allowable?",
     answer:
-      "Yes. When a well shows no allowable on the proration schedule, we cross-reference its drilling permit and completion dependencies and give you a named checklist of what's missing — W-2/G-1 completion report, directional survey (W-12) for horizontal wells, L-1 electric log, W-15 cementing — so you can chase the exact filing instead of guessing.",
+      "LettersIQ can work backwards through the relevant filing dependencies and identify what appears to be missing, such as a W-2 or G-1 completion report, W-12 directional survey, L-1 electric log, or W-15 cementing report. The result is a named checklist for your team to investigate, not another database to search.",
   },
   {
-    question: "How does P-5 renewal monitoring work?",
+    question: "How does early-warning monitoring prevent production interruptions?",
     answer:
-      "We track your organization report's expiration date and count down at 60, 30, 14, and 7 days, plus an immediate alert if your status flips to Delinquent. An unrenewed P-5 severs every lease your organization holds, so this is the single highest-leverage date we watch.",
+      "Many production problems have public signals before the final consequence: a certified letter, an approaching P-5 expiration, a delinquent proration code, a Rule 15 milestone, or an expiring permit. LettersIQ surfaces those upstream changes while there may still be time to investigate and act.",
   },
   {
-    question: "Do I get the new alerts automatically?",
+    question: "How do I request an operator review?",
     answer:
-      "Expanded alert types are included at no extra cost and enabled per organization, with zero change to the severance notifications you already rely on. Tell us to enable them and the new datasets start appearing in your next briefing.",
+      "Use the operator review form on this page and send your operator name and contact details. We will follow up to understand your portfolio and discuss the appropriate LettersIQ monitoring setup. No credit card is required to request the review.",
   },
 ];

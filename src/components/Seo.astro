@@ -33,7 +33,7 @@ const organization = {
   url: site.url,
   email: site.email,
   description:
-    "LettersIQ is a Texas Railroad Commission compliance monitoring service that watches eight public RRC datasets and delivers a daily severance early-warning briefing to oil and gas operators.",
+    "LettersIQ provides regulatory operations intelligence for Texas oil and gas operators by connecting eight public Railroad Commission systems into one prioritized morning briefing.",
   logo: {
     "@type": "ImageObject",
     "@id": `${site.url}/#logo`,
@@ -93,7 +93,7 @@ const softwareApplication = {
   name: site.name,
   url: site.url,
   applicationCategory: "BusinessApplication",
-  applicationSubCategory: "Regulatory compliance monitoring",
+  applicationSubCategory: "Regulatory operations intelligence",
   operatingSystem: "Web-based, delivered by email",
   description: defaultDescription,
   provider: { "@id": `${site.url}/#organization` },
@@ -145,7 +145,7 @@ const faqPage = {
 const videoObject = {
   "@type": "VideoObject",
   "@id": `${site.url}/#film`,
-  name: "Eight Texas RRC datasets, one 7:00 AM email",
+  name: "What changed at the Texas RRC overnight?",
   description:
     "How LettersIQ reads eight Texas Railroad Commission datasets each morning and joins them, so a severance risk visible in no single dataset — including one filed against another operator on a shared commingle permit — arrives as one line in a 7:00 AM briefing.",
   thumbnailUrl: [new URL("/film/lettersiq-film-poster.jpg", site.url).href],

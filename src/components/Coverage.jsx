@@ -86,16 +86,16 @@ export const Coverage = () => {
       <div className="absolute left-0 right-0 top-0 h-px bg-line" />
 
       <div className="section-shell">
-        <SectionLabel label="Coverage" className="mb-5" />
+        <SectionLabel label="Eight connected RRC systems" className="mb-5" />
 
         <div className="mb-12 max-w-3xl">
           <h2 className="text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-labFg">
-            Eight datasets. One briefing.
+            Stop checking the RRC. Start managing the exceptions.
           </h2>
           <p className="mt-5 text-pretty text-base leading-relaxed text-labFgMuted md:text-lg">
-            Every morning we scan the public RRC record and diff it against
-            yesterday. You only hear from us when something changes — never the
-            same standing issue twice.
+            We monitor regulatory activity across your operating portfolio,
+            connect records that live in separate systems, and surface only what
+            changed. Your team handles the handful of issues that need attention.
           </p>
         </div>
 

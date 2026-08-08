@@ -238,37 +238,37 @@ export const BlastRadius = () => {
       <div className="absolute left-0 right-0 top-0 h-px bg-white/10" />
 
       <div className="section-shell relative z-10">
-        <SectionLabel label="Blast radius" className="mb-5" />
+        <SectionLabel label="The P-17 blast radius" className="mb-5" />
 
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           <div>
             <h2 className="max-w-xl text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-white">
-              You can be shut in by someone else's violation.
+              The RRC doesn't have to name you for it to become your problem.
             </h2>
             <p className="mt-5 max-w-lg text-pretty text-base leading-relaxed text-white/65 md:text-lg">
-              When any lease on a shared surface commingle (Form P-17) is severed,
-              every lease on that permit stops producing — including yours. The
-              severance is filed against the other operator, so it never appears
-              in your own records.
+              A third-party operator sharing your surface commingle can create
+              exposure for your leases. If one co-member is severed, every lease
+              on that Form P-17 can stop producing — including yours.
             </p>
             <p className="mt-4 max-w-lg text-pretty text-base leading-relaxed text-white/65 md:text-lg">
-              LettersIQ builds the commingle graph from imaged P-17 filings, then
-              watches your neighbors the same way it watches you.
+              A normal operator-number search misses that relationship. LettersIQ
+              connects the P-17 records to severance data and monitors the entire
+              commingle, not just your own filings.
             </p>
 
             <ul className="blast-beats mt-9 space-y-0 border-t border-white/10">
               <li className="blast-beat border-b border-white/10 py-4">
                 <div className="text-sm font-semibold text-white">Hidden upstream</div>
                 <p className="mt-1.5 max-w-md text-[15px] leading-relaxed text-white/60">
-                  You find out when your purchaser rejects the load — unless someone
-                  is watching the co-member leases.
+                  The trigger sits in another operator's record. The impact lands
+                  on your production.
                 </p>
               </li>
               <li className="blast-beat border-b border-white/10 py-4">
                 <div className="text-sm font-semibold text-white">One graph, every morning</div>
                 <p className="mt-1.5 max-w-md text-[15px] leading-relaxed text-white/60">
-                  By hand this means cross-referencing two disconnected RRC systems
-                  every day. We do that before 7:00 AM CT.
+                  We rebuild the relationship from imaged P-17 filings and check
+                  every connected lease before your day begins.
                 </p>
               </li>
             </ul>

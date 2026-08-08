@@ -12,7 +12,7 @@ export const site = {
   logo: "/lettersiqlogo.png",
   ogImage: "/og-lettersiq.png",
   ogImageAlt:
-    "LettersIQ — a 7 AM briefing that connects eight Texas Railroad Commission datasets into one severance early-warning email.",
+    "LettersIQ connects eight Texas Railroad Commission systems into one prioritized morning briefing for Texas oil and gas operators.",
   themeColor: "#060d1b",
   locale: "en_US",
   price: { amount: "4", currency: "USD", unit: "lease per month" },
@@ -20,4 +20,4 @@ export const site = {
 
 // Kept under ~155 characters so Google renders it whole rather than truncating.
 export const defaultDescription =
-  "Texas RRC compliance monitoring. LettersIQ watches 8 Railroad Commission datasets and emails one 7 AM briefing so you can stop a shut-in before the letter.";
+  "Texas RRC regulatory intelligence connecting eight systems into one morning briefing: what changed, what it affects, and what needs attention.";

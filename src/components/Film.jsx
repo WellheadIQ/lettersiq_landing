@@ -77,15 +77,16 @@ export const Film = () => {
       <div className="absolute left-0 right-0 top-0 h-px bg-white/10" />
 
       <div className="section-shell relative z-10">
-        <SectionLabel label="The 55-second version" className="mb-5" />
+        <SectionLabel label="One morning in 55 seconds" className="mb-5" />
 
         <div className="grid grid-cols-1 items-end gap-6 lg:grid-cols-[1fr_auto] lg:gap-16">
           <h2 className="max-w-2xl text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-white">
-            One morning's scan, resolving into one email.
+            What did the RRC change overnight?
           </h2>
           <p className="max-w-md text-pretty text-base leading-relaxed text-white/65">
-            Eight Railroad Commission datasets read at dawn, then joined — including
-            the severance filed against someone else that shuts in your lease.
+            By the time your team starts the day, LettersIQ has checked eight
+            disconnected systems, connected the affected records, and ranked the
+            exceptions that deserve attention.
           </p>
         </div>
 

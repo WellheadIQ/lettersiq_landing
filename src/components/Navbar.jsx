@@ -29,8 +29,8 @@ const CloseIcon = () => (
 );
 
 const navbarLinks = [
+  { label: "Briefing", href: "#how-it-works" },
   { label: "Blast Radius", href: "#blast-radius" },
-  { label: "How it works", href: "#how-it-works" },
   { label: "Coverage", href: "#coverage" },
   { label: "Pricing", href: "#pricing" },
 ];
@@ -85,7 +85,7 @@ export const Navbar = () => {
       <div className="w-full bg-signalRed text-white">
         <div className="section-shell flex h-9 items-center justify-center gap-2.5 font-mono text-xs">
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-white" aria-hidden="true" />
-          <span className="truncate">Daily scans across 8 RRC datasets — latest 07:00 CT</span>
+          <span className="truncate">Regulatory intelligence across 8 connected RRC systems</span>
         </div>
       </div>
 
@@ -108,7 +108,7 @@ export const Navbar = () => {
           >
             <img src={LettersIQLogo} alt="LettersIQ" className="h-9 md:h-10 w-auto" />
             <span className="hidden border-l border-white/15 pl-3 font-mono text-xs text-white/65 lg:inline-block">
-              RRC&nbsp;Monitoring
+              RRC&nbsp;Operations&nbsp;Intelligence
             </span>
           </motion.a>
 
@@ -133,7 +133,7 @@ export const Navbar = () => {
             ))}
             <Button asChild size="sm" className="ml-4 text-[13px]">
               <a href="#contact-us">
-                Get Started
+                Request Review
                 <span aria-hidden>&rarr;</span>
               </a>
             </Button>
@@ -194,7 +194,7 @@ export const Navbar = () => {
             style={{ "--index": navbarLinks.length }}
           >
             <a href="#contact-us" onClick={toggleMenu} className="btn-ember w-full">
-              Get Started &rarr;
+              Request an Operator Review &rarr;
             </a>
           </div>
         </div>

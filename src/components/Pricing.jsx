@@ -11,7 +11,7 @@ const pricingFeatures = [
   "Proration delinquent-code & allowable diffs",
   "Commingle blast-radius monitoring",
   "Drilling-permit expiry & P-4 change alerts",
-  "Root-cause analysis on every alert",
+  "Connected context and next-step guidance",
   "Multi-lease management included",
 ];
 
@@ -37,12 +37,12 @@ export const Pricing = () => {
           <div className="md:col-span-7">
             <SectionLabel label="Pricing" className="mb-5" />
             <h2 className="font-display font-extrabold text-labFg text-display-sm">
-              One price. The whole signal.
+              Regulatory intelligence for every lease you operate.
             </h2>
           </div>
           <p className="md:col-span-5 text-labFgMuted text-base md:text-lg leading-relaxed md:pb-1">
-            Every monitored dataset, every root-cause alert, and every lease you
-            operate—without add-ons or annual lock-in.
+            Every monitored dataset, connected-record alert, and morning briefing
+            is included at one per-lease price.
           </p>
         </div>
 
@@ -52,12 +52,12 @@ export const Pricing = () => {
             <span className="text-labFg">Complete coverage</span>
             <span className="flex items-center gap-2 text-cobaltText">
               <span className="h-2 w-2 rounded-full bg-cobalt" aria-hidden="true" />
-              Available now
+              One complete plan
             </span>
           </div>
 
-          <div className="grid lg:grid-cols-[0.82fr_1.35fr]">
-            <div className="bg-oxford text-white p-7 sm:p-9 lg:p-10 flex flex-col">
+          <div className="grid min-w-0 lg:grid-cols-[0.82fr_1.35fr]">
+            <div className="flex min-w-0 flex-col bg-oxford p-7 text-white sm:p-9 lg:p-10">
               <div className="inline-flex self-start items-center gap-2 border border-white/20 px-3 py-2 font-mono text-xs text-white/70">
                 <StarMark size={10} className="text-signalBright" />
                 EVERYTHING INCLUDED
@@ -82,17 +82,17 @@ export const Pricing = () => {
 
               <Button asChild className="w-full mt-9 shadow-none">
                 <a href="#contact-us">
-                  Protect My Leases
+                  Request an Operator Review
                   <span aria-hidden>&rarr;</span>
                 </a>
               </Button>
 
               <div className="mt-4 text-sm text-white/65">
-                30-day guarantee · cancel anytime
+                No credit card required
               </div>
             </div>
 
-            <div className="p-6 sm:p-8 lg:p-10">
+            <div className="min-w-0 p-6 sm:p-8 lg:p-10">
               <div className="pb-6 border-b border-line">
                 <h3 className="font-display text-2xl font-bold text-labFg">
                   No feature gates.
@@ -121,12 +121,12 @@ export const Pricing = () => {
               <div className="grid grid-cols-3 mt-7 border border-line divide-x divide-line">
                 {[
                   ["8", "DATASETS"],
-                  ["25+", "ALERT TYPES"],
-                  ["7 AM", "DELIVERY"],
+                  ["1", "CONNECTED VIEW"],
+                  ["7 AM", "BRIEFING"],
                 ].map(([value, label]) => (
                   <div key={label} className="px-3 py-4 text-center">
                     <div className="font-display text-xl sm:text-2xl font-bold text-labFg">{value}</div>
-                    <div className="mt-1 text-xs text-labFgMuted">
+                    <div className="mt-1 break-words text-xs text-labFgMuted">
                       {label}
                     </div>
                   </div>
@@ -137,8 +137,8 @@ export const Pricing = () => {
         </div>
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-2 text-sm text-labFgMuted">
-          <span>No setup fee · no annual contract</span>
-          <span className="text-labFg">Monitoring starts next cycle</span>
+          <span>Start with one lease or review the full portfolio</span>
+          <span className="text-labFg">Monitoring begins after operator setup</span>
         </div>
       </div>
     </section>

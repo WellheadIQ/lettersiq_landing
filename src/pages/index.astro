@@ -5,7 +5,6 @@ import { Film } from "../components/Film.jsx";
 import { Navbar } from "../components/Navbar.jsx";
 import { Coverage } from "../components/Coverage.jsx";
 import { Features1 } from "../components/Features1.jsx";
-import { Testimonials } from "../components/Testimonials.jsx";
 import { BlastRadius } from "../components/BlastRadius.jsx";
 import { HowItWorks } from "../components/HowItWorks.jsx";
 import { Pricing } from "../components/Pricing.jsx";
@@ -18,7 +17,8 @@ import "../styles/Theme.css";
 ---
 
 <Layout
-  title="Texas RRC Severance Alerts, Before the Letter | LettersIQ"
+  title="Texas RRC Regulatory Operations Intelligence | LettersIQ"
+  description="LettersIQ connects eight Texas RRC systems and delivers one prioritized morning briefing: what changed, what it affects, and what needs attention."
   primary
 >
   <Navbar client:load />
@@ -28,9 +28,8 @@ import "../styles/Theme.css";
   <Film client:visible />
   <BlastRadius client:load />
   <HowItWorks client:load />
-  <Coverage client:load />
   <Features1 client:load />
-  <Testimonials client:load />
+  <Coverage client:load />
   <Pricing client:load />
   <FAQ client:load />
   <ContactUs client:load />

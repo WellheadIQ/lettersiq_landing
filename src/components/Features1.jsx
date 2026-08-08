@@ -7,16 +7,16 @@ import { SectionLabel } from "./Primitives.jsx";
 
 const outcomes = [
   {
-    title: "Warns early",
-    body: "Certified letters, P-5 countdowns, and delinquent proration codes surface weeks before a severance order.",
+    title: "Prevent production interruptions",
+    body: "Catch certified letters, P-5 deadlines, delinquent proration codes, and Rule 15 issues while there is still time to act.",
   },
   {
-    title: "Explains the hit",
-    body: "Every alert names the cause — P-5 lapse, delinquent W-10, Rule 15 — and the purchasers or gatherers tied to it.",
+    title: "Get wells to first sales faster",
+    body: "Trace a missing allowable back through its filing dependencies so your team knows what to chase instead of where to search.",
   },
   {
-    title: "Names the next filing",
-    body: "When a well is producing with no allowable, you get the exact missing dependency standing between you and first revenue.",
+    title: "Reduce manual monitoring",
+    body: "Replace spreadsheets and operator-by-operator searches with one ranked list of the changes that require attention.",
   },
 ];
 
@@ -182,18 +182,18 @@ export const Features1 = () => {
       <div className="absolute left-0 right-0 top-0 h-px bg-line" />
 
       <div className="section-shell">
-        <SectionLabel label="What you get" className="mb-5" />
+        <SectionLabel label="Operational outcomes" className="mb-5" />
 
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           {/* Narrative — one job: explain why this is more than mail */}
           <div>
             <h2 className="max-w-xl font-display text-display-sm font-extrabold tracking-[-0.02em] text-labFg">
-              More than a mailbox.
+              From regulatory issue to economic impact.
             </h2>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-labFgMuted md:text-lg">
-              We watch the Commission so you don't have to — then explain every
-              alert, trace its root cause, and hand you the exact filing that
-              stands between a well and first revenue.
+              Not every compliance issue matters equally. LettersIQ prioritizes
+              the changes that can interfere with production, first sales, and
+              upcoming operating deadlines.
             </p>
 
             <ul className="outcomes-list mt-10 space-y-0 border-t border-line">

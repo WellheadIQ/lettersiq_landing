@@ -1,27 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
 import { usePointerTilt } from "../hooks/usePointerTilt.js";
 import { settle } from "../lib/motion.js";
 import { animeSmoothOut, distance, duration } from "../lib/motionTokens.js";
 import { SectionLabel } from "./Primitives.jsx";
-import { Modal } from "./ui/modal.jsx";
-import dashboardInterface from "../assets/images/liq-dashboard-interface.jpg";
 
 const steps = [
   {
     n: "01",
-    title: "We scan",
-    body: "Every dawn we pull eight public Texas Railroad Commission datasets — severance orders, certified letters, P-5 operator renewals, proration schedules and more.",
+    title: "What changed?",
+    body: "New regulatory activity since the previous scan — without repeating the standing issues your team already knows about.",
   },
   {
     n: "02",
-    title: "We connect",
-    body: "We diff each one against yesterday and cross-reference systems that don't talk to each other — so a risk hiding across two separate filings surfaces as a single signal.",
+    title: "What does it affect?",
+    body: "The leases, wells, permits, commingles, purchasers, and operators connected to the issue.",
   },
   {
     n: "03",
-    title: "You get one briefing",
-    body: "By 7:00 AM you get one ranked email: what changed, why it matters for your leases, and how many days you have left to cure it.",
+    title: "Why does it matter?",
+    body: "Whether the change threatens production, first sales, compliance, or an approaching deadline.",
+  },
+  {
+    n: "04",
+    title: "What needs attention next?",
+    body: "The filing, deadline, or underlying issue your team should investigate — ranked by operational impact.",
   },
 ];
 
@@ -184,7 +187,6 @@ const SignalLoopDiagram = () => (
 
 export const HowItWorks = () => {
   const loopPanel = usePointerTilt({ max: 3.5, lift: 8 });
-  const [dashboardOpen, setDashboardOpen] = useState(false);
 
   const root = useAnimeScope(({ reduceMotion, anime }) => {
     const { utils, stagger, svg, createTimeline } = anime;
@@ -272,13 +274,17 @@ export const HowItWorks = () => {
       <div className="absolute left-0 right-0 top-0 h-px bg-line" />
 
       <div className="section-shell">
-        <SectionLabel label="How it works" className="mb-5" />
+        <SectionLabel label="The morning briefing" className="mb-5" />
 
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           <div>
             <h2 className="max-w-xl text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-labFg">
-              New to the filings? Here's the whole loop.
+              One briefing. Your entire Texas portfolio.
             </h2>
+            <p className="mt-5 max-w-lg text-pretty text-base leading-relaxed text-labFgMuted md:text-lg">
+              LettersIQ turns public records into four operational answers, so your
+              team can manage the exceptions instead of searching the RRC.
+            </p>
 
             <ol className="how-steps mt-10 space-y-0 border-t border-line">
               {steps.map((step) => (
@@ -316,36 +322,13 @@ export const HowItWorks = () => {
               </div>
               <SignalLoopDiagram />
             </div>
-            <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-labFgMuted">
-              <span>Public filings in → one ranked briefing out</span>
-              <button
-                type="button"
-                onClick={() => setDashboardOpen(true)}
-                className="link-underline font-mono text-xs text-labFg transition-colors hover:text-signalRed"
-              >
-                See the dashboard &rarr;
-              </button>
+            <figcaption className="mt-4 text-sm text-labFgMuted">
+              Public filings in → connected context and ranked action out
             </figcaption>
           </figure>
         </div>
       </div>
 
-      <Modal
-        open={dashboardOpen}
-        onClose={() => setDashboardOpen(false)}
-        title="The LettersIQ dashboard"
-        caption="Every alert behind the briefing, filterable by type and severity"
-        width="wide"
-      >
-        <img
-          src={dashboardInterface}
-          alt="The LettersIQ monitoring dashboard: 8 datasets, 25+ alert types and 3 open alerts across a lease monitoring table, with a filter panel for severance, certified letter, P-5 renewal, Rule 15, proration, commingle, drilling permit and P-4 alerts."
-          width="1400"
-          height="933"
-          decoding="async"
-          className="mx-auto h-auto w-full rounded-[2px] border border-white/10"
-        />
-      </Modal>
     </section>
   );
 };

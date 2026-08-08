@@ -9,8 +9,8 @@ import briefingEmail from "../assets/images/liq-daily-briefing-email.jpg";
 
 // The 7:00 AM briefing — real product artifact, authored as semantic markup.
 const briefingStats = [
-  { label: "Monitored", value: "12,842" },
-  { label: "Overnight", value: "+37" },
+  { label: "Datasets", value: "8" },
+  { label: "Changes", value: "5" },
   { label: "Critical", value: "1", alert: true },
 ];
 
@@ -22,7 +22,7 @@ const briefingRows = [
   },
   {
     sev: "high",
-    title: "P-5 renewal — Pioneer Natural Res.",
+    title: "P-5 renewal — Brazos Bend Operating",
     meta: "14 days",
   },
   {
@@ -107,38 +107,37 @@ export const Hero = () => {
           <div>
             <div className="boot-in boot-eyebrow flex items-center gap-2.5 text-sm font-semibold text-white/65">
               <span className="h-px w-6 shrink-0 bg-signalRed" aria-hidden="true" />
-              <span>Texas RRC compliance monitoring</span>
+              <span>Regulatory operations intelligence for Texas operators</span>
             </div>
 
             <h1 className="boot-in boot-headline mt-6 font-display text-[clamp(2.75rem,7vw,5rem)] font-extrabold leading-[0.95] tracking-[-0.02em] text-white">
-              Stop severances{" "}
+              Know what can stop production{" "}
               <span className="relative inline-block text-signalRed">
-                before the letter.
+                before it does.
                 <span className="boot-underline absolute -bottom-1 left-0 h-[5px] w-full origin-left scale-x-0 bg-signalRed" />
               </span>
             </h1>
 
             <p className="boot-in boot-sub mt-7 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
-              We watch eight Texas Railroad Commission datasets and connect them, so a
-              risk visible only across two systems lands as one line in your 7:00 AM
-              briefing — with time left to cure it.
+              LettersIQ monitors the Texas Railroad Commission for issues that can
+              shut in wells, delay first sales, or interrupt revenue. Every morning,
+              your team gets one prioritized briefing: what changed, which properties
+              are affected, why it matters, and what needs attention next.
             </p>
 
             <div className="boot-in boot-cta mt-9 flex flex-col gap-3 xs:flex-row xs:flex-wrap xs:gap-4">
               <Button onClick={scrollToContactUs}>
-                Get Started
+                Request an Operator Review
                 <span aria-hidden>&rarr;</span>
               </Button>
-              <Button asChild variant="ghostDark">
-                <a href="#coverage">
-                  See what we monitor <span aria-hidden>&rsaquo;</span>
-                </a>
+              <Button variant="ghostDark" onClick={() => setBriefingOpen(true)}>
+                See a Sample Briefing <span aria-hidden>&rsaquo;</span>
               </Button>
             </div>
 
             <div className="boot-in boot-cta mt-8 flex items-center gap-3 text-sm text-white/60">
               <span className="h-2 w-2 shrink-0 bg-cobalt" aria-hidden="true" />
-              Last scan 07:00 CT · next briefing tomorrow morning
+              No spreadsheets · no eight-system morning check · only new exceptions
             </div>
           </div>
 
@@ -218,13 +217,9 @@ export const Hero = () => {
                   <span className="font-mono text-xs text-panelInkMuted">
                     8 datasets · diffed daily
                   </span>
-                  <button
-                    type="button"
-                    onClick={() => setBriefingOpen(true)}
-                    className="link-underline font-mono text-xs font-semibold text-panelInk transition-colors hover:text-signalRed"
-                  >
-                    See the real email &rarr;
-                  </button>
+                  <span className="font-mono text-xs text-panelInkMuted">
+                    Illustrative portfolio
+                  </span>
                 </div>
 
                 {/* Glancing light that tracks the pointer across the surface */}
@@ -238,7 +233,7 @@ export const Hero = () => {
       <Modal
         open={briefingOpen}
         onClose={() => setBriefingOpen(false)}
-        title="The 7:00 AM briefing"
+        title="A sample 7:00 AM briefing"
         caption="Example portfolio · delivered daily at 07:00 CT"
       >
         <img

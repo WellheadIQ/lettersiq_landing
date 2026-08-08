@@ -5,11 +5,11 @@ import { StarMark } from "./Primitives.jsx";
 
 // Keep in lockstep with Navbar — fewer choices, same destinations.
 const navLinks = [
+  { label: "Briefing", href: "#how-it-works" },
   { label: "Blast Radius", href: "#blast-radius" },
-  { label: "How it works", href: "#how-it-works" },
   { label: "Coverage", href: "#coverage" },
   { label: "Pricing", href: "#pricing" },
-  { label: "Get Started", href: "#contact-us" },
+  { label: "Operator Review", href: "#contact-us" },
 ];
 
 export const Footer = () => {
@@ -24,10 +24,10 @@ export const Footer = () => {
             <StarMark size={40} className="text-white shrink-0" />
             <div>
               <div className="font-display font-extrabold text-white text-2xl md:text-4xl leading-none">
-                Stop severances before the letter.
+                Know what changed. Know what it affects.
               </div>
               <div className="mt-2 text-sm text-white/80">
-                One briefing. Every operator. Every morning.
+                Before a regulatory issue costs you production.
               </div>
             </div>
           </div>
@@ -36,7 +36,7 @@ export const Footer = () => {
             className="hidden sm:inline-flex items-center gap-2 bg-white text-signalRed font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 transition-transform duration-150 hover:scale-[1.02] active:scale-[0.96]"
             style={{ borderRadius: 2 }}
           >
-            Get Started <span aria-hidden>&rarr;</span>
+            Request Review <span aria-hidden>&rarr;</span>
           </a>
         </div>
       </div>
@@ -48,8 +48,8 @@ export const Footer = () => {
             <div className="md:col-span-5">
               <img src={LettersIQLogo} alt="LettersIQ" className="h-10 w-auto mb-5" />
               <p className="mb-5 max-w-sm text-sm leading-relaxed text-white/65">
-                Daily compliance monitoring for Texas oil and gas operators.
-                Eight RRC datasets, connected into one morning briefing.
+                Regulatory operations intelligence for Texas oil and gas operators.
+                Eight connected RRC systems, prioritized in one morning briefing.
               </p>
               <div className="flex items-center gap-2 text-sm text-white/65">
                 <span>Made with</span>
