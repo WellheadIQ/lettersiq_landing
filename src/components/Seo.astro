@@ -1,0 +1,206 @@
+---
+import { site, defaultDescription } from "../data/site.js";
+import { faq } from "../data/faq.js";
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  /** Emit FAQPage + SoftwareApplication schema. Homepage only. */
+  primary?: boolean;
+  /** [label, path] pairs for sub-pages. */
+  breadcrumbs?: [string, string][];
+}
+
+const {
+  title,
+  description = defaultDescription,
+  image = site.ogImage,
+  noindex = false,
+  primary = false,
+  breadcrumbs = [],
+} = Astro.props;
+
+const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const canonical = new URL(path, site.url).href;
+const ogImage = new URL(image, site.url).href;
+
+const organization = {
+  "@type": "Organization",
+  "@id": `${site.url}/#organization`,
+  name: site.name,
+  url: site.url,
+  email: site.email,
+  description:
+    "LettersIQ is a Texas Railroad Commission compliance monitoring service that watches eight public RRC datasets and delivers a daily severance early-warning briefing to oil and gas operators.",
+  logo: {
+    "@type": "ImageObject",
+    "@id": `${site.url}/#logo`,
+    url: new URL(site.logo, site.url).href,
+    width: 2000,
+    height: 1500,
+    caption: site.name,
+  },
+  image: { "@id": `${site.url}/#logo` },
+  parentOrganization: {
+    "@type": "Organization",
+    name: site.parent.name,
+    url: site.parent.url,
+  },
+  sameAs: [site.parent.url],
+  areaServed: { "@type": "State", name: "Texas", "@id": "https://www.wikidata.org/wiki/Q1439" },
+  knowsAbout: [
+    "Texas Railroad Commission compliance",
+    "Well severance orders",
+    "P-5 organization report renewal",
+    "Statewide Rule 15 inactive wells",
+    "Surface commingling permits (P-17)",
+    "Oil and gas proration schedules",
+  ],
+};
+
+const website = {
+  "@type": "WebSite",
+  "@id": `${site.url}/#website`,
+  url: site.url,
+  name: site.name,
+  description: defaultDescription,
+  publisher: { "@id": `${site.url}/#organization` },
+  inLanguage: "en-US",
+};
+
+const webpage = {
+  "@type": "WebPage",
+  "@id": `${canonical}#webpage`,
+  url: canonical,
+  name: title,
+  description,
+  isPartOf: { "@id": `${site.url}/#website` },
+  about: { "@id": `${site.url}/#organization` },
+  primaryImageOfPage: {
+    "@type": "ImageObject",
+    url: ogImage,
+    width: 1200,
+    height: 630,
+  },
+  inLanguage: "en-US",
+};
+
+const softwareApplication = {
+  "@type": "SoftwareApplication",
+  "@id": `${site.url}/#software`,
+  name: site.name,
+  url: site.url,
+  applicationCategory: "BusinessApplication",
+  applicationSubCategory: "Regulatory compliance monitoring",
+  operatingSystem: "Web-based, delivered by email",
+  description: defaultDescription,
+  provider: { "@id": `${site.url}/#organization` },
+  areaServed: { "@type": "State", name: "Texas" },
+  featureList: [
+    "Severance and seal order monitoring",
+    "Certified pre-severance letter alerts",
+    "P-5 organization report renewal countdown",
+    "Statewide Rule 15 inactive-well aging report",
+    "Monthly proration schedule and allowable diffs",
+    "Surface commingling (P-17) blast radius mapping",
+    "Drilling permit (W-1) tracking",
+    "Gatherer and purchaser (P-4) filing changes",
+  ],
+  offers: {
+    "@type": "Offer",
+    url: `${site.url}/#pricing`,
+    price: site.price.amount,
+    priceCurrency: site.price.currency,
+    availability: "https://schema.org/InStock",
+    priceSpecification: {
+      "@type": "UnitPriceSpecification",
+      price: site.price.amount,
+      priceCurrency: site.price.currency,
+      billingDuration: 1,
+      billingIncrement: 1,
+      unitCode: "MON",
+      referenceQuantity: {
+        "@type": "QuantitativeValue",
+        value: 1,
+        unitText: "lease",
+      },
+    },
+  },
+};
+
+const faqPage = {
+  "@type": "FAQPage",
+  "@id": `${site.url}/#faq`,
+  mainEntity: faq.map(({ question, answer }) => ({
+    "@type": "Question",
+    name: question,
+    acceptedAnswer: { "@type": "Answer", text: answer },
+  })),
+};
+
+const breadcrumbList = breadcrumbs.length && {
+  "@type": "BreadcrumbList",
+  "@id": `${canonical}#breadcrumb`,
+  itemListElement: [["Home", "/"], ...breadcrumbs].map(
+    ([name, href], i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name,
+      item: new URL(href, site.url).href,
+    })
+  ),
+};
+
+const graph = [
+  organization,
+  website,
+  webpage,
+  ...(primary ? [softwareApplication, faqPage] : []),
+  ...(breadcrumbList ? [breadcrumbList] : []),
+];
+
+const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{
+  noindex ? (
+    <meta name="robots" content="noindex, follow" />
+  ) : (
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+  )
+}
+
+<meta name="theme-color" content={site.themeColor} />
+<meta name="author" content={site.parent.name} />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content={site.locale} />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:secure_url" content={ogImage} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={site.ogImageAlt} />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={site.ogImageAlt} />
+
+<script type="application/ld+json" set:html={jsonLd} is:inline />

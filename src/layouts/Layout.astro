@@ -10,13 +10,19 @@ import "@fontsource/archivo/700.css";
 import "@fontsource/archivo/800.css";
 import "@fontsource/archivo/900.css";
 import "../styles/transitions.css";
-import { Analytics } from "../components/Analytics.jsx";
+import Seo from "../components/Seo.astro";
 
 export interface Props {
   title: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  primary?: boolean;
+  breadcrumbs?: [string, string][];
 }
 
-const { title } = Astro.props;
+const { title, description, image, noindex, primary, breadcrumbs } =
+  Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -24,49 +30,49 @@ const { title } = Astro.props;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="/favicon.ico" />
   <meta name="generator" content={Astro.generator} />
-  <meta name="description" content="LettersIQ monitors 8 Texas Railroad Commission datasets and connects them into one 7 AM briefing — severance, certified letters, P-5 renewals, Rule 15, proration, commingle blast radius, drilling permits, and P-4 filings. Predict and prevent shut-ins before they cost you." />
-  
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JLT6WXDYCK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-JLT6WXDYCK');
-  gtag('config', 'AW-16667114456');
 
-</script>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
 
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 
-<!-- Google Tag Manager -->
-<script type="text/partytown">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-TFL6VJ9B');</script>
+  <Seo
+    title={title}
+    description={description}
+    image={image}
+    noindex={noindex}
+    primary={primary}
+    breadcrumbs={breadcrumbs}
+  />
+
+  <!-- Google tag (gtag.js) — GA4 + Google Ads conversions -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JLT6WXDYCK"></script>
+  <!-- is:inline keeps gtag() on window; bundled as a module it is scoped away and
+       the conversion call in ContactUs.jsx silently never fires. -->
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JLT6WXDYCK');
+    gtag('config', 'AW-16667114456');
+  </script>
+
+  <!-- Google Tag Manager -->
+  <script type="text/partytown">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TFL6VJ9B');</script>
   <!-- End Google Tag Manager -->
 
-  <!-- Open Graph meta tags -->
-  <meta property="og:title" content="LettersIQ — Stop severances before the letter" />
-  <meta property="og:description" content="LettersIQ watches 8 Texas RRC datasets and connects them so a problem visible only across two systems lands as one line in your 7 AM email. Predict, prevent, and prove compliance before it costs you a shut-in." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://lettersiq.com" />
-  <meta property="og:image" content="/lettersiqlogo.png" />
-  
-<!-- Google tag (gtag.js) -->
-<script type="text/partytown" async src="https://www.googletagmanager.com/gtag/js?id=G-16667114456"></script>
-<script type="text/partytown">
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-16667114456');
-  gtag('config', 'AW-16667114456');
-</script>
-
-  
-  <title>{title}</title>
+  <!-- Vercel Web Analytics -->
+  <script>
+    import { inject } from "@vercel/analytics";
+    inject();
+  </script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -74,7 +80,6 @@ const { title } = Astro.props;
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <a href="#home" class="skip-link">Skip to content</a>
-  <Analytics client:only="react" />
   <slot />
   <style is:global>
     :root {

@@ -95,8 +95,8 @@ export const ContactUs = () => {
   }, []);
 
   const gtagReportConversion = useCallback(() => {
-    if (typeof gtag === 'function') {
-      gtag('event', 'conversion', {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'conversion', {
         send_to: 'AW-16667114456/R0rYCLP-rMkZENj3v4s-',
         event_callback: () => {},
       });
