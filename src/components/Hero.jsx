@@ -134,6 +134,11 @@ export const Hero = () => {
                   See what we monitor <span aria-hidden>&rsaquo;</span>
                 </a>
               </Button>
+              <Button asChild variant="ghostDark">
+                <a href="#film">
+                  <span aria-hidden>&#9654;</span> Watch the 55-second film
+                </a>
+              </Button>
             </div>
 
             <div className="boot-in boot-cta mt-8 flex items-center gap-3 text-sm text-white/60">
