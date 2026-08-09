@@ -42,13 +42,15 @@ const weekly = [
   },
 ];
 
-const CoverageColumn = ({ cadence, items, accent }) => (
+const CoverageColumn = ({ cadence, items }) => (
   <div className="coverage-col min-w-0">
     <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-line pb-3">
       <h3 className="font-display text-lg font-bold tracking-[-0.01em] text-labFg">
         {cadence}
       </h3>
-      <span className={`font-mono text-xs tabular-nums ${accent}`}>
+      {/* A count is inventory, not severity — colouring it would spend the
+          rationed red on metadata and imply a priority that isn't there. */}
+      <span className="font-mono text-xs tabular-nums text-inkMuted">
         {items.length} datasets
       </span>
     </div>
@@ -101,16 +103,8 @@ export const Coverage = () => {
 
         {/* Full inventory, grouped by scan cadence — nothing tucked behind a click */}
         <div className="coverage-board grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-          <CoverageColumn
-            cadence="Daily"
-            items={daily}
-            accent="text-signalRed"
-          />
-          <CoverageColumn
-            cadence="Weekly"
-            items={weekly}
-            accent="text-cobaltText"
-          />
+          <CoverageColumn cadence="Daily" items={daily} />
+          <CoverageColumn cadence="Weekly" items={weekly} />
         </div>
       </div>
     </section>

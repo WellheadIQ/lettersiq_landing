@@ -49,8 +49,8 @@ const checklist = [
 ];
 
 const statusStyle = {
-  ok: "text-cobalt",
-  bad: "text-signalRed",
+  ok: "text-cobaltInk",
+  bad: "text-signalInk",
   warn: "text-panelInkMuted",
 };
 
@@ -58,7 +58,7 @@ const StatusMark = ({ tone }) => {
   if (tone === "ok") {
     return (
       <span
-        className="flex h-6 w-6 shrink-0 items-center justify-center border border-cobalt text-cobalt"
+        className="flex h-6 w-6 shrink-0 items-center justify-center border border-cobaltInk text-cobaltInk"
         aria-hidden="true"
       >
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -76,7 +76,7 @@ const StatusMark = ({ tone }) => {
   if (tone === "bad") {
     return (
       <span
-        className="flex h-6 w-6 shrink-0 items-center justify-center border border-signalRed text-signalRed"
+        className="flex h-6 w-6 shrink-0 items-center justify-center border border-signalInk text-signalInk"
         aria-hidden="true"
       >
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -117,7 +117,7 @@ const AllowableChecklist = () => {
           <span className="h-2 w-2 bg-signalRed" aria-hidden="true" />
           Allowable blocker
         </div>
-        <span className="font-mono text-xs font-semibold text-signalRed">Blocking</span>
+        <span className="font-mono text-xs font-semibold text-signalInk">Blocking</span>
       </div>
 
       <div className="border-b border-black/10 px-5 py-4">
@@ -125,7 +125,7 @@ const AllowableChecklist = () => {
         <div className="mt-1 font-mono text-sm font-medium tabular-nums">
           03-00701 MCFADDIN STATE — Well 14D
         </div>
-        <p className="mt-3 inline-block border border-signalRed/40 bg-signalSoft px-3 py-1.5 text-xs font-semibold text-signalRed">
+        <p className="mt-3 inline-block border border-signalRed/40 bg-signalSoft px-3 py-1.5 text-xs font-semibold text-signalInk">
           No allowable (DLQ W-10)
         </p>
       </div>
@@ -147,7 +147,7 @@ const AllowableChecklist = () => {
         </ul>
       </div>
 
-      <div className="border-t border-black/10 px-5 py-3.5 text-sm font-medium text-signalRed">
+      <div className="border-t border-black/10 px-5 py-3.5 text-sm font-medium text-signalInk">
         1 filing blocking first revenue — chase the W-12.
       </div>
 

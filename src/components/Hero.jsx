@@ -43,8 +43,8 @@ const briefingRows = [
 ];
 
 const severity = {
-  critical: { label: "Critical", className: "text-signalRed" },
-  high: { label: "High", className: "text-cobalt" },
+  critical: { label: "Critical", className: "text-signalInk" },
+  high: { label: "High", className: "text-cobaltInk" },
   med: { label: "Medium", className: "text-panelInkMuted" },
   low: { label: "Low", className: "text-panelInkMuted" },
 };
@@ -135,10 +135,9 @@ export const Hero = () => {
               </Button>
             </div>
 
-            <div className="boot-in boot-cta mt-8 flex items-center gap-3 text-sm text-white/60">
-              <span className="h-2 w-2 shrink-0 bg-cobalt" aria-hidden="true" />
+            <p className="boot-in boot-cta mt-8 max-w-xl text-sm text-white/60">
               No spreadsheets · no eight-system morning check · only new exceptions
-            </div>
+            </p>
           </div>
 
           {/* ---------- Right: 7 AM briefing panel (light instrument inset) ---------- */}
@@ -173,7 +172,7 @@ export const Hero = () => {
                       </div>
                       <div
                         className={`mt-1 font-display text-2xl font-extrabold tabular-nums tracking-tight ${
-                          s.alert ? "text-signalRed" : "text-panelInk"
+                          s.alert ? "text-signalInk" : "text-panelInk"
                         }`}
                       >
                         {s.value}
@@ -187,7 +186,7 @@ export const Hero = () => {
                   {briefingRows.map((r) => (
                     <li
                       key={r.title}
-                      className={`boot-row flex items-center gap-3 px-5 py-3.5 ${
+                      className={`boot-row flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3.5 sm:flex-nowrap ${
                         r.sev === "critical" ? "bg-signalSoft" : ""
                       }`}
                     >
@@ -196,14 +195,17 @@ export const Hero = () => {
                       >
                         {severity[r.sev].label}
                       </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[13px] font-medium text-panelInk">
+                      {/* Narrow viewports drop the title to its own line: on one
+                          line it truncated to "Comminge se…", which is the row
+                          that matters most. */}
+                      <span className="order-last w-full min-w-0 sm:order-none sm:w-auto sm:flex-1">
+                        <span className="block text-[13px] font-medium text-panelInk sm:truncate">
                           {r.title}
                         </span>
                       </span>
                       <span
-                        className={`shrink-0 font-mono text-xs tabular-nums ${
-                          r.sev === "critical" ? "font-semibold text-signalRed" : "text-panelInkMuted"
+                        className={`ml-auto shrink-0 font-mono text-xs tabular-nums sm:ml-0 ${
+                          r.sev === "critical" ? "font-semibold text-signalInk" : "text-panelInkMuted"
                         }`}
                       >
                         {r.meta}

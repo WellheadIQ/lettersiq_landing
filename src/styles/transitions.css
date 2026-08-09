@@ -3,9 +3,9 @@
    Source: .agents/skills/transitions-dev
    (_root.css, 05-menu-dropdown, 06-modal, 09-icon-swap)
 
-   The shared motion-token scale is installed in full so any future
-   motion can reference it. Only the semantic variables for the three
-   transitions actually in use are carried over from _root.css.
+   The shared motion-token scale is installed so any future motion can
+   reference it, minus the bounce curves. Only the semantic variables for
+   the three transitions actually in use are carried over from _root.css.
    Snippets below are verbatim — do not collapse to shorthand, do not
    drop the reduced-motion guards.
    ============================================================ */
@@ -25,8 +25,8 @@
   --ease-in-out: ease-in-out; /* icon swap, text swap, text reveal, skeleton reveal */
   --ease-out: ease-out; /* tooltip open / close */
   --ease-linear: linear; /* shimmer, skeleton pulse, spinner */
-  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1); /* badge pop open */
-  --ease-bounce-strong: cubic-bezier(0.34, 3.85, 0.64, 1); /* bouncy hover-out (avatar return) */
+  /* The scale's two bounce curves are deliberately omitted: nothing in this
+     instrument-panel language overshoots, and unused they only invite it. */
   /* Distances */
   --distance-micro: 4px; /* text swap */
   --distance-small: 6px; /* error shake (small segment) */

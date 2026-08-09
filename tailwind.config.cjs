@@ -18,12 +18,15 @@ module.exports = {
         midnight: "#060D1B", // deepest navy: hero stage, footer
         slateNavy: "#16294A", // elevated navy panel on dark
 
-        signalRed: "#C8102E", // rationed accent: CTA, critical, active
+        signalRed: "#C8102E", // rationed accent: CTA, critical, active — surfaces, rules, marks
         signalBright: "#FF3B54", // brighter red for hover/alert glow
+        signalText: "#FF3B54", // red TEXT on dark surfaces (signalRed reads 3.3:1 there)
+        signalInk: "#B00C28", // red TEXT on the light inset, incl. the signalSoft wash
         signalSoft: "rgba(200,16,46,0.14)", // soft red wash for badges
 
         cobalt: "#3D6BFF", // data lines / info (lifted for dark-bg contrast)
         cobaltText: "#7AA0FF", // cobalt for text/links on dark
+        cobaltInk: "#2F55D4", // cobalt TEXT on the light inset
         unionBlue: "#0A3161", // deep blue linework / info-deep
         cobaltSoft: "rgba(61,107,255,0.12)",
 
@@ -78,6 +81,15 @@ module.exports = {
       },
       maxWidth: {
         content: "80rem",
+      },
+      // Tailwind 3.3 ships no numeric min-height/min-width scale, so `min-h-11`
+      // silently emitted nothing and every 44px touch target collapsed to its
+      // line box. 11 = the 44px WCAG 2.2 target-size floor.
+      minHeight: {
+        11: "2.75rem",
+      },
+      minWidth: {
+        11: "2.75rem",
       },
       opacity: {
         3: "0.03",

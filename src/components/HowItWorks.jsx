@@ -308,7 +308,9 @@ export const HowItWorks = () => {
             </ol>
           </div>
 
-          <figure className="how-figure w-full lg:pt-2">
+          {/* The diagram is roughly half the height of the four answers beside
+              it, so top alignment left a column of dead space under it. */}
+          <figure className="how-figure w-full lg:self-center">
             <div
               ref={loopPanel}
               className="tilt-surface overflow-hidden rounded-[3px] border border-white/15 bg-white/[0.03] px-4 py-6 shadow-float sm:px-6"

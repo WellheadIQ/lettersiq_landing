@@ -11,6 +11,10 @@ import "@fontsource/archivo/800.css";
 import "@fontsource/archivo/900.css";
 import "../styles/transitions.css";
 import Seo from "../components/Seo.astro";
+// The h1 is the LCP element and sets it in Archivo 800. Left to the stylesheet's
+// own `font-display: swap`, it painted in system-ui first and reflowed the whole
+// hero column downward once the real face arrived.
+import archivoDisplay from "@fontsource/archivo/files/archivo-latin-800-normal.woff2";
 
 export interface Props {
   title: string;
@@ -35,6 +39,14 @@ const { title, description, image, noindex, primary, breadcrumbs } =
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" href="/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
+
+  <link
+    rel="preload"
+    as="font"
+    type="font/woff2"
+    href={archivoDisplay}
+    crossorigin
+  />
 
   <link rel="preconnect" href="https://www.googletagmanager.com" />
   <link rel="dns-prefetch" href="https://www.google-analytics.com" />
@@ -117,6 +129,9 @@ const { title, description, image, noindex, primary, breadcrumbs } =
       top: 0;
       left: 50%;
       z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.75rem;
       transform: translate(-50%, -120%);
       background: var(--signal-red);
       color: #fff;

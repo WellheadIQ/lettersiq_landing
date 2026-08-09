@@ -284,7 +284,7 @@ export const BlastRadius = () => {
                   <span className="h-2 w-2 bg-signalRed" aria-hidden="true" />
                   Commingle graph
                 </div>
-                <span className="font-mono text-xs font-semibold text-signalRed">
+                <span className="font-mono text-xs font-semibold text-signalText">
                   Critical
                 </span>
               </div>
@@ -315,7 +315,7 @@ export const BlastRadius = () => {
                   <span className="font-mono tabular-nums text-white">08-12345</span>{" "}
                   (McFaddin Trust) on Clam Lake is under an outstanding severance.
                 </p>
-                <p className="mt-2 text-sm font-semibold text-signalRed">
+                <p className="mt-2 text-sm font-semibold text-signalText">
                   Your leases{" "}
                   <span className="font-mono tabular-nums">08-08559</span> and{" "}
                   <span className="font-mono tabular-nums">08-09012</span> cannot

@@ -26,7 +26,7 @@ export const Footer = () => {
               <div className="font-display font-extrabold text-white text-2xl md:text-4xl leading-none">
                 Know what changed. Know what it affects.
               </div>
-              <div className="mt-2 text-sm text-white/80">
+              <div className="mt-2 text-sm text-white/90">
                 Before a regulatory issue costs you production.
               </div>
             </div>
@@ -46,7 +46,13 @@ export const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 mb-12">
             {/* Brand */}
             <div className="md:col-span-5">
-              <img src={LettersIQLogo} alt="LettersIQ" className="h-10 w-auto mb-5" />
+              <img
+                src={LettersIQLogo}
+                alt="LettersIQ"
+                width="2000"
+                height="1500"
+                className="h-10 w-auto mb-5"
+              />
               <p className="mb-5 max-w-sm text-sm leading-relaxed text-white/65">
                 Regulatory operations intelligence for Texas oil and gas operators.
                 Eight connected RRC systems, prioritized in one morning briefing.
@@ -81,12 +87,17 @@ export const Footer = () => {
                 href="https://www.wellheadiq.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 p-3 border border-white/15 hover:border-white/45 transition-colors group"
+                className="inline-flex min-h-11 items-center p-3 border border-white/15 hover:border-white/45 transition-colors"
               >
-                <img src={wellheadiqLogo} alt="WellheadIQ" className="h-6" />
-                <span className="text-sm text-white/65 group-hover:text-white">
-                  WELLHEADIQ
-                </span>
+                {/* The asset already carries the wordmark; a text label beside it
+                    printed the name twice, on screen and to screen readers. */}
+                <img
+                  src={wellheadiqLogo}
+                  alt="WellheadIQ"
+                  width="6359"
+                  height="811"
+                  className="h-6 w-auto"
+                />
               </a>
             </div>
           </div>
@@ -96,12 +107,14 @@ export const Footer = () => {
               <div className="text-sm text-white/65">
                 &copy; {currentYear} LettersIQ. All rights reserved.
               </div>
-              <div className="text-center text-sm text-white/65 md:text-right">
-                <a href="/privacy-policy" className="inline-flex min-h-11 items-center transition-colors hover:text-white">
+              <div className="flex flex-wrap items-center justify-center gap-x-6 text-sm text-white/65 md:justify-end">
+                <a
+                  href="/privacy-policy"
+                  className="inline-flex min-h-11 items-center transition-colors hover:text-white"
+                >
                   Privacy
                 </a>
-                <span className="mx-3 text-white/20">|</span>
-                Not affiliated with the Texas Railroad Commission.
+                <span>Not affiliated with the Texas Railroad Commission.</span>
               </div>
             </div>
           </div>

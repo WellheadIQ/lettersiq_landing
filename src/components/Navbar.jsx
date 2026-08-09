@@ -85,7 +85,14 @@ export const Navbar = () => {
       <div className="w-full bg-signalRed text-white">
         <div className="section-shell flex h-9 items-center justify-center gap-2.5 font-mono text-xs">
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-white" aria-hidden="true" />
-          <span className="truncate">Regulatory intelligence across 8 connected RRC systems</span>
+          {/* The full sentence clips mid-word under ~640px, so the narrow
+              viewport gets a shorter line rather than a truncated one. */}
+          <span className="truncate sm:hidden">
+            Regulatory intelligence · 8 RRC systems
+          </span>
+          <span className="hidden truncate sm:inline">
+            Regulatory intelligence across 8 connected RRC systems
+          </span>
         </div>
       </div>
 
@@ -101,12 +108,18 @@ export const Navbar = () => {
           <motion.a
             href="#home"
             aria-label="LettersIQ home"
-            className="flex items-center gap-3 shrink-0"
+            className="flex min-h-11 items-center gap-3 shrink-0"
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: duration.verySlow / 1000 }}
           >
-            <img src={LettersIQLogo} alt="LettersIQ" className="h-9 md:h-10 w-auto" />
+            <img
+              src={LettersIQLogo}
+              alt="LettersIQ"
+              width="2000"
+              height="1500"
+              className="h-9 md:h-10 w-auto"
+            />
             <span className="hidden border-l border-white/15 pl-3 font-mono text-xs text-white/65 lg:inline-block">
               RRC&nbsp;Operations&nbsp;Intelligence
             </span>

@@ -260,10 +260,12 @@ const FormField = ({ name, label, type, placeholder, autoComplete, value, error,
         inputMode={type === 'tel' ? 'tel' : type === 'email' ? 'email' : 'text'}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={error ? errorId : undefined}
-        className={`w-full border bg-midnight/60 px-4 py-3.5 font-mono text-sm text-white placeholder:text-white/45 transition-colors focus:outline-none ${
+        className={`w-full border bg-midnight/60 px-4 py-3.5 font-mono text-sm text-white placeholder:text-white/55 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cobaltText ${
           error
-            ? 'border-signalRed/60 focus:border-signalRed'
-            : 'border-line focus:border-cobalt'
+            ? // Matches the message below it; signalRed at 60% was too dark
+              // against the panel to register as an invalid field.
+              'border-signalText focus:border-signalText'
+            : 'border-line focus:border-cobaltText'
         }`}
       />
       {error && (

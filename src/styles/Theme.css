@@ -198,16 +198,13 @@ html {
   transform: scaleX(1);
 }
 
-/* Accessible focus ring — cobalt */
+/* One focus colour for the whole site. Lifted cobalt rather than #1f4fff so the
+   ring clears 3:1 against the near-black canvas, and rather than signal red so
+   it stays visible when the focused control is itself red. */
 :where(a, button, input, textarea, select):focus-visible {
-  outline: 2px solid #1f4fff;
+  outline: 2px solid #7aa0ff;
   outline-offset: 2px;
   border-radius: 1px;
-}
-
-/* Preventing FOUC */
-@font-face {
-  font-display: var(--fontsource-Archivo-font-display, optional);
 }
 
 /* Respect reduced motion */

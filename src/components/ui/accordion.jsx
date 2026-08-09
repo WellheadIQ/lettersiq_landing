@@ -18,7 +18,7 @@ const AccordionTrigger = React.forwardRef(({ className, children, ...props }, re
       className={cn(
         "group flex flex-1 items-start gap-4 px-5 sm:px-6 py-5 text-left transition-colors duration-150 ease-out-strong",
         "hover:bg-parchmentAlt data-[state=open]:bg-parchmentAlt",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-signalRed",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cobaltText",
         className
       )}
       {...props}
