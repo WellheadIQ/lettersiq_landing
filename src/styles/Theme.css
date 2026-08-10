@@ -198,6 +198,109 @@ html {
   transform: scaleX(1);
 }
 
+/* ============================================================
+   Morning-loop scroll stage
+   ============================================================ */
+
+/* The reading column takes whichever edge has room. Tall viewports give it the
+   bottom; wide ones give it the side. A landscape phone has neither the height
+   for the first nor the `lg` width for the second, so it gets its own rule —
+   without it the copy eats the stage and the last chapter's CTA falls off. */
+.story-stage {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  padding-bottom: max(3.5rem, env(safe-area-inset-bottom));
+}
+
+.story-copy {
+  position: relative;
+  display: grid;
+  width: 100%;
+  max-width: 32rem;
+}
+
+/* Darkens only the band the copy sits in. It has to clear early enough that
+   the briefing artifact reads as a white document rather than a grey one. */
+.story-scrim {
+  background: linear-gradient(
+    to top,
+    #060d1b 0%,
+    rgba(6, 13, 27, 0.58) 34%,
+    rgba(6, 13, 27, 0) 68%
+  );
+}
+
+/* Every beat shares one grid cell, so the slot is as tall as the tallest
+   chapter instead of as tall as the first one. */
+.story-beat {
+  grid-area: 1 / 1;
+}
+
+.story-beat-title {
+  margin-top: 0.9rem;
+  font-size: clamp(1.5rem, min(3.4vw, 5.2vh), 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.story-beat-body {
+  margin-top: 0.9rem;
+}
+
+.story-beat-cta {
+  margin-top: 1.6rem;
+}
+
+@media (min-width: 1024px) {
+  .story-stage {
+    justify-content: center;
+    padding-bottom: 0;
+  }
+
+  .story-scrim {
+    background: linear-gradient(
+      to right,
+      #060d1b 0%,
+      rgba(6, 13, 27, 0.74) 24%,
+      rgba(6, 13, 27, 0) 52%
+    );
+  }
+}
+
+/* Short and wide: centre the copy in the column beside the world, and clear
+   the fixed header so the eyebrow isn't tucked under it. */
+@media (max-height: 560px) and (min-width: 640px) {
+  .story-stage {
+    justify-content: center;
+    padding-top: 6.5rem;
+    padding-bottom: 0;
+  }
+
+  .story-copy {
+    max-width: 26rem;
+  }
+
+  .story-scrim {
+    background: linear-gradient(
+      to right,
+      #060d1b 0%,
+      rgba(6, 13, 27, 0.76) 28%,
+      rgba(6, 13, 27, 0) 58%
+    );
+  }
+
+  .story-beat-title,
+  .story-beat-body {
+    margin-top: 0.6rem;
+  }
+
+  .story-beat-cta {
+    margin-top: 1rem;
+  }
+}
+
 /* One focus colour for the whole site. Lifted cobalt rather than #1f4fff so the
    ring clears 3:1 against the near-black canvas, and rather than signal red so
    it stays visible when the focused control is itself red. */

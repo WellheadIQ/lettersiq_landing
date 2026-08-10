@@ -85,12 +85,14 @@ export const Navbar = () => {
       <div className="w-full bg-signalRed text-white">
         <div className="section-shell flex h-9 items-center justify-center gap-2.5 font-mono text-xs">
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-white" aria-hidden="true" />
-          {/* The full sentence clips mid-word under ~640px, so the narrow
-              viewport gets a shorter line rather than a truncated one. */}
-          <span className="truncate sm:hidden">
+          {/* Three lengths rather than one truncated line: the sentence runs
+              out of room at ~640px and again at ~400px, and the claim that has
+              to survive both cuts is the number of systems. */}
+          <span className="xs:hidden">8 connected RRC systems</span>
+          <span className="hidden xs:inline sm:hidden">
             Regulatory intelligence · 8 RRC systems
           </span>
-          <span className="hidden truncate sm:inline">
+          <span className="hidden sm:inline">
             Regulatory intelligence across 8 connected RRC systems
           </span>
         </div>

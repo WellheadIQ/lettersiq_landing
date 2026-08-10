@@ -123,10 +123,10 @@ const CommingleGraph = () => (
         </text>
         <text
           x={CENTER.x}
-          y={CENTER.y + 13}
+          y={CENTER.y + 14}
           textAnchor="middle"
           className="font-mono"
-          fontSize="10"
+          fontSize="11"
           fill="rgba(250,251,255,0.55)"
         >
           {CENTER.sub}
@@ -156,9 +156,9 @@ const CommingleGraph = () => (
           {n.sub ? (
             <text
               x={n.x}
-              y={n.y + 10}
+              y={n.y + 11}
               textAnchor="middle"
-              fontSize="10"
+              fontSize="11"
               fill={
                 n.tone === "hot" ? toneFill.hot : "rgba(250,251,255,0.55)"
               }

@@ -32,7 +32,7 @@ const steps = [
 const SignalLoopDiagram = () => (
   <div className="how-diagram relative mx-auto w-full max-w-[440px]">
     <svg
-      viewBox="0 0 420 300"
+      viewBox="0 64 420 172"
       className="h-auto w-full"
       role="img"
       aria-labelledby="how-diagram-title how-diagram-desc"
@@ -84,16 +84,6 @@ const SignalLoopDiagram = () => (
             strokeLinecap="round"
           />
         ))}
-        <text
-          x="73"
-          y="246"
-          textAnchor="middle"
-          className="font-mono"
-          fontSize="11"
-          fill="rgba(250,251,255,0.55)"
-        >
-          Scan
-        </text>
       </g>
 
       {/* Connect hub */}
@@ -114,16 +104,6 @@ const SignalLoopDiagram = () => (
           strokeWidth="1.5"
           strokeLinecap="round"
         />
-        <text
-          x="228"
-          y="246"
-          textAnchor="middle"
-          className="font-mono"
-          fontSize="11"
-          fill="rgba(250,251,255,0.55)"
-        >
-          Connect
-        </text>
       </g>
 
       {/* Brief: miniature briefing panel */}
@@ -139,16 +119,6 @@ const SignalLoopDiagram = () => (
           strokeWidth="1"
         />
         <rect x="318" y="88" width="78" height="18" fill="#C8102E" />
-        <text
-          x="357"
-          y="100"
-          textAnchor="middle"
-          className="font-mono"
-          fontSize="8"
-          fill="#FAFBFF"
-        >
-          7:00 AM
-        </text>
         {[0, 1, 2, 3].map((i) => (
           <g key={i} className="how-brief-row">
             <rect
@@ -170,18 +140,16 @@ const SignalLoopDiagram = () => (
             />
           </g>
         ))}
-        <text
-          x="357"
-          y="246"
-          textAnchor="middle"
-          className="font-mono"
-          fontSize="11"
-          fill="rgba(250,251,255,0.55)"
-        >
-          Brief
-        </text>
       </g>
     </svg>
+
+    {/* Stage names live in the DOM, not the drawing: inside a viewBox that
+        scales with the column they'd render at 7px on a phone. */}
+    <ol className="mt-4 grid grid-cols-3 gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-white/55">
+      <li className="text-center">Scan</li>
+      <li className="text-center">Connect</li>
+      <li className="text-center">Brief</li>
+    </ol>
   </div>
 );
 

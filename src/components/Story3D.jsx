@@ -15,10 +15,27 @@ import { storyChapters } from "../lib/storyChapters.js";
  * with no canvas at all.
  */
 
+/**
+ * A short portrait phone has no band left for the world once the fixed header
+ * and the reading column have taken theirs, and a briefing rendered into
+ * 150 pixels is decoration rather than evidence. Those viewports get the flat
+ * story, which carries every chapter at full size.
+ */
+function stageHasRoom() {
+  const { innerWidth: w, innerHeight: h } = window;
+  if (w >= 1024) return true;
+  // Landscape puts the copy in a side column, so the world needs enough width
+  // left over for a readable document — a 640-wide phone laid flat doesn't
+  // have it, and 190px of briefing is worse than no briefing.
+  if (h <= 560) return w >= 740;
+  return h >= 700;
+}
+
 /** Devices that would stutter, or visitors who have asked for less, get the still. */
 function canRenderScene() {
   if (typeof window === "undefined") return false;
   if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) return false;
+  if (!stageHasRoom()) return false;
 
   const connection = navigator.connection;
   if (connection?.saveData === true) return false;
@@ -32,6 +49,7 @@ function canRenderScene() {
 export const Story3D = () => {
   const trackRef = useRef(null);
   const canvasRef = useRef(null);
+  const copyRef = useRef(null);
   const sceneRef = useRef(null);
   const [mode, setMode] = useState("static");
   const [ready, setReady] = useState(false);
@@ -48,6 +66,72 @@ export const Story3D = () => {
     const travel = rect.height - window.innerHeight;
     if (travel <= 0) return 0;
     return Math.min(1, Math.max(0, -rect.top / travel));
+  }, []);
+
+  /**
+   * The reading column moves between the side and the bottom of the stage
+   * depending on the viewport, so the scene is told where the empty space
+   * actually is rather than re-deriving the breakpoints in a second place.
+   */
+  const publishSafeArea = useCallback(() => {
+    const canvas = canvasRef.current;
+    const copy = copyRef.current;
+    const scene = sceneRef.current;
+    if (!canvas || !copy || !scene) return;
+
+    const stage = canvas.getBoundingClientRect();
+    const taken = copy.getBoundingClientRect();
+    if (!stage.width || !stage.height) return;
+
+    // The header is fixed over the pinned stage, so the top of the canvas is
+    // not actually free. Without this the world composes behind the nav.
+    const header = document.querySelector("nav.fixed")?.getBoundingClientRect();
+    const masked = Math.max(0, Math.min(stage.height * 0.3, (header?.bottom ?? 0) - stage.top));
+
+    const left = taken.left - stage.left;
+    const right = taken.right - stage.left;
+    const top = taken.top - stage.top;
+    const bottom = taken.bottom - stage.top;
+    const gutter = 24;
+    const floor = stage.height - masked;
+
+    // The back-to-top control floats over the same corner the world uses, so a
+    // band that runs under it gets cut back on whichever axis costs less.
+    const badge = document
+      .querySelector("[data-scroll-top]")
+      ?.getBoundingClientRect();
+    const clearBadge = (band) => {
+      if (!badge) return band;
+      const bx = badge.left - stage.left - 12;
+      const by = badge.top - stage.top - 12;
+      const overlaps =
+        bx < band.x + band.width &&
+        badge.right - stage.left > band.x &&
+        by < band.y + band.height &&
+        badge.bottom - stage.top > band.y;
+      if (!overlaps) return band;
+      const trimRight = { ...band, width: Math.max(0, bx - band.x) };
+      const trimBottom = { ...band, height: Math.max(0, by - band.y) };
+      return trimRight.width * band.height >= band.width * trimBottom.height
+        ? trimRight
+        : trimBottom;
+    };
+
+    // The four bands the copy leaves behind. Taking the biggest one is what
+    // makes this work at sizes nobody authored a breakpoint for: it lands on
+    // the side column when the copy is beside the world and on the open band
+    // when the copy is under it, without either case being named here.
+    const area = [
+      { x: right + gutter, y: masked, width: stage.width - right - gutter, height: floor },
+      { x: 0, y: masked, width: left - gutter, height: floor },
+      { x: 0, y: masked, width: stage.width, height: top - gutter - masked },
+      { x: 0, y: bottom + gutter, width: stage.width, height: stage.height - bottom - gutter },
+    ]
+      .map(clearBadge)
+      .filter((band) => band.width >= 150 && band.height >= 150)
+      .sort((a, b) => b.width * b.height - a.width * a.height)[0];
+
+    scene.setSafeArea(area ?? { x: 0, y: masked, width: stage.width, height: floor });
   }, []);
 
   useEffect(() => {
@@ -67,6 +151,7 @@ export const Story3D = () => {
           return;
         }
         sceneRef.current = scene;
+        publishSafeArea();
         scene.setProgress(readProgress());
         setReady(true);
         cleanup = () => {
@@ -87,7 +172,17 @@ export const Story3D = () => {
       else window.clearTimeout(idle);
       cleanup?.();
     };
-  }, [readProgress]);
+  }, [readProgress, publishSafeArea]);
+
+  // The copy column is what defines the free space, so watch the box itself
+  // rather than the viewport: font loading and wrapping move it too.
+  useEffect(() => {
+    if (mode !== "scene" || !copyRef.current) return undefined;
+    const observer = new ResizeObserver(publishSafeArea);
+    observer.observe(copyRef.current);
+    if (canvasRef.current) observer.observe(canvasRef.current);
+    return () => observer.disconnect();
+  }, [mode, publishSafeArea]);
 
   useEffect(() => {
     if (mode !== "scene") return undefined;
@@ -95,6 +190,10 @@ export const Story3D = () => {
     const onScroll = () => {
       const progress = readProgress();
       sceneRef.current?.setProgress(progress);
+      // The header only overlaps the stage while the section is pinned, and it
+      // mounts after this island does, so the mask is re-measured here rather
+      // than once at startup. Unchanged areas are dropped by the scene.
+      publishSafeArea();
 
       // Beats change on thresholds rather than continuously, so the reading
       // block stays put while the camera makes its largest moves.
@@ -115,7 +214,7 @@ export const Story3D = () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [mode, readProgress]);
+  }, [mode, readProgress, publishSafeArea]);
 
   return (
     <section
@@ -142,6 +241,7 @@ export const Story3D = () => {
         <ScrollStage
           trackRef={trackRef}
           canvasRef={canvasRef}
+          copyRef={copyRef}
           ready={ready}
           active={active}
         />
@@ -152,7 +252,7 @@ export const Story3D = () => {
   );
 };
 
-const ScrollStage = ({ trackRef, canvasRef, ready, active }) => (
+const ScrollStage = ({ trackRef, canvasRef, copyRef, ready, active }) => (
   <div
     ref={trackRef}
     className="relative mt-10 md:mt-14"
@@ -167,22 +267,16 @@ const ScrollStage = ({ trackRef, canvasRef, ready, active }) => (
       />
 
       {/* Legibility scrim — local to the reading column, not a blanket. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-midnight via-midnight/45 to-transparent lg:bg-gradient-to-r lg:from-midnight lg:via-midnight/55 lg:to-transparent"
-      />
+      <div aria-hidden="true" className="story-scrim pointer-events-none absolute inset-0" />
 
-      {/* The copy only moves beside the stage once there is room for both;
-          below that it sits under it and the world composes centred. */}
-      <div className="section-shell relative flex h-full flex-col justify-end pb-14 lg:justify-center lg:pb-0">
-        <div className="relative max-w-lg">
+      {/* Which edge the copy takes is a CSS decision; the scene measures the
+          result rather than repeating the breakpoints. */}
+      <div className="section-shell story-stage relative">
+        <div ref={copyRef} className="story-copy">
           {storyChapters.map((chapter, i) => (
             <article
               key={chapter.id}
-              // Beats are stacked in one slot: the first holds the height, the
-              // rest are absolutely placed over it. All stay in the accessible
-              // reading order.
-              className={`${i === 0 ? "relative" : "absolute inset-x-0 top-0"} transition-[opacity,transform,filter] duration-500 ease-out-strong`}
+              className="story-beat transition-[opacity,transform,filter] duration-500 ease-out-strong"
               style={{
                 opacity: i === active ? 1 : 0,
                 transform: `translateY(${i === active ? 0 : 14}px)`,
@@ -193,15 +287,17 @@ const ScrollStage = ({ trackRef, canvasRef, ready, active }) => (
               <p className="font-mono text-xs tracking-[0.14em] text-signalBright">
                 {chapter.eyebrow.toUpperCase()}
               </p>
-              <h3 className="mt-4 text-balance font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-extrabold leading-[1.05] tracking-[-0.02em] text-white">
+              <h3 className="story-beat-title text-balance font-display font-extrabold text-white">
                 {chapter.title}
               </h3>
-              <p className="mt-4 text-pretty text-base leading-relaxed text-white/70">
+              <p className="story-beat-body text-pretty text-base leading-relaxed text-white/70">
                 {chapter.body}
               </p>
               {i === storyChapters.length - 1 && (
-                <Button asChild className="mt-7">
-                  <a href="#contact-us">
+                <Button asChild className="story-beat-cta">
+                  {/* Off-beat CTAs stay in the reading order but out of the
+                      tab order, so nothing focusable hides behind opacity 0. */}
+                  <a href="#contact-us" tabIndex={i === active ? undefined : -1}>
                     Check My Operator
                     <span aria-hidden>&rarr;</span>
                   </a>
@@ -221,7 +317,7 @@ const ScrollStage = ({ trackRef, canvasRef, ready, active }) => (
 const ChapterRail = ({ active }) => (
   <div
     aria-hidden="true"
-    className="pointer-events-none absolute inset-x-0 bottom-10 hidden lg:block"
+    className="pointer-events-none absolute inset-x-0 bottom-10 hidden lg:block [@media(max-height:560px)]:lg:hidden"
   >
     <div className="section-shell">
       <ol className="flex items-center gap-2">
@@ -251,8 +347,8 @@ const StaticStory = () => (
   <div className="section-shell pb-16 pt-10 md:pb-24 md:pt-12">
     <figure className="overflow-hidden rounded-[3px] border border-white/15 bg-midnight shadow-float">
       <img
-        src="/film/lettersiq-film-poster.jpg"
-        alt="Eight Texas Railroad Commission dataset planes suspended over a map of Texas, with one overnight record joined down to the leases it affects."
+        src="/film/story-briefing.jpg"
+        alt="A 7:00 AM briefing listing five findings in order of consequence: production stopped by a commingle severance at Clam Lake, a P-5 renewal due in fourteen days, a missing W-12 blocking first sales, a proration delinquency, and a drilling permit expiring in twenty-two days — drawn from 1,204 records reviewed overnight."
         width="1920"
         height="1080"
         loading="lazy"

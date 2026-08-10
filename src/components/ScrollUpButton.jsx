@@ -3,9 +3,16 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import React from "react";
 import { distance, duration, easeSmoothOut } from "../lib/motionTokens.js";
 
+/**
+ * Regions the button steps aside for: the contact form, whose fields it would
+ * sit on top of, and the pinned story stage, which owns the whole screen while
+ * it plays and carries its own navigation.
+ */
+const YIELD_TO = ["contact-us", "story"];
+
 export const ScrollUpButton = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [contactInView, setContactInView] = useState(false);
+  const [yielding, setYielding] = useState(false);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -17,16 +24,23 @@ export const ScrollUpButton = () => {
     return () => window.removeEventListener("scroll", toggleVisible);
   }, []);
 
-  // Hide the button once the contact/footer region is on screen so it never
-  // collides with the form's fields or submit button on mobile.
   useEffect(() => {
-    const target = document.getElementById("contact-us");
-    if (!target || typeof IntersectionObserver === "undefined") return;
+    if (typeof IntersectionObserver === "undefined") return undefined;
+    const targets = YIELD_TO.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!targets.length) return undefined;
+
+    const showing = new Set();
     const observer = new IntersectionObserver(
-      ([entry]) => setContactInView(entry.isIntersecting),
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) showing.add(entry.target);
+          else showing.delete(entry.target);
+        });
+        setYielding(showing.size > 0);
+      },
       { rootMargin: "0px 0px -20% 0px" }
     );
-    observer.observe(target);
+    targets.forEach((target) => observer.observe(target));
     return () => observer.disconnect();
   }, []);
 
@@ -34,7 +48,7 @@ export const ScrollUpButton = () => {
     window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   };
 
-  const isVisible = isScrolled && !contactInView;
+  const isVisible = isScrolled && !yielding;
   const offset = reduceMotion ? 0 : distance.medium;
 
   return (
@@ -43,6 +57,7 @@ export const ScrollUpButton = () => {
         <motion.button
           type="button"
           aria-label="Scroll to top"
+          data-scroll-top
           className="w-12 h-12 fixed bottom-6 right-6 border border-lineStrong bg-card hover:bg-oxford hover:border-oxford cursor-pointer flex justify-center items-center z-50 group transition-colors duration-150 ease-out-strong"
           onClick={scrollToTop}
           initial={{ opacity: 0, y: offset }}
