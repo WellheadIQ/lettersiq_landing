@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Hero } from "../components/Hero.jsx";
-import { Film } from "../components/Film.jsx";
+import { Story3D } from "../components/Story3D.jsx";
 import { Navbar } from "../components/Navbar.jsx";
 import { Coverage } from "../components/Coverage.jsx";
 import { Features1 } from "../components/Features1.jsx";
@@ -23,9 +23,9 @@ import "../styles/Theme.css";
 >
   <Navbar client:load />
   <Hero client:load />
-  <!-- client:visible — the film's observer has no work to do until the section
-       is near the viewport, so its JS stays off the critical path. -->
-  <Film client:visible />
+  <!-- client:load so the pinned track replaces the static fallback before the
+       reader arrives; Three.js itself is still imported lazily, on idle. -->
+  <Story3D client:load />
   <BlastRadius client:load />
   <HowItWorks client:load />
   <Features1 client:load />

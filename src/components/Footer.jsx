@@ -9,7 +9,7 @@ const navLinks = [
   { label: "Blast Radius", href: "#blast-radius" },
   { label: "Coverage", href: "#coverage" },
   { label: "Pricing", href: "#pricing" },
-  { label: "Operator Review", href: "#contact-us" },
+  { label: "Check My Operator", href: "#contact-us" },
 ];
 
 export const Footer = () => {
@@ -23,11 +23,11 @@ export const Footer = () => {
           <div className="flex items-center gap-4">
             <StarMark size={40} className="text-white shrink-0" />
             <div>
-              <div className="font-display font-extrabold text-white text-2xl md:text-4xl leading-none">
-                Know what changed. Know what it affects.
+              <div className="font-display font-extrabold text-white text-2xl md:text-4xl leading-[1.05]">
+                Know what changed. Know what it affects. Know what to do next.
               </div>
               <div className="mt-2 text-sm text-white/90">
-                Before a regulatory issue costs you production.
+                Before it costs you production.
               </div>
             </div>
           </div>
@@ -36,7 +36,7 @@ export const Footer = () => {
             className="hidden sm:inline-flex items-center gap-2 bg-white text-signalRed font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 transition-transform duration-150 hover:scale-[1.02] active:scale-[0.96]"
             style={{ borderRadius: 2 }}
           >
-            Request Review <span aria-hidden>&rarr;</span>
+            Check My Operator <span aria-hidden>&rarr;</span>
           </a>
         </div>
       </div>

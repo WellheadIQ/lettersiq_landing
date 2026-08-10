@@ -14,29 +14,36 @@ const briefingStats = [
   { label: "Critical", value: "1", alert: true },
 ];
 
+// Consequence first, then the record, then what it touches — the same three
+// pieces every LettersIQ finding is written in.
 const briefingRows = [
   {
     sev: "critical",
+    consequence: "Production stopped",
     title: "Commingle severance — Clam Lake",
     meta: "2 leases exposed",
   },
   {
     sev: "high",
+    consequence: "Production at risk",
     title: "P-5 renewal — Brazos Bend Operating",
     meta: "14 days",
   },
   {
     sev: "med",
+    consequence: "Severance risk",
     title: "Rule 15 inactive — Well 08-11234",
     meta: "W-3X due",
   },
   {
     sev: "med",
+    consequence: "Allowable blocked",
     title: "Proration delinquent — DLQ W-10",
     meta: "3 wells",
   },
   {
     sev: "low",
+    consequence: "Permit lapses",
     title: "Drilling permit expiry — W-1",
     meta: "22 days",
   },
@@ -107,7 +114,7 @@ export const Hero = () => {
           <div>
             <div className="boot-in boot-eyebrow flex items-center gap-2.5 text-sm font-semibold text-white/65">
               <span className="h-px w-6 shrink-0 bg-signalRed" aria-hidden="true" />
-              <span>Regulatory operations intelligence for Texas operators</span>
+              <span>Texas RRC intelligence · 8 connected systems</span>
             </div>
 
             <h1 className="boot-in boot-headline mt-6 font-display text-[clamp(2.75rem,7vw,5rem)] font-extrabold leading-[0.95] tracking-[-0.02em] text-white">
@@ -119,15 +126,15 @@ export const Hero = () => {
             </h1>
 
             <p className="boot-in boot-sub mt-7 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
-              LettersIQ monitors the Texas Railroad Commission for issues that can
-              shut in wells, delay first sales, or interrupt revenue. Every morning,
-              your team gets one prioritized briefing: what changed, which properties
-              are affected, why it matters, and what needs attention next.
+              LettersIQ connects eight Texas RRC systems to catch regulatory issues
+              that can shut in wells, delay first sales, or interrupt revenue. Every
+              morning, your team gets one prioritized briefing: what changed, what it
+              affects, and what needs attention.
             </p>
 
             <div className="boot-in boot-cta mt-9 flex flex-col gap-3 xs:flex-row xs:flex-wrap xs:gap-4">
               <Button onClick={scrollToContactUs}>
-                Request an Operator Review
+                Check My Operator
                 <span aria-hidden>&rarr;</span>
               </Button>
               <Button variant="ghostDark" onClick={() => setBriefingOpen(true)}>
@@ -186,30 +193,32 @@ export const Hero = () => {
                   {briefingRows.map((r) => (
                     <li
                       key={r.title}
-                      className={`boot-row flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3.5 sm:flex-nowrap ${
+                      className={`boot-row px-5 py-3 ${
                         r.sev === "critical" ? "bg-signalSoft" : ""
                       }`}
                     >
-                      <span
-                        className={`w-[4.5rem] shrink-0 font-mono text-xs font-semibold ${severity[r.sev].className}`}
-                      >
-                        {severity[r.sev].label}
-                      </span>
-                      {/* Narrow viewports drop the title to its own line: on one
-                          line it truncated to "Comminge se…", which is the row
-                          that matters most. */}
-                      <span className="order-last w-full min-w-0 sm:order-none sm:w-auto sm:flex-1">
-                        <span className="block text-[13px] font-medium text-panelInk sm:truncate">
-                          {r.title}
+                      <div className="flex items-baseline gap-3">
+                        <span
+                          className={`min-w-0 flex-1 truncate font-mono text-[11px] font-semibold uppercase tracking-[0.07em] ${severity[r.sev].className}`}
+                        >
+                          <span className="sr-only">
+                            {severity[r.sev].label} —{" "}
+                          </span>
+                          {r.consequence}
                         </span>
-                      </span>
-                      <span
-                        className={`ml-auto shrink-0 font-mono text-xs tabular-nums sm:ml-0 ${
-                          r.sev === "critical" ? "font-semibold text-signalInk" : "text-panelInkMuted"
-                        }`}
-                      >
-                        {r.meta}
-                      </span>
+                        <span
+                          className={`shrink-0 font-mono text-xs tabular-nums ${
+                            r.sev === "critical"
+                              ? "font-semibold text-signalInk"
+                              : "text-panelInkMuted"
+                          }`}
+                        >
+                          {r.meta}
+                        </span>
+                      </div>
+                      <div className="mt-1 text-[13px] font-medium text-panelInk">
+                        {r.title}
+                      </div>
                     </li>
                   ))}
                 </ul>

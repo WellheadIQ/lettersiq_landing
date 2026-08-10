@@ -18,6 +18,10 @@ const outcomes = [
     title: "Reduce manual monitoring",
     body: "Replace spreadsheets and operator-by-operator searches with one ranked list of the changes that require attention.",
   },
+  {
+    title: "De-risk asset acquisitions",
+    body: "Run acquired Texas properties through LettersIQ before or immediately after closing to surface inherited regulatory obligations and connected exposure.",
+  },
 ];
 
 const checklist = [
@@ -147,8 +151,18 @@ const AllowableChecklist = () => {
         </ul>
       </div>
 
-      <div className="border-t border-black/10 px-5 py-3.5 text-sm font-medium text-signalInk">
-        1 filing blocking first revenue — chase the W-12.
+      {/* Consequence, then the record, then the move — the same three lines the
+          product uses everywhere a finding is shown. */}
+      <div className="border-t border-black/10 px-5 py-4">
+        <div className="font-mono text-xs font-semibold uppercase tracking-[0.08em] text-signalInk">
+          First sales blocked
+        </div>
+        <div className="mt-1.5 text-sm font-semibold text-panelInk">
+          W-12 missing
+        </div>
+        <div className="mt-1 text-sm text-panelInkMuted">
+          Next action: chase the directional survey
+        </div>
       </div>
 
       <span className="tilt-sheen" aria-hidden="true" />

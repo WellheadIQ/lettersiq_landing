@@ -32,7 +32,7 @@ export const FAQ = () => {
           </h2>
           <p className="mt-4 text-pretty text-base text-labFgMuted md:text-lg">
             LettersIQ is not another database your team has to learn. Here is how
-            the monitoring, connected-record analysis, and operator review work.
+            the monitoring, connected-record analysis, and pricing work.
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export const FAQ = () => {
             href="#contact-us"
             className="link-underline inline-flex min-h-11 items-center text-labFg"
           >
-            Request an operator review &rarr;
+            Check my operator &rarr;
           </a>
         </div>
       </div>

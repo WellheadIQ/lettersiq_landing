@@ -121,11 +121,7 @@ const softwareApplication = {
       billingDuration: 1,
       billingIncrement: 1,
       unitCode: "MON",
-      referenceQuantity: {
-        "@type": "QuantitativeValue",
-        value: 1,
-        unitText: "lease",
-      },
+      name: "Essential — up to 100 leases",
     },
   },
 };
@@ -138,23 +134,6 @@ const faqPage = {
     name: question,
     acceptedAnswer: { "@type": "Answer", text: answer },
   })),
-};
-
-// The explainer film. Google will not surface a VideoObject without duration and
-// thumbnailUrl, so both are required rather than nice-to-have.
-const videoObject = {
-  "@type": "VideoObject",
-  "@id": `${site.url}/#film`,
-  name: "What changed at the Texas RRC overnight?",
-  description:
-    "How LettersIQ reads eight Texas Railroad Commission datasets each morning and joins them, so a severance risk visible in no single dataset — including one filed against another operator on a shared commingle permit — arrives as one line in a 7:00 AM briefing.",
-  thumbnailUrl: [new URL("/film/lettersiq-film-poster.jpg", site.url).href],
-  contentUrl: new URL("/film/lettersiq-film.mp4", site.url).href,
-  uploadDate: "2026-08-08T00:00:00-05:00",
-  duration: "PT55S",
-  isFamilyFriendly: true,
-  inLanguage: site.locale.split("_")[0],
-  publisher: { "@id": `${site.url}/#organization` },
 };
 
 const breadcrumbList = breadcrumbs.length && {
@@ -174,7 +153,7 @@ const graph = [
   organization,
   website,
   webpage,
-  ...(primary ? [softwareApplication, faqPage, videoObject] : []),
+  ...(primary ? [softwareApplication, faqPage] : []),
   ...(breadcrumbList ? [breadcrumbList] : []),
 ];
 

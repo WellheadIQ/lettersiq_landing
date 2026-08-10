@@ -275,6 +275,9 @@ export const BlastRadius = () => {
           </div>
 
           <figure className="blast-graph w-full lg:pt-2">
+            <p className="mb-4 text-pretty font-display text-lg font-bold tracking-[-0.01em] text-white">
+              This is what &ldquo;connected regulatory intelligence&rdquo; means.
+            </p>
             <div
               ref={graphPanel}
               className="tilt-surface overflow-hidden rounded-[3px] border border-white/15 bg-white/[0.03] shadow-float"

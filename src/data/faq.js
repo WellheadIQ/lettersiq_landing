@@ -41,8 +41,13 @@ export const faq = [
       "Many production problems have public signals before the final consequence: a certified letter, an approaching P-5 expiration, a delinquent proration code, a Rule 15 milestone, or an expiring permit. LettersIQ surfaces those upstream changes while there may still be time to investigate and act.",
   },
   {
-    question: "How do I request an operator review?",
+    question: "How do I get my operator checked?",
     answer:
-      "Use the operator review form on this page and send your operator name and contact details. We will follow up to understand your portfolio and discuss the appropriate LettersIQ monitoring setup. No credit card is required to request the review.",
+      "Use the Check My Operator form on this page and send your operator name and contact details. We run your Texas portfolio through LettersIQ and show you what deserves attention. No credit card is required.",
+  },
+  {
+    question: "What does LettersIQ cost?",
+    answer:
+      "Plans are priced on the size of the operating portfolio being monitored, and every plan includes every dataset and alert type. Essential covers up to 100 leases at $399 per month, Operator covers up to 500 leases at $999 per month, and portfolios above 500 leases are priced individually.",
   },
 ];

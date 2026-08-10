@@ -15,7 +15,8 @@ export const site = {
     "LettersIQ connects eight Texas Railroad Commission systems into one prioritized morning briefing for Texas oil and gas operators.",
   themeColor: "#060d1b",
   locale: "en_US",
-  price: { amount: "4", currency: "USD", unit: "lease per month" },
+  // Entry plan — schema.org offers advertise the lowest price a buyer can pay.
+  price: { amount: "399", currency: "USD", unit: "month" },
 };
 
 // Kept under ~155 characters so Google renders it whole rather than truncating.

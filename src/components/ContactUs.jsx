@@ -31,9 +31,12 @@ const SpinnerIcon = () => (
   </svg>
 );
 
+// Operator name leads: it is the only thing we actually need to run the
+// portfolio, and asking for it first makes the exchange feel like a lookup
+// rather than a lead form.
 const FIELDS = [
-  { name: 'name', label: 'Full name', type: 'text', autoComplete: 'name', placeholder: 'Jane Smith' },
   { name: 'operator', label: 'Operator name', type: 'text', autoComplete: 'organization', placeholder: 'Brazos Bend Operating' },
+  { name: 'name', label: 'Full name', type: 'text', autoComplete: 'name', placeholder: 'Jane Smith' },
   { name: 'email', label: 'Work email', type: 'email', autoComplete: 'email', placeholder: 'you@operator.com' },
   { name: 'phone', label: 'Phone', type: 'tel', autoComplete: 'tel', placeholder: '(512) 555-0134' },
 ];
@@ -141,13 +144,13 @@ export const ContactUs = () => {
   return (
     <section id="contact-us" className="w-full bg-midnight py-16 md:py-24 relative overflow-hidden">
       <div className="section-shell max-w-2xl relative z-10">
-        <SectionLabel label="Operator review" className="mb-5" />
+        <SectionLabel label="Check my operator" className="mb-5" />
         <h2 className="text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-white">
-          See what LettersIQ can find across your portfolio.
+          See what LettersIQ finds across your portfolio.
         </h2>
         <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-white/65 md:text-lg">
-          Send us your operator name and contact details. We'll review your needs and
-          show you how connected RRC monitoring fits your operating portfolio.
+          Give us your operator name. We'll run your Texas portfolio through
+          LettersIQ and show you what deserves attention.
         </p>
 
         <AnimatePresence mode="wait" initial={false}>
@@ -184,7 +187,7 @@ export const ContactUs = () => {
                 >
                   We couldn't send your request. Your entries are still here — try again, or{" "}
                   <a
-                    href="mailto:privacy@wellheadiq.com?subject=LettersIQ%20operator%20review"
+                    href="mailto:privacy@wellheadiq.com?subject=LettersIQ%20operator%20check"
                     className="font-semibold underline underline-offset-2 hover:text-white"
                   >
                     email privacy@wellheadiq.com
@@ -195,7 +198,7 @@ export const ContactUs = () => {
 
               <div className="p-6 pt-2">
                 <Button type="submit" disabled={formState === 'submitting'} className="w-full">
-                  {formState === 'submitting' ? 'Sending…' : 'Request an Operator Review'}
+                  {formState === 'submitting' ? 'Sending…' : 'Check My Operator'}
                   <IconSwap
                     state={formState === 'submitting' ? 'b' : 'a'}
                     a={<ArrowIcon />}
@@ -227,16 +230,16 @@ const SuccessMessage = ({ onReset }) => (
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
       </svg>
     </div>
-    <h3 className="font-display text-2xl font-bold text-white">Request received</h3>
+    <h3 className="font-display text-2xl font-bold text-white">Operator received</h3>
     <p className="mt-3 text-pretty text-white/65">
-      We'll be in touch to review your operator and discuss the right monitoring setup.
+      We'll run your Texas portfolio through LettersIQ and send you what we find.
     </p>
     <button
       type="button"
       onClick={onReset}
       className="btn-ghost-dark mt-8 min-h-11 px-5 text-sm"
     >
-      Submit another request
+      Check another operator
     </button>
   </motion.div>
 );

@@ -92,7 +92,7 @@ export const Coverage = () => {
 
         <div className="mb-12 max-w-3xl">
           <h2 className="text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-labFg">
-            Stop checking the RRC. Start managing the exceptions.
+            Eight RRC systems. One connected view.
           </h2>
           <p className="mt-5 text-pretty text-base leading-relaxed text-labFgMuted md:text-lg">
             We monitor regulatory activity across your operating portfolio,

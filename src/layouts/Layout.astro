@@ -116,11 +116,13 @@ const { title, description, image, noindex, primary, breadcrumbs } =
       text-rendering: optimizeLegibility;
     }
 
+    /* Horizontal clipping lives on <html> only. Repeating overflow-x here made
+       <body> its own scroll container, which silently disables position:sticky
+       for every descendant — including the scroll-conducted story section. */
     body {
       background-color: var(--canvas);
       color: var(--ink);
       position: relative;
-      overflow-x: hidden;
     }
 
     /* Skip-to-content — visible only on keyboard focus */

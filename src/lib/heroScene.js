@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { buildTexasShape } from "./texasOutline.js";
 
 /**
  * Hero instrument scene — "eight datasets, one briefing" rendered as real geometry.
@@ -26,35 +27,11 @@ const SLAB_GAP = 0.3;
 const SLAB_W = 3.05;
 const SLAB_D = 2.15;
 
-// Lone Star silhouette, authored in the same 220x200 space as the flat SVG motif.
-const TEXAS_POINTS = [
-  [40, 34], [96, 34], [96, 26], [132, 26], [134, 58], [162, 64], [182, 92],
-  [176, 104], [188, 120], [182, 150], [150, 150], [138, 176], [120, 150],
-  [96, 150], [96, 120], [58, 120], [58, 78], [40, 78],
-];
-
 // The two planes the correlated signal threads through, and where it lands.
 const ALERT_UPPER = 6;
 const ALERT_LOWER = 2;
 const ALERT_X = 0.62;
 const ALERT_Z = -0.34;
-
-function buildTexasShape() {
-  const shape = new THREE.Shape();
-  const scale = 0.019;
-  const cx = 114;
-  const cy = 101;
-
-  TEXAS_POINTS.forEach(([x, y], i) => {
-    const px = (x - cx) * scale;
-    // SVG y grows downward; the extruded shape is laid flat and flipped on X.
-    const py = -(y - cy) * scale;
-    if (i === 0) shape.moveTo(px, py);
-    else shape.lineTo(px, py);
-  });
-  shape.closePath();
-  return shape;
-}
 
 /** Deterministic scatter so the marker field is identical on every load. */
 function pseudoRandom(seed) {

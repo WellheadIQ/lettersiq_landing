@@ -146,7 +146,7 @@ export const Navbar = () => {
             ))}
             <Button asChild size="sm" className="ml-4 text-[13px]">
               <a href="#contact-us">
-                Request Review
+                Check My Operator
                 <span aria-hidden>&rarr;</span>
               </a>
             </Button>
@@ -207,7 +207,7 @@ export const Navbar = () => {
             style={{ "--index": navbarLinks.length }}
           >
             <a href="#contact-us" onClick={toggleMenu} className="btn-ember w-full">
-              Request an Operator Review &rarr;
+              Check My Operator &rarr;
             </a>
           </div>
         </div>
