@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { SectionLabel } from './Primitives.jsx';
 import { Button } from './ui/button.jsx';
 import { IconSwap } from './ui/icon-swap.jsx';
@@ -16,6 +16,25 @@ const panelExit = (y) => ({
   y,
   transition: { duration: duration.medium / 1000, ease: easeSmoothOut },
 });
+
+/**
+ * Panel swap props. The form and the confirmation both carry travel and blur,
+ * which is exactly what a vestibular reader has asked not to receive — and
+ * neither one needs motion to be read.
+ *
+ * The reduced-motion branch declares the resting state rather than omitting the
+ * props: the server render always writes the offset, blurred `initial` styles
+ * inline, so they have to be actively cleared on the client.
+ */
+const panelSettled = { y: 0, filter: 'blur(0px)' };
+const panelMotion = (reduceMotion, exitY) =>
+  reduceMotion
+    ? { initial: panelSettled, animate: panelSettled }
+    : {
+        initial: { y: distance.medium, filter: `blur(${blur.small}px)` },
+        animate: panelEnter,
+        exit: panelExit(exitY),
+      };
 
 const ArrowIcon = () => <span className="block leading-none">&rarr;</span>;
 
@@ -67,6 +86,7 @@ const validateField = (name, value) => {
 };
 
 export const ContactUs = () => {
+  const reduceMotion = useReducedMotion();
   const [formState, setFormState] = useState('idle');
   const [formData, setFormData] = useState({ name: '', operator: '', email: '', phone: '' });
   const [errors, setErrors] = useState({});
@@ -143,85 +163,86 @@ export const ContactUs = () => {
 
   return (
     <section id="contact-us" className="w-full bg-midnight py-16 md:py-24 relative overflow-hidden">
-      <div className="section-shell max-w-2xl relative z-10">
-        <SectionLabel label="Check my operator" className="mb-5" />
-        <h2 className="text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-white">
-          See what LettersIQ finds across your portfolio.
-        </h2>
-        <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-white/65 md:text-lg">
-          Give us your operator name. We'll run your Texas portfolio through
-          LettersIQ and show you what deserves attention.
-        </p>
+      {/* Inner column, not `max-w-2xl` on the shell: the shell centres itself,
+          so narrowing it there would pull the form off the leading edge every
+          other section on the page shares. */}
+      <div className="section-shell relative z-10">
+        <div className="max-w-2xl">
+          <SectionLabel label="Check my operator" className="mb-5" />
+          <h2 className="text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-white">
+            See what LettersIQ finds across your portfolio.
+          </h2>
+          <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-white/65 md:text-lg">
+            Give us your operator name. We'll run your Texas portfolio through
+            LettersIQ and show you what deserves attention.
+          </p>
 
-        <AnimatePresence mode="wait" initial={false}>
-          {formState === 'success' ? (
-            <SuccessMessage key="success" onReset={resetForm} />
-          ) : (
-            <motion.form
-              key="form"
-              onSubmit={handleSubmit}
-              noValidate
-              initial={{ y: distance.medium, filter: `blur(${blur.small}px)` }}
-              animate={panelEnter}
-              exit={panelExit(-distance.base)}
-              className="mt-8 border border-line bg-card"
-            >
-              <div className="grid gap-5 p-6 sm:grid-cols-2">
-                {FIELDS.map((f) => (
-                  <FormField
-                    key={f.name}
-                    {...f}
-                    value={formData[f.name]}
-                    error={touched[f.name] ? errors[f.name] : ''}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    full={f.name === 'name' || f.name === 'operator'}
-                  />
-                ))}
-              </div>
-
-              {formState === 'error' && (
-                <div
-                  role="alert"
-                  className="mx-6 mb-2 border border-signalRed/40 bg-signalSoft px-4 py-3 text-sm text-signalBright"
-                >
-                  We couldn't send your request. Your entries are still here — try again, or{" "}
-                  <a
-                    href="mailto:privacy@wellheadiq.com?subject=LettersIQ%20operator%20check"
-                    className="font-semibold underline underline-offset-2 hover:text-white"
-                  >
-                    email privacy@wellheadiq.com
-                  </a>
-                  .
+          <AnimatePresence mode="wait" initial={false}>
+            {formState === 'success' ? (
+              <SuccessMessage key="success" onReset={resetForm} reduceMotion={reduceMotion} />
+            ) : (
+              <motion.form
+                key="form"
+                onSubmit={handleSubmit}
+                noValidate
+                {...panelMotion(reduceMotion, -distance.base)}
+                className="mt-8 border border-line bg-card"
+              >
+                <div className="grid gap-5 p-6 sm:grid-cols-2">
+                  {FIELDS.map((f) => (
+                    <FormField
+                      key={f.name}
+                      {...f}
+                      value={formData[f.name]}
+                      error={touched[f.name] ? errors[f.name] : ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      full={f.name === 'name' || f.name === 'operator'}
+                    />
+                  ))}
                 </div>
-              )}
 
-              <div className="p-6 pt-2">
-                <Button type="submit" disabled={formState === 'submitting'} className="w-full">
-                  {formState === 'submitting' ? 'Sending…' : 'Check My Operator'}
-                  <IconSwap
-                    state={formState === 'submitting' ? 'b' : 'a'}
-                    a={<ArrowIcon />}
-                    b={<SpinnerIcon />}
-                  />
-                </Button>
-                <p className="mt-3 text-center text-sm text-white/65">
-                  No credit card required
-                </p>
-              </div>
-            </motion.form>
-          )}
-        </AnimatePresence>
+                {formState === 'error' && (
+                  <div
+                    role="alert"
+                    className="mx-6 mb-2 border border-signalRed/40 bg-signalSoft px-4 py-3 text-sm text-signalBright"
+                  >
+                    We couldn't send your request. Your entries are still here — try again, or{" "}
+                    <a
+                      href="mailto:privacy@wellheadiq.com?subject=LettersIQ%20operator%20check"
+                      className="font-semibold underline underline-offset-2 hover:text-white"
+                    >
+                      email privacy@wellheadiq.com
+                    </a>
+                    .
+                  </div>
+                )}
+
+                <div className="p-6 pt-2">
+                  <Button type="submit" disabled={formState === 'submitting'} className="w-full">
+                    {formState === 'submitting' ? 'Sending…' : 'Check My Operator'}
+                    <IconSwap
+                      state={formState === 'submitting' ? 'b' : 'a'}
+                      a={<ArrowIcon />}
+                      b={<SpinnerIcon />}
+                    />
+                  </Button>
+                  <p className="mt-3 text-center text-sm text-white/65">
+                    No credit card required
+                  </p>
+                </div>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </section>
   );
 };
 
-const SuccessMessage = ({ onReset }) => (
+const SuccessMessage = ({ onReset, reduceMotion }) => (
   <motion.div
-    initial={{ y: distance.medium, filter: `blur(${blur.small}px)` }}
-    animate={panelEnter}
-    exit={panelExit(-distance.medium)}
+    {...panelMotion(reduceMotion, -distance.medium)}
     role="status"
     className="mt-8 border border-cobalt/30 bg-card px-6 py-12 text-center"
   >
@@ -268,7 +289,7 @@ const FormField = ({ name, label, type, placeholder, autoComplete, value, error,
             ? // Matches the message below it; signalRed at 60% was too dark
               // against the panel to register as an invalid field.
               'border-signalText focus:border-signalText'
-            : 'border-line focus:border-cobaltText'
+            : 'border-lineControl focus:border-cobaltText'
         }`}
       />
       {error && (

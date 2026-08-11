@@ -49,9 +49,13 @@ const briefingRows = [
   },
 ];
 
+// Severity is a monotonic ramp: rationed red for the one thing that has stopped
+// production, then full ink, then muted. Cobalt is deliberately absent — it
+// means "informational / on file" elsewhere on the page, and a colour that says
+// both "act now" and "nothing to do" destroys the ranking this panel sells.
 const severity = {
   critical: { label: "Critical", className: "text-signalInk" },
-  high: { label: "High", className: "text-cobaltInk" },
+  high: { label: "High", className: "text-panelInk" },
   med: { label: "Medium", className: "text-panelInkMuted" },
   low: { label: "Low", className: "text-panelInkMuted" },
 };
@@ -197,9 +201,12 @@ export const Hero = () => {
                         r.sev === "critical" ? "bg-signalSoft" : ""
                       }`}
                     >
-                      <div className="flex items-baseline gap-3">
+                      {/* Wraps rather than truncates: the consequence is the
+                          line the panel exists to deliver, so it can take a
+                          second line before the metadata gives up any width. */}
+                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                         <span
-                          className={`min-w-0 flex-1 truncate font-mono text-[11px] font-semibold uppercase tracking-[0.07em] ${severity[r.sev].className}`}
+                          className={`min-w-0 flex-1 font-mono text-[11px] font-semibold uppercase tracking-[0.07em] ${severity[r.sev].className}`}
                         >
                           <span className="sr-only">
                             {severity[r.sev].label} —{" "}

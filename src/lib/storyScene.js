@@ -58,8 +58,10 @@ const DATASETS = [
 const FINDINGS = [
   { tone: "#B00C28", consequence: "Production stopped", title: "Commingle severance — Clam Lake", meta: "2 leases" },
   { tone: "#B00C28", consequence: "Production at risk", title: "P-5 renewal — Brazos Bend Operating", meta: "14 days" },
-  { tone: "#2F55D4", consequence: "First sales blocked", title: "W-12 missing — Well 08-11234", meta: "1 filing" },
-  { tone: "#2F55D4", consequence: "Allowable blocked", title: "Proration delinquent — DLQ W-10", meta: "3 wells" },
+  // Ink, not cobalt: blue reads as "informational / on file" everywhere else on
+  // the page, so spending it on mid severity inverted the ranking.
+  { tone: "#0A1428", consequence: "First sales blocked", title: "W-12 missing — Well 08-11234", meta: "1 filing" },
+  { tone: "#0A1428", consequence: "Allowable blocked", title: "Proration delinquent — DLQ W-10", meta: "3 wells" },
   { tone: "#5A6883", consequence: "Permit lapses", title: "Drilling permit expiry — W-1", meta: "22 days" },
 ];
 

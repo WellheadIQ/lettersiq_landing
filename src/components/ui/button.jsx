@@ -11,9 +11,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-signalRed text-white hover:bg-signalBright",
+        default: "bg-signalRed text-white hover:bg-signalRedHover",
         outline:
-          "border border-lineStrong bg-transparent text-labFg hover:border-labFg hover:bg-parchmentAlt",
+          "border border-lineControl bg-transparent text-labFg hover:border-labFg hover:bg-parchmentAlt",
         ghost: "bg-transparent text-labFg hover:bg-parchmentAlt",
         ghostDark: "bg-transparent text-white/80 hover:text-white hover:bg-white/10",
         secondary: "bg-oxford text-white hover:bg-slateNavy",

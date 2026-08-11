@@ -19,6 +19,9 @@ module.exports = {
         slateNavy: "#16294A", // elevated navy panel on dark
 
         signalRed: "#C8102E", // rationed accent: CTA, critical, active — surfaces, rules, marks
+        // Filled-button hover. Brightest red that still clears 4.5:1 with white
+        // (4.86:1); signalBright reads 3.50:1 and cannot carry white label text.
+        signalRedHover: "#DE1B39",
         signalBright: "#FF3B54", // brighter red for hover/alert glow
         signalText: "#FF3B54", // red TEXT on dark surfaces (signalRed reads 3.3:1 there)
         signalInk: "#B00C28", // red TEXT on the light inset, incl. the signalSoft wash
@@ -43,9 +46,13 @@ module.exports = {
         inkMuted: "#9AA6BC",
         inkFaint: "#63708A",
 
-        // Hairlines — light on dark
+        // Hairlines — light on dark. Decorative rules only: `line` reads 1.30:1
+        // on card and 1.49:1 on parchment, which is the intended whisper.
         line: "rgba(233,238,247,0.10)",
         lineStrong: "rgba(233,238,247,0.20)",
+        // Boundaries that define where to click. 3.21:1 on card, 3.67:1 on
+        // parchment — the 3:1 UI-component floor, which a whisper cannot meet.
+        lineControl: "rgba(233,238,247,0.38)",
         lineDark: "rgba(250,251,255,0.14)",
         lineDarkStrong: "rgba(250,251,255,0.28)",
 

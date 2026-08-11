@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion, useScroll, useSpring, useReducedMotion } from "framer-motion";
 import LettersIQLogo from "/lettersiqlogo.png";
 import { Button } from "./ui/button.jsx";
 import { IconSwap } from "./ui/icon-swap.jsx";
 import { useSurfaceTransition } from "../hooks/useSurfaceTransition.js";
+import { lockPageScroll } from "../lib/scrollLock.js";
 import { duration } from "../lib/motionTokens.js";
 
 const MenuIcon = () => (
@@ -39,12 +40,41 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  // Reactive, so a mid-session OS change is honoured without a reload.
+  const reduceMotion = useReducedMotion();
+
   const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
+  const smoothedProgress = useSpring(scrollYProgress, {
     stiffness: 120,
     damping: 30,
     restDelta: 0.001,
   });
+  // The bar reports scroll position either way; reduced motion only drops the
+  // spring's overshoot so it tracks the finger exactly.
+  const progress = reduceMotion ? scrollYProgress : smoothedProgress;
+
+  // Entrances enhance, never gate. The reduced-motion branch still declares the
+  // resting state rather than dropping the props: the server render always
+  // writes the hidden `initial` styles inline (it cannot know the preference),
+  // so something has to actively clear them or the chrome stays at opacity 0.
+  const settled = { opacity: 1, y: 0 };
+  const brandEntrance = reduceMotion
+    ? { initial: settled, animate: settled }
+    : {
+        initial: { opacity: 0, y: -12 },
+        animate: settled,
+        transition: { duration: duration.verySlow / 1000 },
+      };
+  const linksEntrance = reduceMotion
+    ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
+    : {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: {
+          delay: duration.micro / 1000,
+          duration: duration.verySlow / 1000,
+        },
+      };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -54,10 +84,8 @@ export const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (!isOpen) return undefined;
+    return lockPageScroll();
   }, [isOpen]);
 
   // Escape closes the menu wherever focus currently sits.
@@ -111,9 +139,7 @@ export const Navbar = () => {
             href="#home"
             aria-label="LettersIQ home"
             className="flex min-h-11 items-center gap-3 shrink-0"
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: duration.verySlow / 1000 }}
+            {...brandEntrance}
           >
             <img
               src={LettersIQLogo}
@@ -129,12 +155,7 @@ export const Navbar = () => {
 
           {/* Desktop links */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              delay: duration.micro / 1000,
-              duration: duration.verySlow / 1000,
-            }}
+            {...linksEntrance}
             className="hidden lg:flex items-center gap-1"
           >
             {navbarLinks.map(({ href, label }) => (
@@ -160,7 +181,7 @@ export const Navbar = () => {
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
-            className="flex h-11 w-11 items-center justify-center border border-white/20 text-white transition-colors hover:border-white/50 lg:hidden"
+            className="flex h-11 w-11 items-center justify-center border border-lineControl text-white transition-colors hover:border-white/50 lg:hidden"
             onClick={toggleMenu}
           >
             <IconSwap
@@ -189,9 +210,9 @@ export const Navbar = () => {
         id="mobile-menu"
         data-origin="top-right"
         inert={isOpen ? undefined : ""}
-        className={`t-dropdown lg:hidden fixed top-[100px] left-0 right-0 bg-midnight border-b border-white/10 z-50 overflow-hidden ${menu.stateClass}`}
+        className={`t-dropdown lg:hidden fixed top-[100px] left-0 right-0 max-h-[calc(100dvh-7rem)] overflow-y-auto overscroll-contain bg-midnight border-b border-white/10 z-50 ${menu.stateClass}`}
       >
-        <div className="section-shell py-4">
+        <div className="section-shell py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           {navbarLinks.map(({ label, href }, index) => (
             <div key={href} className="t-dropdown-item" style={{ "--index": index }}>
               <a

@@ -58,7 +58,7 @@ export const ScrollUpButton = () => {
           type="button"
           aria-label="Scroll to top"
           data-scroll-top
-          className="w-12 h-12 fixed bottom-6 right-6 border border-lineStrong bg-card hover:bg-oxford hover:border-oxford cursor-pointer flex justify-center items-center z-50 group transition-colors duration-150 ease-out-strong"
+          className="w-12 h-12 fixed bottom-6 right-6 border border-lineControl bg-card hover:bg-oxford hover:border-oxford cursor-pointer flex justify-center items-center z-50 group transition-colors duration-150 ease-out-strong"
           onClick={scrollToTop}
           initial={{ opacity: 0, y: offset }}
           animate={{

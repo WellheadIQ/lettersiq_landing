@@ -71,10 +71,21 @@ const legend = [
 /** Draw order: severed edge first, then the rest — telegraphs the blast path. */
 const edgeOrder = ["third", "y1", "y2", "o1", "o2"];
 
+/* Cropped to the drawing's real bounds — the old 0 0 360 320 box carried ~30
+   units of dead margin on every side, and on a 320px phone that margin was
+   costing the whole diagram 18% of its scale. */
+const VIEW = { x: 30, y: 30, w: 306, h: 280 };
+
+/** Node centre as a percentage of the rendered SVG box, for the DOM label layer. */
+const anchor = (n) => ({
+  left: `${((n.x - VIEW.x) / VIEW.w) * 100}%`,
+  top: `${((n.y - VIEW.y) / VIEW.h) * 100}%`,
+});
+
 const CommingleGraph = () => (
   <div className="relative mx-auto w-full max-w-[440px]">
     <svg
-      viewBox="0 0 360 320"
+      viewBox={`${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}`}
       className="h-auto w-full"
       role="img"
       aria-labelledby="commingle-graph-title commingle-graph-desc"
@@ -106,31 +117,11 @@ const CommingleGraph = () => (
         <circle
           cx={CENTER.x}
           cy={CENTER.y}
-          r="36"
+          r="44"
           fill="#0A1428"
           stroke="rgba(250,251,255,0.45)"
           strokeWidth="1.25"
         />
-        <text
-          x={CENTER.x}
-          y={CENTER.y - 2}
-          textAnchor="middle"
-          className="font-mono"
-          fontSize="12"
-          fill="#FAFBFF"
-        >
-          {CENTER.label}
-        </text>
-        <text
-          x={CENTER.x}
-          y={CENTER.y + 14}
-          textAnchor="middle"
-          className="font-mono"
-          fontSize="11"
-          fill="rgba(250,251,255,0.55)"
-        >
-          {CENTER.sub}
-        </text>
       </g>
 
       {nodes.map((n) => (
@@ -138,37 +129,55 @@ const CommingleGraph = () => (
           <circle
             cx={n.x}
             cy={n.y}
-            r="30"
+            r="38"
             fill="#060D1B"
             stroke={toneStroke[n.tone]}
             strokeWidth={n.tone === "hot" ? "1.75" : "1.1"}
           />
-          <text
-            x={n.x}
-            y={n.sub ? n.y - 4 : n.y + 4}
-            textAnchor="middle"
-            className="font-mono"
-            fontSize="11"
-            fill={toneFill[n.tone]}
-          >
-            {n.label}
-          </text>
-          {n.sub ? (
-            <text
-              x={n.x}
-              y={n.y + 11}
-              textAnchor="middle"
-              fontSize="11"
-              fill={
-                n.tone === "hot" ? toneFill.hot : "rgba(250,251,255,0.55)"
-              }
-            >
-              {n.sub}
-            </text>
-          ) : null}
         </g>
       ))}
     </svg>
+
+    {/* Labels live in the DOM, not in the SVG: baked <text> scaled with the
+        viewBox and bottomed out at 7.8px on a 320px phone. The SVG keeps
+        role="img" with its title and desc, so this layer is decoration to a
+        screen reader and the relationship is still described once. */}
+    <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+      {/* w-max: an absolutely positioned box is otherwise capped by the space
+          left of the container edge, which wrapped the right-hand IDs mid-token. */}
+      <div
+        className="absolute w-max -translate-x-1/2 -translate-y-1/2 text-center font-mono text-[12px] leading-[1.25] tracking-tight"
+        style={anchor(CENTER)}
+      >
+        <div className="text-starWhite">{CENTER.label}</div>
+        <div className="text-white/55">{CENTER.sub}</div>
+      </div>
+
+      {/* Two elements per label: the outer one owns the centring transform, the
+          inner one is what the entrance animates — sharing an element would let
+          anime's translateY overwrite the -50% centring. */}
+      {nodes.map((n) => (
+        <div
+          key={n.id}
+          className="absolute w-max -translate-x-1/2 -translate-y-1/2"
+          style={anchor(n)}
+        >
+          <div className="graph-node-label text-center font-mono text-[12px] leading-[1.25] tracking-tight">
+            <div style={{ color: toneFill[n.tone] }}>{n.label}</div>
+            {n.sub ? (
+              <div
+                style={{
+                  color:
+                    n.tone === "hot" ? toneFill.hot : "rgba(250,251,255,0.55)",
+                }}
+              >
+                {n.sub}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ))}
+    </div>
   </div>
 );
 
@@ -186,16 +195,21 @@ export const BlastRadius = () => {
       settle(anime, utils.$(".blast-graph"), { trigger: ".blast-graph", enter: "90% top" });
     }
 
-    const nodesEls = utils.$(".graph-node");
-    if (nodesEls.length && !reduceMotion) {
-      utils.set(nodesEls, { translateY: distance.medium });
-      animate(nodesEls, {
-        translateY: [distance.medium, 0],
-        duration: duration.verySlow,
-        delay: stagger(duration.stagger),
-        ease: animeSmoothOut(anime),
-        autoplay: onScroll({ target: ".blast-graph", enter: "82% top" }),
-      });
+    // Circles and their DOM labels are two sets in the same order, animated as a
+    // pair so each node and its name arrive together.
+    const nodeLayers = [utils.$(".graph-node"), utils.$(".graph-node-label")];
+    if (!reduceMotion) {
+      for (const els of nodeLayers) {
+        if (!els.length) continue;
+        utils.set(els, { translateY: distance.medium });
+        animate(els, {
+          translateY: [distance.medium, 0],
+          duration: duration.verySlow,
+          delay: stagger(duration.stagger),
+          ease: animeSmoothOut(anime),
+          autoplay: onScroll({ target: ".blast-graph", enter: "82% top" }),
+        });
+      }
     }
 
     // One-shot line drawing. Edges stay fully painted until the graph enters

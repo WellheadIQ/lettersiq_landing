@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useSurfaceTransition } from "../../hooks/useSurfaceTransition.js";
+import { lockPageScroll } from "../../lib/scrollLock.js";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -30,10 +31,9 @@ export const Modal = ({
   useEffect(() => {
     if (!open) return undefined;
     restoreFocusTo.current = document.activeElement;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const release = lockPageScroll();
     return () => {
-      document.body.style.overflow = previousOverflow;
+      release();
       restoreFocusTo.current?.focus?.();
     };
   }, [open]);
@@ -106,7 +106,7 @@ export const Modal = ({
             data-modal-close
             onClick={onClose}
             aria-label="Close"
-            className="-mr-1 flex h-9 w-9 shrink-0 items-center justify-center border border-white/20 text-white/70 transition-colors hover:border-white/50 hover:text-white"
+            className="-mr-1 flex h-9 w-9 shrink-0 items-center justify-center border border-lineControl text-white/70 transition-colors hover:border-white/50 hover:text-white"
           >
             <svg
               className="h-4 w-4"
@@ -125,7 +125,13 @@ export const Modal = ({
           </button>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto bg-midnight p-4 sm:p-6">
+        {/* tabIndex makes the scroll container focusable, which is the only way
+            arrow keys can scroll it — a keyboard reader otherwise cannot reach
+            content that sits below the fold of a long dialog. */}
+        <div
+          tabIndex={0}
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-midnight p-4 sm:p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cobaltText"
+        >
           {children}
         </div>
       </div>

@@ -52,7 +52,7 @@ html {
 /* Buttons (legacy alias) */
 
 .custom-button-colored {
-  @apply font-mono font-bold bg-signalRed text-white flex justify-center items-center hover:bg-signalBright cursor-pointer;
+  @apply font-mono font-bold bg-signalRed text-white flex justify-center items-center hover:bg-signalRedHover cursor-pointer;
   transition: background-color var(--duration-quick) var(--ease-smooth-out),
     transform var(--duration-quick) var(--ease-smooth-out);
 }
@@ -74,6 +74,12 @@ html {
 /* Consistent page container */
 .section-shell {
   @apply w-full mx-auto px-5 sm:px-8 lg:px-10;
+}
+
+/* Zero specificity on purpose: as a plain `.section-shell` declaration this
+   width beat every `max-w-*` utility written on the same element on source
+   order, silently. `:where()` makes it a default that any utility can override. */
+:where(.section-shell) {
   max-width: 80rem;
 }
 
@@ -99,13 +105,10 @@ html {
   transition: background-color var(--duration-quick) var(--ease-smooth-out),
     transform var(--duration-quick) var(--ease-smooth-out);
 }
-.btn-ember:active {
-  transform: scale(0.96);
-}
 
 /* Ghost button (light surfaces) */
 .btn-ghost {
-  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 border border-labBorderStrong text-labFg;
+  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 border border-lineControl text-labFg;
   border-radius: 2px;
   transition: border-color var(--duration-quick) var(--ease-smooth-out),
     background-color var(--duration-quick) var(--ease-smooth-out),
@@ -123,7 +126,7 @@ html {
 
 /* Ghost button (dark surfaces) */
 .btn-ghost-dark {
-  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 border border-white/25 text-white;
+  @apply inline-flex items-center justify-center gap-2 font-mono text-sm uppercase tracking-[0.12em] font-medium px-7 py-4 border border-lineControl text-white;
   border-radius: 2px;
   transition: border-color var(--duration-quick) var(--ease-smooth-out),
     background-color var(--duration-quick) var(--ease-smooth-out),
@@ -140,9 +143,15 @@ html {
 /* Hover lift only on real pointers — avoids sticky states on touch (Emil) */
 @media (hover: hover) and (pointer: fine) {
   .btn-ember:hover {
-    background-color: #e8354f;
+    @apply bg-signalRedHover;
     transform: translateY(-1px);
   }
+}
+
+/* Declared after the hover rule on purpose: a pressed button is also a hovered
+   button, so at equal specificity the press has to come last to be felt. */
+.btn-ember:active {
+  transform: scale(0.96);
 }
 
 /* ============================================================
