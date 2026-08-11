@@ -16,19 +16,26 @@ import { storyChapters } from "../lib/storyChapters.js";
  */
 
 /**
- * A short portrait phone has no band left for the world once the fixed header
- * and the reading column have taken theirs, and a briefing rendered into
- * 150 pixels is decoration rather than evidence. Those viewports get the flat
- * story, which carries every chapter at full size.
+ * The floor below which no arrangement of the stage leaves a band the briefing
+ * can be read in.
+ *
+ * This has to be measured against what a browser actually reports, not against
+ * a device's spec sheet: a phone whose screen is 844pt tall reports about 664
+ * with the URL and tab bars showing, and then grows as they collapse. Gating
+ * above that band means the same phone gets the flat story or the world
+ * depending on how far the visitor happened to have scrolled, which reads as
+ * random. Short portrait viewports get compacted copy instead (see Theme.css),
+ * and the briefing drops rows until the ones it keeps are legible.
  */
 function stageHasRoom() {
   const { innerWidth: w, innerHeight: h } = window;
   if (w >= 1024) return true;
-  // Landscape puts the copy in a side column, so the world needs enough width
-  // left over for a readable document — a 640-wide phone laid flat doesn't
-  // have it, and 190px of briefing is worse than no briefing.
-  if (h <= 560) return w >= 740;
-  return h >= 700;
+  // Laid flat, the copy takes a side column, so what's scarce is width: a
+  // 640-wide phone leaves under 200px for the document, which is worse than
+  // not drawing it. Orientation has to be read from both axes — a small phone
+  // in portrait can be shorter than a big one in landscape.
+  if (w > h) return w >= 640;
+  return h >= 520;
 }
 
 /** Devices that would stutter, or visitors who have asked for less, get the still. */
@@ -52,6 +59,9 @@ export const Story3D = () => {
   const copyRef = useRef(null);
   const sceneRef = useRef(null);
   const [mode, setMode] = useState("static");
+  // Bumped when a viewport that was too small becomes big enough, to re-run the
+  // capability check rather than latching the first answer.
+  const [allowed, setAllowed] = useState(false);
   const [ready, setReady] = useState(false);
   const [active, setActive] = useState(0);
 
@@ -135,7 +145,26 @@ export const Story3D = () => {
   }, []);
 
   useEffect(() => {
-    if (!canRenderScene()) return undefined;
+    if (!canRenderScene()) {
+      // A phone that fails the check on load can pass it a moment later, when
+      // the URL bar collapses or the device is rotated. Watch for that instead
+      // of leaving the visitor on the flat story for the rest of the session.
+      // One direction only: swapping back mid-scroll would throw away their
+      // place in the story.
+      const recheck = () => {
+        if (!canRenderScene()) return;
+        window.removeEventListener("resize", recheck);
+        window.removeEventListener("orientationchange", recheck);
+        setAllowed(true);
+      };
+      window.addEventListener("resize", recheck);
+      window.addEventListener("orientationchange", recheck);
+      return () => {
+        window.removeEventListener("resize", recheck);
+        window.removeEventListener("orientationchange", recheck);
+      };
+    }
+
     setMode("scene");
 
     let cancelled = false;
@@ -172,7 +201,7 @@ export const Story3D = () => {
       else window.clearTimeout(idle);
       cleanup?.();
     };
-  }, [readProgress, publishSafeArea]);
+  }, [readProgress, publishSafeArea, allowed]);
 
   // The copy column is what defines the free space, so watch the box itself
   // rather than the viewport: font loading and wrapping move it too.
@@ -255,10 +284,10 @@ export const Story3D = () => {
 const ScrollStage = ({ trackRef, canvasRef, copyRef, ready, active }) => (
   <div
     ref={trackRef}
-    className="relative mt-10 md:mt-14"
-    style={{ height: `${(storyChapters.length + 1) * 100}vh` }}
+    className="story-track relative mt-10 md:mt-14"
+    style={{ "--story-beats": storyChapters.length + 1 }}
   >
-    <div className="sticky top-0 h-screen w-full overflow-hidden">
+    <div className="story-frame sticky top-0 w-full overflow-hidden">
       <canvas
         ref={canvasRef}
         aria-hidden="true"

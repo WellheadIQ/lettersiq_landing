@@ -33,16 +33,25 @@ const PALETTE = {
 // are the tokens the page already uses for its one light inset panel.
 const INK = { body: "#0A1428", muted: "#4A5568" };
 
-/** Bottom of the stack to the top; the two the story touches sit at 3 and 6. */
+/**
+ * The eight systems, named on the sheets themselves, bottom of the stack to the
+ * top — the two the story touches sit at 3 and 6. Long name first, then the
+ * short one.
+ *
+ * The tab is a fixed slice of a sheet, so on a phone the long form lands around
+ * four pixels tall — present, unreadable, and therefore worse than nothing. The
+ * short form spends the same width on half the characters, which buys type big
+ * enough to actually read. The full names are in the chapter's copy either way.
+ */
 const DATASETS = [
-  "PURCHASER FILINGS",
-  "DRILLING PERMITS",
-  "PRORATION / W-10",
-  "P-17 COMMINGLES",
-  "RULE 15 INACTIVE",
-  "P-5 ORGANIZATION",
-  "CERTIFIED LETTERS",
-  "SEVERANCE ORDERS",
+  ["PURCHASER FILINGS", "PURCHASERS"],
+  ["DRILLING PERMITS", "PERMITS"],
+  ["PRORATION / W-10", "PRORATION"],
+  ["P-17 COMMINGLES", "P-17"],
+  ["RULE 15 INACTIVE", "RULE 15"],
+  ["P-5 ORGANIZATION", "P-5"],
+  ["CERTIFIED LETTERS", "LETTERS"],
+  ["SEVERANCE ORDERS", "SEVERANCE"],
 ];
 
 /** The ranked briefing, in the site's consequence → record → number pattern. */
@@ -59,6 +68,9 @@ const PLANE_BASE_Y = 1.15;
 const PLANE_GAP = 0.34;
 const PLANE_W = 5.6;
 const PLANE_D = 4.0;
+/** World height of the long name's type on a sheet tab: 20px of a 50px frame on
+ *  a 0.25-unit plane. What the choice between the two forms is measured against. */
+const LABEL_TYPE_H = (20 / 50) * 0.25;
 const GROUND_SCALE = 0.026;
 
 const planeY = (i) => PLANE_BASE_Y + i * PLANE_GAP;
@@ -114,8 +126,12 @@ export function initStoryScene(canvas, { reduceMotion = false, lowPower = false 
   let safeArea = null;
   // Narrow viewports also get the wider authored camera endpoints.
   let compact = true;
-  // How many briefing rows the free area can hold at a readable size.
+  // Whether the sheet tabs can carry the systems' full names at reading size.
+  let labelsWide = true;
+  // How many briefing rows the free area can hold at a readable size, and
+  // whether it can also afford the masthead and footer around them.
   let barLimit = 5;
+  let showChrome = true;
 
   let renderer;
   try {
@@ -436,17 +452,24 @@ export function initStoryScene(canvas, { reduceMotion = false, lowPower = false 
 
     // A named tab off the right edge of every sheet. Eight systems the copy
     // only asserts; here they are, readable.
-    const labelTexture = makeLabel(300, 32, (ctx, w, h) => {
+    // The tab is drawn into a frame taller than the long name needs, so the
+    // short name can be set two and a half times larger in the same world-space
+    // slot — no geometry to rebuild when the viewport crosses over.
+    const labelTexture = makeLabel(300, 50, (ctx, w, h) => {
+      const [long, short] = DATASETS[i];
+      const text = labelsWide ? long : short;
+      const size = labelsWide ? 20 : 34;
       ctx.fillStyle = involved ? "rgba(255,59,84,0.95)" : "rgba(159,192,255,0.5)";
-      ctx.fillRect(0, h / 2 - 7, 2, 14);
-      ctx.font = `500 14px ${MONO}`;
+      ctx.fillRect(0, h / 2 - size / 2, labelsWide ? 3 : 4, size);
+      ctx.font = `500 ${size}px ${MONO}`;
       ctx.letterSpacing = "0.13em";
       ctx.fillStyle = involved ? "#FF6B7E" : "#A9C6FF";
-      ctx.fillText(DATASETS[i], 11, h / 2 + 1);
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, labelsWide ? 13 : 16, h / 2 + 1);
     });
 
     const label = new THREE.Mesh(
-      track(new THREE.PlaneGeometry(1.5, 0.16)),
+      track(new THREE.PlaneGeometry(1.5, 0.25)),
       labelMaterial(labelTexture, 0)
     );
     // On the sheet rather than tagged off its edge, so the stack's silhouette
@@ -951,8 +974,10 @@ export function initStoryScene(canvas, { reduceMotion = false, lowPower = false 
     // fourth chapter is the list being ordered and the fifth is it being
     // delivered — two beats instead of the same frame twice.
     const delivered = smoothstep(clamp01((w.dawn - 0.32) / 0.5));
-    briefingHead.material.opacity = delivered * 0.92;
-    briefingFoot.material.opacity = delivered * 0.85;
+    briefingHead.material.opacity = showChrome ? delivered * 0.92 : 0;
+    briefingFoot.material.opacity = showChrome ? delivered * 0.85 : 0;
+    briefingHead.visible = showChrome;
+    briefingFoot.visible = showChrome;
 
     planes.forEach((entry) => {
       // The stack all but withdraws once the briefing exists — that is the
@@ -1095,26 +1120,62 @@ export function initStoryScene(canvas, { reduceMotion = false, lowPower = false 
     const fullWidth = width / spread;
     const fullHeight = height / spread;
 
+    // Same question as the briefing's row count, asked of the sheet tabs: how
+    // tall does this type actually land, given the establishing shot's distance
+    // and this viewport's height? Below reading size the eight systems go to
+    // their short names rather than to a row of smudges.
+    const opening = endpoint(storyChapters[0]);
+    const openReach = Math.hypot(
+      opening.position[1] - opening.target[1],
+      opening.position[2] - opening.target[2]
+    );
+    const openSeen = 2 * openReach * Math.tan((opening.fov * Math.PI) / 360) * spread;
+    const wide = (LABEL_TYPE_H * height) / openSeen >= 9;
+    if (wide !== labelsWide) {
+      labelsWide = wide;
+      planes.forEach((entry) => entry.label.material.map.repaint());
+    }
+
     // The briefing is the one thing in the world that has to be *read*, so it
     // gets the free area exactly rather than the world's damped share of it,
     // and it stops growing at document size — past that a ranked list on a
     // 27-inch display is a billboard, not a morning email.
     const room = {
-      width: Math.min(usable.width * 0.92, 760),
-      height: Math.min(usable.height * 0.88, 520),
+      width: Math.min(usable.width * 0.94, 760),
+      height: Math.min(usable.height * 0.9, 520),
     };
-    const finale = endpoint(storyChapters[storyChapters.length - 1]);
-    const reach = Math.hypot(finale.position[1] - 1.2, finale.position[2] - briefing.position.z);
-    const seenHeight = 2 * reach * Math.tan((finale.fov * Math.PI) / 360) * spread;
+    // Fitted against the tightest framing the document is ever seen in, not
+    // just the one it comes to rest in. The camera is closer than its endpoint
+    // for the whole approach, so fitting the endpoint alone lets the masthead
+    // run off the stage on the way in — visible on a phone, where the band is
+    // the full width and there are no margins to absorb it.
+    let reach = Infinity;
+    let lens = Infinity;
+    storyChapters.slice(-2).forEach((chapter) => {
+      const view = endpoint(chapter);
+      reach = Math.min(
+        reach,
+        Math.hypot(view.position[1] - 1.2, view.position[2] - briefing.position.z)
+      );
+      lens = Math.min(lens, view.fov);
+    });
+    const seenHeight = 2 * reach * Math.tan((lens * Math.PI) / 360) * spread;
     const seenWidth = seenHeight * (width / height);
 
     // Type is baked into the row textures, so the only way to make a finding
-    // bigger is to carry fewer of them. Five rows is the story; three is the
-    // concession, taken only when five would land under reading size.
-    const READABLE_ROW_PX = 42;
-    const fitFor = (count) => {
-      const top = bars[0].restY + 0.42;
-      const bottom = bars[count - 1].restY - 0.31 - 0.09;
+    // bigger is to carry fewer of them. Five rows is the story; three and two
+    // are concessions, taken only when the fuller list lands under reading
+    // size. The masthead and footer counts follow, so the artifact never
+    // promises more findings than it shows. Reading size is measured on the
+    // paper band, not on the row's share of the list: the gap between rows
+    // isn't where the type goes.
+    const READABLE_BAR_PX = 34;
+    const fitFor = (count, chrome) => {
+      // The masthead and footer take two thirds of a two-row list's height, so
+      // the last rung spends that on the findings instead. What they say — the
+      // hour, and how many things need you — the chapter's own copy says too.
+      const top = bars[0].restY + (chrome ? 0.42 : BAR_H / 2 + 0.06);
+      const bottom = bars[count - 1].restY - (chrome ? 0.4 : BAR_H / 2 + 0.06);
       const scale = Math.max(
         0.5,
         Math.min(
@@ -1122,13 +1183,27 @@ export function initStoryScene(canvas, { reduceMotion = false, lowPower = false 
           (room.width / width) * (seenWidth / BAR_W)
         )
       );
-      return { count, scale, bottom, top, rowPx: (ROW_GAP * scale * height) / seenHeight };
+      return { count, chrome, scale, bottom, top, barPx: (BAR_H * scale * height) / seenHeight };
     };
-    const full = fitFor(bars.length);
-    const best = full.rowPx >= READABLE_ROW_PX ? full : fitFor(3);
+    // Fewer rows always means a bigger scale, so the first readable rung wins
+    // and the shortest bands land on the last one.
+    let best = fitFor(bars.length, true);
+    for (const [count, chrome] of [
+      [3, true],
+      [2, true],
+      [2, false],
+    ]) {
+      if (best.barPx >= READABLE_BAR_PX) break;
+      const next = fitFor(count, chrome);
+      // When width is what's binding — a narrow side column — a shorter list is
+      // the same size as a long one, so it would cost findings for nothing.
+      if (next.barPx <= best.barPx) break;
+      best = next;
+    }
     const { count: shown, scale: listScale, top: listTop, bottom: listBottom } = best;
 
     barLimit = shown;
+    showChrome = best.chrome;
     if (shown !== headCount) {
       headCount = shown;
       headTexture.repaint();
@@ -1238,12 +1313,17 @@ export function initStoryScene(canvas, { reduceMotion = false, lowPower = false 
       };
       const a = project(new THREE.Vector3(box.min.x, box.max.y, box.max.z));
       const b = project(new THREE.Vector3(box.max.x, box.min.y, box.max.z));
+      const row = bars[0].group;
+      const top = project(row.localToWorld(corner.set(0, BAR_H / 2, 0)));
+      const foot = project(row.localToWorld(corner.set(0, -BAR_H / 2, 0)));
       return {
+        barPx: Math.round(foot.y - top.y),
         left: Math.round(a.x),
         right: Math.round(b.x),
         top: Math.round(a.y),
         bottom: Math.round(b.y),
         rows: shown,
+        chrome: showChrome,
         safeArea,
       };
     },

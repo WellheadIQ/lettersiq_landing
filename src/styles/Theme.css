@@ -202,6 +202,20 @@ html {
    Morning-loop scroll stage
    ============================================================ */
 
+/* `vh` on a phone is the height with the browser's bars collapsed, so a stage
+   sized in it hides its own last line under the URL bar until you scroll. `dvh`
+   tracks what is actually on screen; the `vh` pair keeps older browsers on the
+   previous behaviour rather than on nothing. */
+.story-track {
+  height: calc(var(--story-beats) * 100vh);
+  height: calc(var(--story-beats) * 100dvh);
+}
+
+.story-frame {
+  height: 100vh;
+  height: 100dvh;
+}
+
 /* The reading column takes whichever edge has room. Tall viewports give it the
    bottom; wide ones give it the side. A landscape phone has neither the height
    for the first nor the `lg` width for the second, so it gets its own rule —
@@ -269,6 +283,30 @@ html {
   }
 }
 
+/* Short and tall: the copy and the world are stacked, so every line the copy
+   saves is a line the briefing gets. Most phones in a browser with its bars
+   showing land here, so this is the common case rather than the edge one. */
+@media (max-height: 720px) and (orientation: portrait) {
+  .story-stage {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+
+  .story-beat-title {
+    margin-top: 0.55rem;
+    font-size: clamp(1.3rem, 5.8vw, 1.6rem);
+  }
+
+  .story-copy .story-beat-body {
+    margin-top: 0.55rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .story-beat-cta {
+    margin-top: 0.95rem;
+  }
+}
+
 /* Short and wide: centre the copy in the column beside the world, and clear
    the fixed header so the eyebrow isn't tucked under it. */
 @media (max-height: 560px) and (min-width: 640px) {
@@ -278,8 +316,10 @@ html {
     padding-bottom: 0;
   }
 
+  /* Every column-inch here is one the document doesn't get, and laid flat the
+     document has only width to work with. */
   .story-copy {
-    max-width: 26rem;
+    max-width: 21rem;
   }
 
   .story-scrim {
