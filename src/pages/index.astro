@@ -12,6 +12,8 @@ import { FAQ } from "../components/FAQ.jsx";
 import { Footer } from "../components/Footer.jsx";
 import { ScrollUpButton } from "../components/ScrollUpButton";
 import { ContactUs } from "../components/ContactUs"
+import { DialRoot } from "dialkit";
+import "dialkit/styles.css";
 import "../styles/Theme.css";
 
 ---
@@ -35,4 +37,9 @@ import "../styles/Theme.css";
   <ContactUs client:load />
   <Footer />
   <ScrollUpButton client:load />
+  <DialRoot
+    client:only="react"
+    position="bottom-right"
+    theme="dark"
+  />
 </Layout>

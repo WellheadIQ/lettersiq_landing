@@ -1,4 +1,5 @@
 import React from "react";
+import { useDialKit } from "dialkit";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
 import { settle } from "../lib/motion.js";
 import { duration } from "../lib/motionTokens.js";
@@ -42,7 +43,19 @@ const tiers = [
   },
 ];
 
+const gridDialConfig = {
+  gap: [24, 0, 64, 1],
+  padding: [0, 0, 64, 1],
+  columnCount: [3, 1, 6, 1],
+  Card: {
+    borderRadius: [0, 0, 32, 1],
+  },
+};
+
 export const Pricing = () => {
+  const grid = useDialKit("Pricing grid", gridDialConfig, {
+    id: "lettersiq-pricing-grid",
+  });
   const root = useAnimeScope(({ reduceMotion, anime }) => {
     if (reduceMotion) return;
     settle(anime, anime.utils.$(".pricing-card"), {
@@ -79,9 +92,20 @@ export const Pricing = () => {
           </p>
         </div>
 
-        <div className="pricing-tiers grid gap-5 lg:grid-cols-3 lg:gap-6">
+        <div
+          className="pricing-tiers grid"
+          style={{
+            gap: grid.gap,
+            padding: grid.padding,
+            gridTemplateColumns: `repeat(${grid.columnCount}, minmax(0, 1fr))`,
+          }}
+        >
           {tiers.map((tier) => (
-            <TierCard key={tier.name} {...tier} />
+            <TierCard
+              key={tier.name}
+              {...tier}
+              cardBorderRadius={grid.Card.borderRadius}
+            />
           ))}
         </div>
 
@@ -136,9 +160,18 @@ export const Pricing = () => {
   );
 };
 
-const TierCard = ({ name, scope, price, cadence, body, featured }) => (
+const TierCard = ({
+  name,
+  scope,
+  price,
+  cadence,
+  body,
+  featured,
+  cardBorderRadius,
+}) => (
   <div
-    className={`pricing-card relative flex flex-col border-2 border-oxford shadow-float ${
+    style={{ borderRadius: cardBorderRadius }}
+    className={`pricing-card relative flex flex-col overflow-hidden border-2 border-oxford shadow-float ${
       featured ? "bg-oxford text-white" : "bg-card"
     }`}
   >
