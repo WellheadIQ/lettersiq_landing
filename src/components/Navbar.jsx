@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useSpring, useReducedMotion } from "framer-motion";
 import LettersIQLogo from "/lettersiqlogo.png";
 import { Button } from "./ui/button.jsx";
 import { IconSwap } from "./ui/icon-swap.jsx";
 import { useSurfaceTransition } from "../hooks/useSurfaceTransition.js";
 import { lockPageScroll } from "../lib/scrollLock.js";
-import { duration } from "../lib/motionTokens.js";
 
 const MenuIcon = () => (
   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -39,6 +38,7 @@ const navbarLinks = [
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const toggleRef = useRef(null);
 
   // Reactive, so a mid-session OS change is honoured without a reload.
   const reduceMotion = useReducedMotion();
@@ -53,29 +53,6 @@ export const Navbar = () => {
   // spring's overshoot so it tracks the finger exactly.
   const progress = reduceMotion ? scrollYProgress : smoothedProgress;
 
-  // Entrances enhance, never gate. The reduced-motion branch still declares the
-  // resting state rather than dropping the props: the server render always
-  // writes the hidden `initial` styles inline (it cannot know the preference),
-  // so something has to actively clear them or the chrome stays at opacity 0.
-  const settled = { opacity: 1, y: 0 };
-  const brandEntrance = reduceMotion
-    ? { initial: settled, animate: settled }
-    : {
-        initial: { opacity: 0, y: -12 },
-        animate: settled,
-        transition: { duration: duration.verySlow / 1000 },
-      };
-  const linksEntrance = reduceMotion
-    ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
-    : {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        transition: {
-          delay: duration.micro / 1000,
-          duration: duration.verySlow / 1000,
-        },
-      };
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
     onScroll();
@@ -88,14 +65,38 @@ export const Navbar = () => {
     return lockPageScroll();
   }, [isOpen]);
 
-  // Escape closes the menu wherever focus currently sits.
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => { if (desktop.matches) setIsOpen(false); };
+    desktop.addEventListener("change", onChange);
+    return () => desktop.removeEventListener("change", onChange);
+  }, []);
+
   useEffect(() => {
     if (!isOpen) return undefined;
+    const background = [...document.querySelectorAll("main, footer, [data-footer-cta], [data-scroll-top]")];
+    const previous = background.map((element) => element.inert);
+    background.forEach((element) => { element.inert = true; });
     const onKeyDown = (event) => {
-      if (event.key === "Escape") setIsOpen(false);
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        toggleRef.current?.focus();
+      }
+      if (event.key !== "Tab") return;
+      const links = [...document.querySelectorAll("#mobile-menu a[href]")];
+      const first = toggleRef.current;
+      const last = links.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault(); last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); first?.focus();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      background.forEach((element, index) => { element.inert = previous[index]; });
+    };
   }, [isOpen]);
 
   // The menu stays mounted so the close transition can play out; `inert` keeps
@@ -108,7 +109,7 @@ export const Navbar = () => {
   const toggleMenu = () => setIsOpen((v) => !v);
 
   return (
-    <nav className="w-full fixed top-0 left-0 right-0 z-50">
+    <nav aria-label="Main navigation" className="w-full fixed top-0 left-0 right-0 z-50">
       {/* Announcement bar — rationed red */}
       <div className="w-full bg-signalRed text-white">
         <div className="section-shell flex h-9 items-center justify-center gap-2.5 font-mono text-xs">
@@ -139,30 +140,28 @@ export const Navbar = () => {
             href="#home"
             aria-label="LettersIQ home"
             className="flex min-h-11 items-center gap-3 shrink-0"
-            {...brandEntrance}
           >
             <img
               src={LettersIQLogo}
               alt="LettersIQ"
               width="2000"
               height="1500"
-              className="h-9 md:h-10 w-auto"
+              className="brand-logo"
             />
-            <span className="hidden border-l border-white/15 pl-3 font-mono text-xs text-white/65 lg:inline-block">
+            <span className="hidden border-l border-white/15 pl-3 font-mono text-xs text-white/65 xl:inline-block">
               RRC&nbsp;Operations&nbsp;Intelligence
             </span>
           </motion.a>
 
           {/* Desktop links */}
           <motion.div
-            {...linksEntrance}
             className="hidden lg:flex items-center gap-1"
           >
             {navbarLinks.map(({ href, label }) => (
               <a
                 key={label}
                 href={href}
-                className="link-underline flex min-h-11 items-center px-4 font-mono text-[13px] text-white/70 transition-colors duration-150 ease-out-strong hover:text-white"
+                className="link-underline flex min-h-11 items-center whitespace-nowrap px-4 font-mono text-[13px] text-white/70 transition-colors duration-150 ease-out-strong hover:text-white"
               >
                 {label}
               </a>
@@ -177,6 +176,7 @@ export const Navbar = () => {
 
           {/* Mobile toggle */}
           <button
+            ref={toggleRef}
             type="button"
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
@@ -201,8 +201,8 @@ export const Navbar = () => {
 
       {/* Mobile menu — anchored dropdown, grows from the toggle in the top right */}
       <div
-        className={`t-scrim lg:hidden fixed inset-0 top-[100px] bg-black/50 backdrop-blur-sm z-40 ${menu.stateClass}`}
-        onClick={toggleMenu}
+        className={`t-scrim lg:hidden fixed inset-0 top-[var(--header-height)] bg-black/50 backdrop-blur-sm z-40 ${menu.stateClass}`}
+        onClick={() => setIsOpen(false)}
         aria-hidden="true"
       />
       <div
@@ -210,14 +210,14 @@ export const Navbar = () => {
         id="mobile-menu"
         data-origin="top-right"
         inert={isOpen ? undefined : ""}
-        className={`t-dropdown lg:hidden fixed top-[100px] left-0 right-0 max-h-[calc(100dvh-7rem)] overflow-y-auto overscroll-contain bg-midnight border-b border-white/10 z-50 ${menu.stateClass}`}
+        className={`t-dropdown lg:hidden fixed top-[var(--header-height)] left-0 right-0 max-h-[calc(100dvh-var(--header-height))] overflow-y-auto overscroll-contain bg-midnight border-b border-white/10 z-50 ${menu.stateClass}`}
       >
         <div className="section-shell py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           {navbarLinks.map(({ label, href }, index) => (
             <div key={href} className="t-dropdown-item" style={{ "--index": index }}>
               <a
                 href={href}
-                onClick={toggleMenu}
+                onClick={() => setIsOpen(false)}
                 className="flex items-center justify-between px-1 py-3.5 font-mono text-base text-white/80 hover:text-white transition-colors border-b border-white/5"
               >
                 {label}
@@ -229,7 +229,7 @@ export const Navbar = () => {
             className="t-dropdown-item mt-4"
             style={{ "--index": navbarLinks.length }}
           >
-            <a href="#contact-us" onClick={toggleMenu} className="btn-ember w-full">
+            <a href="#contact-us" onClick={() => setIsOpen(false)} className="btn-ember w-full">
               Check My Operator &rarr;
             </a>
           </div>

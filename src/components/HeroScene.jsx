@@ -4,10 +4,16 @@ import React, { useEffect, useRef, useState } from "react";
 function shouldRender() {
   if (typeof window === "undefined") return false;
   if (window.innerWidth < 768) return false;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+  if (navigator.connection?.saveData) return false;
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) return false;
 
   const canvas = document.createElement("canvas");
-  return !!(canvas.getContext("webgl2") || canvas.getContext("webgl"));
+  try {
+    const context = canvas.getContext("webgl2");
+    context?.getExtension("WEBGL_lose_context")?.loseContext();
+    return !!context;
+  } catch { return false; }
 }
 
 /**
@@ -29,9 +35,19 @@ export const HeroScene = () => {
       import("../lib/heroScene.js").then(({ initHeroScene }) => {
         if (cancelled || !canvasRef.current) return;
         cleanup = initHeroScene(canvasRef.current, { reduceMotion });
-        setReady(true);
-      });
+        setReady(!!cleanup);
+      }).catch(() => { if (!cancelled) setReady(false); });
     };
+
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const stopForReducedMotion = () => {
+      if (!preference.matches) return;
+      cancelled = true;
+      cleanup?.();
+      cleanup = undefined;
+      setReady(false);
+    };
+    preference.addEventListener("change", stopForReducedMotion);
 
     // Yield to first paint before pulling the renderer down.
     const idle = window.requestIdleCallback
@@ -40,6 +56,7 @@ export const HeroScene = () => {
 
     return () => {
       cancelled = true;
+      preference.removeEventListener("change", stopForReducedMotion);
       if (window.cancelIdleCallback) window.cancelIdleCallback(idle);
       else window.clearTimeout(idle);
       cleanup?.();

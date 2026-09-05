@@ -91,10 +91,11 @@ const { title, description, image, noindex, primary, breadcrumbs } =
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFL6VJ9B"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
-  <a href="#home" class="skip-link">Skip to content</a>
+  <a href="#main-content" class="skip-link">Skip to content</a>
   <slot />
   <style is:global>
     :root {
+      --header-height: 102px;
       --canvas: #060d1b;
       --oxford: #0a1428;
       --signal-red: #c8102e;
@@ -112,8 +113,13 @@ const { title, description, image, noindex, primary, breadcrumbs } =
       background-color: var(--canvas);
       overflow-x: hidden;
       scroll-behavior: smooth;
-      scroll-padding-top: 7rem;
+      scroll-padding-top: calc(var(--header-height) + 1rem);
+      scrollbar-gutter: stable;
       text-rendering: optimizeLegibility;
+    }
+
+    @media (min-width: 768px) {
+      :root { --header-height: 110px; }
     }
 
     /* Horizontal clipping lives on <html> only. Repeating overflow-x here made

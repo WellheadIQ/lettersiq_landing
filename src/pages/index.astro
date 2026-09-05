@@ -12,8 +12,6 @@ import { FAQ } from "../components/FAQ.jsx";
 import { Footer } from "../components/Footer.jsx";
 import { ScrollUpButton } from "../components/ScrollUpButton";
 import { ContactUs } from "../components/ContactUs"
-import { DialRoot } from "dialkit";
-import "dialkit/styles.css";
 import "../styles/Theme.css";
 
 ---
@@ -24,6 +22,7 @@ import "../styles/Theme.css";
   primary
 >
   <Navbar client:load />
+  <main id="main-content" tabindex="-1">
   <Hero client:load />
   <!-- client:load so the pinned track replaces the static fallback before the
        reader arrives; Three.js itself is still imported lazily, on idle. -->
@@ -35,11 +34,7 @@ import "../styles/Theme.css";
   <Pricing client:load />
   <FAQ client:load />
   <ContactUs client:load />
+  </main>
   <Footer />
   <ScrollUpButton client:load />
-  <DialRoot
-    client:only="react"
-    position="bottom-right"
-    theme="dark"
-  />
 </Layout>

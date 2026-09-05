@@ -99,14 +99,10 @@ export const Hero = () => {
       );
   }, []);
 
-  const scrollToContactUs = () => {
-    document.getElementById("contact-us")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <section
       ref={root}
-      className="relative w-full overflow-hidden bg-midnight pt-[100px]"
+      className="relative w-full overflow-hidden bg-midnight pt-[var(--header-height)]"
       id="home"
     >
       {/* Eight dataset planes over the Texas base plate — real geometry, real depth */}
@@ -121,11 +117,11 @@ export const Hero = () => {
               <span>Texas RRC intelligence · 8 connected systems</span>
             </div>
 
-            <h1 className="boot-in boot-headline mt-6 font-display text-[clamp(2.75rem,7vw,5rem)] font-extrabold leading-[0.95] tracking-[-0.02em] text-white">
+            <h1 className="boot-in boot-headline mt-6 font-display text-[clamp(2.5rem,5.5vw,4.75rem)] font-extrabold leading-[1.02] tracking-[-0.02em] text-white">
               Know what can stop production{" "}
-              <span className="relative inline-block text-signalRed">
+              <span className="relative inline-block text-signalBright">
                 before it does.
-                <span className="boot-underline absolute -bottom-1 left-0 h-[5px] w-full origin-left scale-x-0 bg-signalRed" />
+                <span className="boot-underline absolute -bottom-1 left-0 h-[2px] w-full origin-left scale-x-0 bg-signalRed" />
               </span>
             </h1>
 
@@ -137,12 +133,13 @@ export const Hero = () => {
             </p>
 
             <div className="boot-in boot-cta mt-9 flex flex-col gap-3 xs:flex-row xs:flex-wrap xs:gap-4">
-              <Button onClick={scrollToContactUs}>
-                Check My Operator
-                <span aria-hidden>&rarr;</span>
+              <Button asChild>
+                <a href="#contact-us">Check My Operator <span aria-hidden>&rarr;</span></a>
               </Button>
-              <Button variant="ghostDark" onClick={() => setBriefingOpen(true)}>
-                See a Sample Briefing <span aria-hidden>&rsaquo;</span>
+              <Button asChild variant="ghostDark">
+                <a href={briefingEmail} onClick={(event) => { event.preventDefault(); setBriefingOpen(true); }}>
+                  See a Sample Briefing <span aria-hidden>&rsaquo;</span>
+                </a>
               </Button>
             </div>
 
@@ -231,7 +228,7 @@ export const Hero = () => {
                 </ul>
 
                 {/* Panel footer */}
-                <div className="flex items-center justify-between border-t border-black/10 px-5 py-3.5">
+                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-black/10 px-5 py-3.5">
                   <span className="font-mono text-xs text-panelInkMuted">
                     8 datasets · diffed daily
                   </span>
@@ -254,6 +251,9 @@ export const Hero = () => {
         title="A sample 7:00 AM briefing"
         caption="Example portfolio · delivered daily at 07:00 CT"
       >
+        <a href={briefingEmail} target="_blank" rel="noopener noreferrer" className="mb-3 inline-flex min-h-11 items-center gap-2 text-sm text-cobaltText underline underline-offset-4 hover:text-white">
+          Open full-size briefing <span aria-hidden="true">↗</span><span className="sr-only"> (opens in a new tab)</span>
+        </a>
         <img
           src={briefingEmail}
           alt="A LettersIQ daily briefing email listing four RRC alerts for McFaddin Operating: a critical certified pre-severance letter, a P-5 expiring in 14 days, a proration status change, and a resolved severance."

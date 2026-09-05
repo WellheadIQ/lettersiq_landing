@@ -27,14 +27,16 @@ import { storyChapters } from "../lib/storyChapters.js";
  * random. Short portrait viewports get compacted copy instead (see Theme.css),
  * and the briefing drops rows until the ones it keeps are legible.
  */
+let webGLSupported;
+
 function stageHasRoom() {
   const { innerWidth: w, innerHeight: h } = window;
-  if (w >= 1024) return true;
+  if (w >= 1024) return h >= 560;
   // Laid flat, the copy takes a side column, so what's scarce is width: a
   // 640-wide phone leaves under 200px for the document, which is worse than
   // not drawing it. Orientation has to be read from both axes — a small phone
   // in portrait can be shorter than a big one in landscape.
-  if (w > h) return w >= 640;
+  if (w > h) return w >= 640 && h >= 360;
   return h >= 520;
 }
 
@@ -49,8 +51,14 @@ function canRenderScene() {
   if (/^(slow-)?2g$/.test(connection?.effectiveType ?? "")) return false;
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) return false;
 
-  const probe = document.createElement("canvas");
-  return !!(probe.getContext("webgl2") || probe.getContext("webgl"));
+  if (webGLSupported === undefined) {
+    try {
+      const context = document.createElement("canvas").getContext("webgl2");
+      webGLSupported = !!context;
+      context?.getExtension("WEBGL_lose_context")?.loseContext();
+    } catch { webGLSupported = false; }
+  }
+  return webGLSupported;
 }
 
 export const Story3D = () => {
@@ -145,24 +153,22 @@ export const Story3D = () => {
   }, []);
 
   useEffect(() => {
-    if (!canRenderScene()) {
-      // A phone that fails the check on load can pass it a moment later, when
-      // the URL bar collapses or the device is rotated. Watch for that instead
-      // of leaving the visitor on the flat story for the rest of the session.
-      // One direction only: swapping back mid-scroll would throw away their
-      // place in the story.
-      const recheck = () => {
-        if (!canRenderScene()) return;
-        window.removeEventListener("resize", recheck);
-        window.removeEventListener("orientationchange", recheck);
-        setAllowed(true);
-      };
-      window.addEventListener("resize", recheck);
-      window.addEventListener("orientationchange", recheck);
-      return () => {
-        window.removeEventListener("resize", recheck);
-        window.removeEventListener("orientationchange", recheck);
-      };
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const recheck = () => setAllowed(canRenderScene());
+    recheck();
+    window.addEventListener("resize", recheck);
+    preference.addEventListener("change", recheck);
+    return () => {
+      window.removeEventListener("resize", recheck);
+      preference.removeEventListener("change", recheck);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!allowed) {
+      setMode("static");
+      setReady(false);
+      return undefined;
     }
 
     setMode("scene");
@@ -187,6 +193,8 @@ export const Story3D = () => {
           scene.dispose();
           sceneRef.current = null;
         };
+      }).catch(() => {
+        if (!cancelled) { setReady(false); setMode("static"); }
       });
     };
 
@@ -267,6 +275,10 @@ export const Story3D = () => {
       </div>
 
       {mode === "scene" ? (
+        <>
+        <div className="section-shell mt-5">
+          <a href="#blast-radius" className="inline-flex min-h-11 items-center text-sm text-white/70 underline underline-offset-4 hover:text-white">Skip the walkthrough →</a>
+        </div>
         <ScrollStage
           trackRef={trackRef}
           canvasRef={canvasRef}
@@ -274,6 +286,7 @@ export const Story3D = () => {
           ready={ready}
           active={active}
         />
+        </>
       ) : (
         <StaticStory />
       )}

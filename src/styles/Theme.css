@@ -370,3 +370,18 @@ html {
     scroll-behavior: auto !important;
   }
 }
+
+/* Native dialogs stay above the fixed navigation and contain keyboard focus. */
+.sample-dialog { max-height: calc(100dvh - 2rem); }
+.sample-dialog::backdrop { background: rgb(6 13 27 / 90%); }
+.sample-dialog[open] { animation: dialog-enter 180ms var(--ease-smooth-out); }
+@keyframes dialog-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* The source wordmark has generous transparent margins; fit its visible ink. */
+.brand-logo { width: 136px; height: 44px; object-fit: cover; }
+#main-content:focus { outline: none; }
+
+html:has([aria-controls="mobile-menu"][aria-expanded="true"]) [data-scroll-top] { visibility: hidden; }

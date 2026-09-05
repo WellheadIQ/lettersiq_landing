@@ -1,20 +1,20 @@
-/**
- * Freezes page scroll behind an overlay and returns the release function.
- *
- * The lock has to land on <html>: Layout.astro puts `overflow-x: hidden` there,
- * which makes <html> the scrolling element, so the usual `body.style.overflow`
- * lock is inert on this page and the page scrolls behind open overlays.
- *
- * @returns {() => void} release
- */
+let locks = 0;
+let previousOverflow = "";
+
+/** Nestable, idempotent scroll locks for the menu and sample dialog. */
 export function lockPageScroll() {
   if (typeof document === "undefined") return () => {};
-
   const root = document.documentElement;
-  const previous = root.style.overflow;
-  root.style.overflow = "hidden";
-
+  if (locks === 0) {
+    previousOverflow = root.style.overflow;
+    root.style.overflow = "hidden";
+  }
+  locks += 1;
+  let released = false;
   return () => {
-    root.style.overflow = previous;
+    if (released) return;
+    released = true;
+    locks -= 1;
+    if (locks === 0) root.style.overflow = previousOverflow;
   };
 }

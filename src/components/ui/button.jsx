@@ -7,7 +7,7 @@ import { cn } from "../../lib/utils.js";
 // Emil: buttons must feel responsive (scale on :active), animate transform/opacity
 // only, custom ease-out curve, sub-200ms feedback.
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-mono uppercase tracking-[0.12em] font-medium select-none transition-[transform,background-color,color,border-color] duration-150 ease-out-strong will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobaltText focus-visible:ring-offset-2 focus-visible:ring-offset-parchment disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96]",
+  "inline-flex items-center justify-center gap-2 text-center font-mono uppercase tracking-[0.12em] font-medium select-none transition-[transform,background-color,color,border-color] duration-150 ease-out-strong will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cobaltText focus-visible:ring-offset-2 focus-visible:ring-offset-parchment disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96]",
   {
     variants: {
       variant: {
@@ -19,7 +19,7 @@ const buttonVariants = cva(
         secondary: "bg-oxford text-white hover:bg-slateNavy",
       },
       size: {
-        default: "px-7 py-4 text-sm",
+        default: "min-h-11 px-6 py-4 text-sm",
         // Compact only in width — every size still clears the 44px target floor.
         sm: "min-h-11 px-4 py-2.5 text-xs",
         lg: "px-9 py-5 text-base",

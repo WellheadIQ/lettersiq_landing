@@ -1,5 +1,4 @@
 import React from "react";
-import { useDialKit } from "dialkit";
 import { useAnimeScope } from "../hooks/useAnimeScope.js";
 import { settle } from "../lib/motion.js";
 import { duration } from "../lib/motionTokens.js";
@@ -43,19 +42,7 @@ const tiers = [
   },
 ];
 
-const gridDialConfig = {
-  gap: [24, 0, 64, 1],
-  padding: [0, 0, 64, 1],
-  columnCount: [3, 1, 6, 1],
-  Card: {
-    borderRadius: [0, 0, 32, 1],
-  },
-};
-
 export const Pricing = () => {
-  const grid = useDialKit("Pricing grid", gridDialConfig, {
-    id: "lettersiq-pricing-grid",
-  });
   const root = useAnimeScope(({ reduceMotion, anime }) => {
     if (reduceMotion) return;
     settle(anime, anime.utils.$(".pricing-card"), {
@@ -92,24 +79,11 @@ export const Pricing = () => {
           </p>
         </div>
 
-        <div
-          className="pricing-tiers grid"
-          style={{
-            gap: grid.gap,
-            padding: grid.padding,
-            gridTemplateColumns: `repeat(${grid.columnCount}, minmax(0, 1fr))`,
-          }}
-        >
-          {tiers.map((tier) => (
-            <TierCard
-              key={tier.name}
-              {...tier}
-              cardBorderRadius={grid.Card.borderRadius}
-            />
-          ))}
+        <div className="pricing-tiers grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-6">
+          {tiers.map((tier) => <TierCard key={tier.name} {...tier} />)}
         </div>
 
-        <div className="pricing-included mt-6 border-2 border-oxford bg-card shadow-float">
+        <div className="pricing-included mt-6 border border-lineStrong bg-card">
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-line bg-parchmentAlt px-5 py-3.5 font-mono text-xs sm:px-6">
             <span className="text-labFg">Included in every plan</span>
             <span className="flex items-center gap-2 text-cobaltText">
@@ -123,7 +97,7 @@ export const Pricing = () => {
               {pricingFeatures.map((feature) => (
                 <div key={feature} className="flex gap-3 border-b border-line py-4">
                   <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center bg-signalRed text-white">
-                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg aria-hidden="true" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
@@ -167,18 +141,16 @@ const TierCard = ({
   cadence,
   body,
   featured,
-  cardBorderRadius,
 }) => (
   <div
-    style={{ borderRadius: cardBorderRadius }}
-    className={`pricing-card relative flex flex-col overflow-hidden border-2 border-oxford shadow-float ${
-      featured ? "bg-oxford text-white" : "bg-card"
+    className={`pricing-card relative flex min-w-0 flex-col overflow-hidden rounded-sm border ${
+      featured ? "border-cobaltText/60 bg-slateNavy text-white" : "border-lineStrong bg-card"
     }`}
   >
     <div className={`h-1.5 ${featured ? "bg-signalRed" : "bg-transparent"}`} />
 
     <div className="flex flex-1 flex-col p-6 sm:p-7">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h3
           className={`font-display text-xl font-bold ${
             featured ? "text-white" : "text-labFg"
@@ -202,7 +174,7 @@ const TierCard = ({
         {scope.toUpperCase()}
       </div>
 
-      <div className="mt-7 flex items-baseline gap-1.5">
+      <div className="mt-7 flex flex-wrap items-baseline gap-1.5">
         <span
           className={`font-display text-[3.25rem] font-extrabold leading-none tracking-[-0.03em] ${
             featured ? "text-white" : "text-labFg"
@@ -232,7 +204,7 @@ const TierCard = ({
       <Button
         asChild
         variant={featured ? "default" : "outline"}
-        className="mt-7 w-full shadow-none"
+        className="mt-7 w-full px-4 text-xs xl:text-sm shadow-none"
       >
         <a href="#contact-us">
           Check My Operator

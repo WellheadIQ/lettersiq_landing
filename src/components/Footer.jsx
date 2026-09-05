@@ -18,7 +18,7 @@ export const Footer = () => {
   return (
     <>
       {/* Full-bleed signal-red closing band — the page's signature */}
-      <div className="w-full bg-signalRed">
+      <div data-footer-cta className="w-full bg-signalRed">
         <div className="section-shell py-12 md:py-16 flex items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <StarMark size={40} className="text-white shrink-0" />
@@ -51,7 +51,7 @@ export const Footer = () => {
                 alt="LettersIQ"
                 width="2000"
                 height="1500"
-                className="h-10 w-auto mb-5"
+                className="brand-logo mb-5"
               />
               <p className="mb-5 max-w-sm text-sm leading-relaxed text-white/65">
                 Regulatory operations intelligence for Texas oil and gas operators.

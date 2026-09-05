@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { formatPhone, validateField, submitOperator } from '../lib/contact.js';
 import { SectionLabel } from './Primitives.jsx';
 import { Button } from './ui/button.jsx';
 import { IconSwap } from './ui/icon-swap.jsx';
@@ -60,37 +61,19 @@ const FIELDS = [
   { name: 'phone', label: 'Phone', type: 'tel', autoComplete: 'tel', placeholder: '(512) 555-0134' },
 ];
 
-const digits = (v) => v.replace(/\D/g, '').slice(0, 10);
-
-const formatPhone = (v) => {
-  const d = digits(v);
-  if (d.length < 4) return d;
-  if (d.length < 7) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
-  return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
-};
-
-const validateField = (name, value) => {
-  const v = (value || '').trim();
-  switch (name) {
-    case 'name':
-      return v.length >= 2 ? '' : 'Enter your full name.';
-    case 'operator':
-      return v.length >= 2 ? '' : 'Enter your operator or company name.';
-    case 'email':
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'Enter a valid email address.';
-    case 'phone':
-      return digits(v).length === 10 ? '' : 'Enter a 10-digit phone number.';
-    default:
-      return '';
-  }
-};
-
 export const ContactUs = () => {
   const reduceMotion = useReducedMotion();
+  const requestRef = useRef(null);
   const [formState, setFormState] = useState('idle');
+  const [hydrated, setHydrated] = useState(false);
   const [formData, setFormData] = useState({ name: '', operator: '', email: '', phone: '' });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+
+  useEffect(() => {
+    setHydrated(true);
+    return () => requestRef.current?.abort();
+  }, []);
 
   const resetForm = useCallback(() => {
     setErrors({});
@@ -105,11 +88,8 @@ export const ContactUs = () => {
     setFormData((prev) => ({ ...prev, [name]: next }));
     // Only re-validate live once the field has been visited, to clear a
     // showing error as the user fixes it — never punish first-time typing.
-    setTouched((t) => {
-      if (t[name]) setErrors((prev) => ({ ...prev, [name]: validateField(name, next) }));
-      return t;
-    });
-  }, []);
+    if (touched[name]) setErrors((prev) => ({ ...prev, [name]: validateField(name, next) }));
+  }, [touched]);
 
   const handleBlur = useCallback((e) => {
     const { name, value } = e.target;
@@ -129,6 +109,7 @@ export const ContactUs = () => {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
+      if (requestRef.current) return;
       const nextErrors = {};
       FIELDS.forEach(({ name }) => {
         const msg = validateField(name, formData[name]);
@@ -145,17 +126,18 @@ export const ContactUs = () => {
       }
 
       setFormState('submitting');
+      const controller = new AbortController();
+      requestRef.current = controller;
+      const timeout = setTimeout(() => controller.abort(), 15000);
       try {
-        const response = await fetch('https://formcarry.com/s/t84fP1_KPoq', {
-          method: 'POST',
-          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...formData, phone: digits(formData.phone) }),
-        });
-        if (!response.ok) throw new Error('Submission failed');
+        await submitOperator(formData, { signal: controller.signal });
         setFormState('success');
         gtagReportConversion();
       } catch (err) {
         setFormState('error');
+      } finally {
+        clearTimeout(timeout);
+        requestRef.current = null;
       }
     },
     [formData, gtagReportConversion]
@@ -163,11 +145,10 @@ export const ContactUs = () => {
 
   return (
     <section id="contact-us" className="w-full bg-midnight py-16 md:py-24 relative overflow-hidden">
-      {/* Inner column, not `max-w-2xl` on the shell: the shell centres itself,
-          so narrowing it there would pull the form off the leading edge every
-          other section on the page shares. */}
+      {/* Keep the invitation and form in view together on a desktop. */}
       <div className="section-shell relative z-10">
-        <div className="max-w-2xl">
+        <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-16">
+          <div>
           <SectionLabel label="Check my operator" className="mb-5" />
           <h2 className="text-balance font-display text-display-sm font-extrabold tracking-[-0.02em] text-white">
             See what LettersIQ finds across your portfolio.
@@ -177,6 +158,8 @@ export const ContactUs = () => {
             LettersIQ and show you what deserves attention.
           </p>
 
+          <p className="mt-6 text-sm text-white/65">All fields are required. <a href="/privacy-policy" className="underline underline-offset-4 hover:text-white">How we use your information</a></p>
+          </div>
           <AnimatePresence mode="wait" initial={false}>
             {formState === 'success' ? (
               <SuccessMessage key="success" onReset={resetForm} reduceMotion={reduceMotion} />
@@ -184,11 +167,16 @@ export const ContactUs = () => {
               <motion.form
                 key="form"
                 onSubmit={handleSubmit}
-                noValidate
+                action="https://formcarry.com/s/t84fP1_KPoq"
+                method="post"
+                noValidate={hydrated}
+                data-ready={hydrated ? "true" : undefined}
+                aria-busy={formState === 'submitting'}
                 {...panelMotion(reduceMotion, -distance.base)}
-                className="mt-8 border border-line bg-card"
+                className="border border-lineStrong bg-card"
               >
-                <div className="grid gap-5 p-6 sm:grid-cols-2">
+                <fieldset disabled={formState === 'submitting'} className="grid min-w-0 gap-5 p-5 sm:grid-cols-2 sm:p-6">
+                  <legend className="sr-only">Your operator and contact details</legend>
                   {FIELDS.map((f) => (
                     <FormField
                       key={f.name}
@@ -200,7 +188,7 @@ export const ContactUs = () => {
                       full={f.name === 'name' || f.name === 'operator'}
                     />
                   ))}
-                </div>
+                </fieldset>
 
                 {formState === 'error' && (
                   <div
@@ -240,11 +228,16 @@ export const ContactUs = () => {
   );
 };
 
-const SuccessMessage = ({ onReset, reduceMotion }) => (
+const SuccessMessage = ({ onReset, reduceMotion }) => {
+  const focusRef = useRef(null);
+  useEffect(() => { focusRef.current?.focus(); }, []);
+  return (
   <motion.div
     {...panelMotion(reduceMotion, -distance.medium)}
+    ref={focusRef}
+    tabIndex={-1}
     role="status"
-    className="mt-8 border border-cobalt/30 bg-card px-6 py-12 text-center"
+    className="border border-cobalt/30 bg-card px-6 py-12 text-center"
   >
     <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border border-cobalt/50 text-cobaltText">
       <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -263,7 +256,8 @@ const SuccessMessage = ({ onReset, reduceMotion }) => (
       Check another operator
     </button>
   </motion.div>
-);
+  );
+};
 
 const FormField = ({ name, label, type, placeholder, autoComplete, value, error, onChange, onBlur, full }) => {
   const errorId = `${name}-error`;
@@ -281,10 +275,11 @@ const FormField = ({ name, label, type, placeholder, autoComplete, value, error,
         onBlur={onBlur}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        required
         inputMode={type === 'tel' ? 'tel' : type === 'email' ? 'email' : 'text'}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={error ? errorId : undefined}
-        className={`w-full border bg-midnight/60 px-4 py-3.5 font-mono text-sm text-white placeholder:text-white/55 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cobaltText ${
+        className={`w-full border bg-midnight/60 px-4 py-3.5 font-mono text-base text-white placeholder:text-white/55 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cobaltText ${
           error
             ? // Matches the message below it; signalRed at 60% was too dark
               // against the panel to register as an invalid field.
