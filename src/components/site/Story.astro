@@ -1,0 +1,118 @@
+---
+import World from "./World.astro";
+import { clockFace } from "../../lib/drawings.js";
+import { createPen } from "../../lib/ink.js";
+
+const chapters = [
+  {
+    time: "02:14 AM",
+    title: "Three leases share one tank battery. Two of them are yours.",
+    body: "A P-17 surface commingling permit ties them together. Oil from all three wells runs into the same tanks, so they share the same fate.",
+  },
+  {
+    time: "02:14 AM",
+    title: "A record moves on the lease next door.",
+    body: "The Commission files a certified pre-severance letter against your neighbor's lease. It's addressed to another operator, at another office.",
+  },
+  {
+    time: "02:15 AM",
+    title: "Their problem runs through your pipe.",
+    body: "A severance on any lease in a commingle shuts in the whole commingle. Your filings haven't changed and an operator-number search comes back clean, but both of your leases are exposed.",
+  },
+  {
+    time: "Day 31",
+    title: "If nobody reads it, the order lands.",
+    body: "The severance issues. The battery can't move oil, three pumps stop, and you learn about it after production has already stopped.",
+  },
+  {
+    time: "07:00 AM · Day 1",
+    title: "Rewind. LettersIQ read it at 2:14.",
+    body: "By 7:00 AM the letter is at the top of your briefing: the neighbor's lease, the permit that ties you together, the two leases at risk, and who to call.",
+  },
+  {
+    time: "07:40 AM · Day 1",
+    title: "One phone call on day one, instead of a shut-in on day thirty-one.",
+    body: "The co-member cures before an order issues. All three wells keep pumping.",
+  },
+];
+
+const clock = clockFace(88, 44);
+const check = createPen(91, { wobble: 1.2 });
+const tick = check.poly([[4, 14], [11, 21], [26, 4]]);
+const strike = check.scribble(0, 100, 6, { passes: 1 });
+---
+<section class="story" id="story" data-story aria-labelledby="story-heading">
+  <h2 class="sr-only" id="story-heading">One night on a shared commingle</h2>
+  <div class="story-pin" data-story-pin>
+    <div class="story-stage">
+      <World
+        variant="story"
+        seed={7}
+        viewBox="0 -250 2000 1250"
+        label="Night-time elevation of three pumpjacks on a shared commingle. A certified letter arrives at the neighbor's lease, red lines trace the exposure through the buried flowlines to your two leases, and a severance stamp lands on the tank battery."
+      />
+    </div>
+
+    <div class="story-clock" aria-hidden="true">
+      <svg viewBox="-50 -50 100 100" class="story-dial">
+        <path class="ink-l" d={clock.rim} />
+        <path class="ink-t" d={clock.ticks} />
+        <g data-hand-h transform="rotate(67)"><path class="ink-l" d={clock.hour} /></g>
+        <g data-hand-m transform="rotate(84)"><path class="ink-l" d={clock.minute} /></g>
+        <path class="ink-l" d={clock.hub} />
+      </svg>
+      <div class="story-readout">
+        <span data-clock-time>02:14 AM</span>
+        <span data-clock-day>Day 01</span>
+      </div>
+    </div>
+
+    <ol class="chapters">
+      {chapters.map((c, i) => (
+        <li class="chapter" data-chapter={i}>
+          <p class="chapter-no">
+            <span>{String(i + 1).padStart(2, "0")}</span>
+            <span class="chapter-time">{c.time}</span>
+          </p>
+          <h3 class="chapter-title">{c.title}</h3>
+          <p class="chapter-body">{c.body}</p>
+        </li>
+      ))}
+    </ol>
+
+    <aside class="mini-brief" data-story-brief aria-label="Excerpt from the 7:00 AM briefing">
+      <header class="mini-brief-head">
+        <span>LettersIQ · Morning briefing</span>
+        <span>07:00 CT</span>
+      </header>
+      <ol class="mini-brief-list">
+        <li class="mini-brief-item is-critical">
+          <p class="sev">Critical · production at risk</p>
+          <p class="mini-title">
+            Commingle blast radius (3rd-party severance)
+            <svg class="mini-strike" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true" data-brief-strike><path class="ink-r" d={strike} /></svg>
+          </p>
+          <p class="mini-meta">Certified letter on Lease 08-10977 (Halvorsen Energy). Co-member on your P-17. Leases 08-11234 and 08-11235 exposed.</p>
+          <p class="mini-next">Next: call the co-member and confirm a cure before an order issues.</p>
+          <p class="mini-done" data-brief-done>
+            <svg viewBox="0 0 30 24" aria-hidden="true"><path class="ink-r" d={tick} /></svg>
+            called 7:40, cure filed
+          </p>
+        </li>
+        <li class="mini-brief-item">
+          <p class="sev">High</p>
+          <p class="mini-title">P-5 expiration approaching · 14 days</p>
+        </li>
+        <li class="mini-brief-item">
+          <p class="sev">Medium</p>
+          <p class="mini-title">Proration status change · DLQ W-10, 3 wells</p>
+        </li>
+      </ol>
+      <footer class="mini-brief-foot">Illustrative portfolio</footer>
+    </aside>
+
+    <div class="story-progress" aria-hidden="true">
+      {chapters.map((_, i) => <span data-progress={i}></span>)}
+    </div>
+  </div>
+</section>

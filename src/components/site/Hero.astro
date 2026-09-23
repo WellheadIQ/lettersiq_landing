@@ -1,0 +1,52 @@
+---
+import World from "./World.astro";
+import { createPen } from "../../lib/ink.js";
+
+const pen = createPen(1207, { wobble: 1.3 });
+const ring = pen.circle(120, 50, 112, 40, { turns: 1.16, start: -2.6, tilt: -0.04 });
+---
+<section class="hero" id="top">
+  <div class="shell hero-head">
+    <p class="kicker hero-rise">
+      <span class="kicker-dot" aria-hidden="true"></span>
+      Texas RRC intelligence for oil &amp; gas operators
+    </p>
+    <h1 class="hero-title" data-hero-title>
+      Read the Railroad Commission
+      <em>
+        <span class="ringed">before<svg class="ring" viewBox="0 0 240 100" preserveAspectRatio="none" aria-hidden="true" data-draw-now><path class="ink-r" d={ring} /></svg></span>
+        it writes to you.
+      </em>
+    </h1>
+    <div class="hero-foot">
+      <p class="hero-lede hero-rise">
+        LettersIQ reads eight Texas Railroad Commission systems every night,
+        traces each change to the leases it can shut in, and puts one ranked
+        page in front of your team by 7:00&nbsp;AM.
+      </p>
+      <div class="hero-actions hero-rise">
+        <a class="btn btn-red" href="#contact">Check my operator <span aria-hidden="true">→</span></a>
+        <a class="btn btn-line" href="#briefing">Read a sample briefing</a>
+      </div>
+    </div>
+  </div>
+
+  <figure class="hero-plate">
+    <div class="plate-frame">
+      <span class="plate-tag plate-tag--l" aria-hidden="true">FIG. 01</span>
+      <span class="plate-tag plate-tag--r" aria-hidden="true">[ REEVES CO., TX · ELEVATION ]</span>
+      <div class="hero-world" data-draw-sweep>
+        <World
+          variant="hero"
+          seed={7}
+          viewBox="100 478 1860 390"
+          label="Hand-drawn elevation of three pumpjacks feeding one shared tank battery through buried flowlines."
+        />
+      </div>
+    </div>
+    <figcaption class="shell plate-caption">
+      <span>Fig. 01</span>
+      Three wells, one shared tank battery. Two of the leases are yours. Keep scrolling to see what happens to them overnight.
+    </figcaption>
+  </figure>
+</section>

@@ -1,19 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { Hero } from "../components/Hero.jsx";
-import { Story3D } from "../components/Story3D.jsx";
-import { Navbar } from "../components/Navbar.jsx";
-import { Coverage } from "../components/Coverage.jsx";
-import { Features1 } from "../components/Features1.jsx";
-import { BlastRadius } from "../components/BlastRadius.jsx";
-import { HowItWorks } from "../components/HowItWorks.jsx";
-import { Pricing } from "../components/Pricing.jsx";
-import { FAQ } from "../components/FAQ.jsx";
-import { Footer } from "../components/Footer.jsx";
-import { ScrollUpButton } from "../components/ScrollUpButton";
-import { ContactUs } from "../components/ContactUs"
-import "../styles/Theme.css";
-
+import Nav from "../components/site/Nav.astro";
+import Hero from "../components/site/Hero.astro";
+import Story from "../components/site/Story.astro";
+import Signals from "../components/site/Signals.astro";
+import Systems from "../components/site/Systems.astro";
+import Briefing from "../components/site/Briefing.astro";
+import Pricing from "../components/site/Pricing.astro";
+import Faq from "../components/site/Faq.astro";
+import Contact from "../components/site/Contact.astro";
+import Footer from "../components/site/Footer.astro";
 ---
 
 <Layout
@@ -21,20 +17,20 @@ import "../styles/Theme.css";
   description="LettersIQ connects eight Texas RRC systems and delivers one prioritized morning briefing: what changed, what it affects, and what needs attention."
   primary
 >
-  <Navbar client:load />
+  <Nav />
   <main id="main-content" tabindex="-1">
-  <Hero client:load />
-  <!-- client:load so the pinned track replaces the static fallback before the
-       reader arrives; Three.js itself is still imported lazily, on idle. -->
-  <Story3D client:load />
-  <BlastRadius client:load />
-  <HowItWorks client:load />
-  <Features1 client:load />
-  <Coverage client:load />
-  <Pricing client:load />
-  <FAQ client:load />
-  <ContactUs client:load />
+    <Hero />
+    <Story />
+    <Signals />
+    <Systems />
+    <Briefing />
+    <Pricing />
+    <Faq />
+    <Contact />
   </main>
   <Footer />
-  <ScrollUpButton client:load />
 </Layout>
+
+<script>
+  import "../scripts/main.js";
+</script>

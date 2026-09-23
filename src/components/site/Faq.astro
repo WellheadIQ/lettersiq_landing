@@ -1,0 +1,41 @@
+---
+import { faq } from "../../data/faq.js";
+import { createPen } from "../../lib/ink.js";
+
+const pen = createPen(909, { wobble: 0.9 });
+const marks = faq.map(() => ({
+  h: pen.line(3, 12, 21, 12),
+  v: pen.line(12, 3, 12, 21),
+}));
+---
+<section class="section faq" id="faq" aria-labelledby="faq-heading">
+  <div class="shell faq-grid">
+    <header class="faq-head">
+      <p class="fig-label">Fig. 07 · Questions</p>
+      <h2 id="faq-heading" class="section-title" data-reveal>
+        Asked in the <em>field.</em>
+      </h2>
+      <p class="section-lede" data-reveal>
+        Anything else, ask us directly at
+        <a class="text-link" href="mailto:privacy@wellheadiq.com">privacy@wellheadiq.com</a>.
+      </p>
+    </header>
+    <div class="faq-list">
+      {faq.map((item, i) => (
+        <details class="faq-item" data-reveal>
+          <summary>
+            <span class="faq-no">{String(i + 1).padStart(2, "0")}</span>
+            <span class="faq-q">{item.question}</span>
+            <svg class="faq-mark" viewBox="0 0 24 24" aria-hidden="true">
+              <path class="ink-l" d={marks[i].h} />
+              <path class="ink-l faq-mark-v" d={marks[i].v} />
+            </svg>
+          </summary>
+          <div class="faq-a">
+            <p>{item.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

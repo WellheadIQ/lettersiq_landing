@@ -1,0 +1,49 @@
+---
+import { glyphs } from "../../lib/drawings.js";
+
+const g = glyphs(31);
+const systems = [
+  { glyph: g.severance, name: "Severance & seal orders", form: "Severance", cadence: "Daily", body: "Issue, resolution and reissue records, so an active order shows up the morning it issues and the all-clear shows up the day it lifts." },
+  { glyph: g.certified, name: "Certified letters", form: "Pre-severance", cadence: "Daily", body: "The Commission's final notice before a severance, caught the night it's filed while there's still time to cure." },
+  { glyph: g.proration, name: "Proration schedules", form: "Oil & gas", cadence: "Daily", body: "Delinquency codes like DLQ W-10, DLQ FORM and H-15 VIOL, plus allowable changes, compared against yesterday." },
+  { glyph: g.p5, name: "Organization report", form: "P-5", cadence: "Weekly", body: "A 60, 30, 14 and 7-day countdown to expiry. An unrenewed P-5 can sever every lease you operate." },
+  { glyph: g.rule15, name: "Inactive wells", form: "Rule 15", cadence: "Weekly", body: "Five- and ten-year inactivity milestones, W-3X extension status, and wells that newly land on the aging report." },
+  { glyph: g.commingle, name: "Surface commingling", form: "P-17", cadence: "Weekly", body: "Every co-member lease on your commingles, watched for the severance that would shut in yours." },
+  { glyph: g.drilling, name: "Drilling permits", form: "W-1", cadence: "Weekly", body: "The two-year no-spud expiry, counted from the original approval and checked against the wellbore record." },
+  { glyph: g.purchaser, name: "Gatherers & purchasers", form: "P-4", cadence: "Weekly", body: "Lost market outlets and operator-of-record changes, the day the Commission processes them." },
+];
+---
+<section class="section systems" id="systems" aria-labelledby="systems-heading">
+  <div class="shell">
+    <header class="section-head section-head--split">
+      <div>
+        <p class="fig-label">Fig. 04 · Coverage</p>
+        <h2 id="systems-heading" class="section-title" data-reveal>
+          Eight systems. <em>One reading.</em>
+        </h2>
+      </div>
+      <p class="section-lede" data-reveal>
+        An operator-number search only shows what was filed against you.
+        LettersIQ reads all eight systems against every lease you run, then
+        joins them, so a record in one system can surface a risk in another.
+      </p>
+    </header>
+
+    <ol class="index" data-index>
+      {systems.map((s, i) => (
+        <li class="index-row" data-reveal>
+          <span class="index-no">{String(i + 1).padStart(2, "0")}</span>
+          <svg class="index-glyph" viewBox="0 0 64 64" aria-hidden="true" data-glyph>
+            <path class="ink-l" d={s.glyph} />
+          </svg>
+          <h3 class="index-name">
+            {s.name}
+            <span class="index-form">{s.form}</span>
+          </h3>
+          <span class={`index-cadence is-${s.cadence.toLowerCase()}`}>{s.cadence}</span>
+          <p class="index-body">{s.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

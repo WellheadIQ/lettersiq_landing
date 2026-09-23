@@ -1,55 +1,56 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import "../styles/Theme.css";
+import Layout from "../layouts/Layout.astro";
+import Footer from "../components/site/Footer.astro";
+import { site } from "../data/site.js";
 
 const sections = [
   {
-    title: "1. Information We Collect",
+    title: "Information we collect",
     intro: "We may collect the following types of information when you use our services:",
     items: [
-      "Personal Information: When you sign up for our services, we may collect personal information such as your name, work email address, company or operator name, business address, phone number, and payment details.",
-      "Non-Personal Information: We may collect non-personal information, such as your browser type, device information, IP address, and website usage statistics, to help us improve our services.",
-      "Cookies and Tracking Technologies: We may use cookies and similar tracking technologies to enhance your experience on our website and to analyze usage patterns.",
+      ["Personal information", "When you sign up for our services, we may collect personal information such as your name, work email address, company or operator name, business address, phone number, and payment details."],
+      ["Non-personal information", "We may collect non-personal information, such as your browser type, device information, IP address, and website usage statistics, to help us improve our services."],
+      ["Cookies and tracking technologies", "We may use cookies and similar tracking technologies to enhance your experience on our website and to analyze usage patterns."],
     ],
   },
   {
-    title: "2. How We Use Your Information",
+    title: "How we use your information",
     intro: "We use the information we collect for the following purposes:",
     items: [
-      "To Provide Our Services: We use your personal information to set up monitoring for your portfolio, deliver briefings and reports, and provide customer support.",
-      "To Improve Our Services: We analyze non-personal information to improve our website, services, and user experience.",
-      "To Communicate with You: We may use your contact information to send you updates, promotional offers, and important service-related communications.",
-      "To Comply with Legal Obligations: We may use your information as required by law or to protect our rights and interests.",
+      ["To provide our services", "We use your personal information to set up monitoring for your portfolio, deliver briefings and reports, and provide customer support."],
+      ["To improve our services", "We analyze non-personal information to improve our website, services, and user experience."],
+      ["To communicate with you", "We may use your contact information to send you updates, promotional offers, and important service-related communications."],
+      ["To comply with legal obligations", "We may use your information as required by law or to protect our rights and interests."],
     ],
   },
   {
-    title: "3. Sharing Your Information",
+    title: "Sharing your information",
     paragraphs: [
       "We do not sell, trade, or rent your personal information to third parties. We may share your information with third-party service providers who assist us in delivering our services, such as cloud hosting providers, email delivery providers, analytics providers, and payment processors. These providers are required to protect your information and use it only for the purposes we specify.",
       "We may also disclose your information if required by law, court order, or to protect our legal rights.",
     ],
   },
   {
-    title: "4. Security of Your Information",
+    title: "Security of your information",
     paragraphs: [
       "We take the security of your personal information seriously. We implement appropriate technical and organizational measures to protect your data from unauthorized access, disclosure, alteration, or destruction. However, no method of transmission over the internet or electronic storage is 100% secure, and we cannot guarantee absolute security.",
     ],
   },
   {
-    title: "5. Your Rights",
+    title: "Your rights",
     paragraphs: [
       "You have the right to access, update, or delete your personal information at any time. If you wish to exercise any of these rights, please contact us.",
     ],
   },
   {
-    title: "6. Our Jurisdiction",
+    title: "Our jurisdiction",
     paragraphs: [
       "LettersIQ is a U.S.-based service operated by WellheadIQ. Our services are directed to businesses operating in the United States, and information we collect is stored and processed in the United States under applicable U.S. law.",
       "We do not offer our services to individuals in the European Union or the United Kingdom. If you believe you have provided us with personal information subject to another jurisdiction's data protection law, contact us and we will address your request.",
     ],
   },
   {
-    title: "7. Changes to This Privacy Policy",
+    title: "Changes to this privacy policy",
     paragraphs: [
       "We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date. We encourage you to review this policy periodically to stay informed about how we are protecting your information.",
     ],
@@ -62,30 +63,21 @@ const sections = [
   description="How LettersIQ collects, uses, stores and shares information for its Texas Railroad Commission monitoring service, and the choices you have over your data."
   breadcrumbs={[["Privacy Policy", "/privacy-policy"]]}
 >
-  <main id="main-content" tabindex="-1" class="bg-paper min-h-screen pt-10 md:pt-16 pb-20">
-    <div class="section-shell">
-      <!-- Back link + label -->
-      <div class="flex items-center justify-between mb-8">
-        <a href="/" class="inline-flex min-h-11 items-center gap-2 font-mono text-[11px] tracking-[0.16em] text-labFgMuted hover:text-signalText transition-colors uppercase">
-          <span aria-hidden>←</span> Back to Home
-        </a>
-        <div class="flex items-center gap-3 mono-label text-labFgMuted">
-          <span class="text-signalText">LIQ</span>
-          <span class="w-6 h-px bg-labBorderStrong"></span>
-          <span>Legal</span>
-        </div>
-      </div>
+  <header class="nav is-scrolled legal-nav">
+    <div class="shell nav-inner">
+      <a href="/" class="brand" aria-label="LettersIQ home">
+        <span class="brand-word">Letters</span><span class="brand-iq">IQ</span>
+      </a>
+      <a href="/" class="legal-back">&larr; Back to the story</a>
+    </div>
+  </header>
 
-      <!-- The measure lives on the prose blocks rather than on the shell: the
-           shell centres itself, so capping it there would pull the whole page
-           off the leading edge the navbar sits on, and the utility rows above
-           and below are chrome that should still span.
-           34rem measures ~79 characters per line at 16px; `max-w-3xl` measured
-           131 and the uncapped shell measured 182. -->
-      <header class="mb-10 pb-10 border-b border-labBorder max-w-[34rem]">
-        <h1 class="text-display-sm font-bold text-labFg tracking-tight">Privacy Policy</h1>
-        <p class="mt-4 font-mono text-xs tracking-wider text-labFgMuted">LAST UPDATED: AUGUST 10, 2026</p>
-        <p class="mt-6 text-labFgMuted leading-relaxed">
+  <main id="main-content" tabindex="-1" class="legal">
+    <div class="shell legal-grid">
+      <header class="legal-head">
+        <p class="fig-label">Legal · Last updated August 10, 2026</p>
+        <h1 class="section-title">Privacy <em>policy.</em></h1>
+        <p class="legal-lede">
           At LettersIQ, a service provided by WellheadIQ, we are committed to protecting your privacy
           and ensuring that your personal information is handled in a safe and responsible manner. This
           Privacy Policy outlines the types of information we collect, how we use it, and the measures
@@ -93,44 +85,42 @@ const sections = [
         </p>
       </header>
 
-      <!-- Sections -->
-      <div class="space-y-10 max-w-[34rem]">
-        {sections.map((section) => (
-          <section>
-            <h2 class="text-xl md:text-2xl font-bold text-labFg mb-3 tracking-tight">{section.title}</h2>
-            {section.intro && <p class="text-labFgMuted leading-relaxed mb-3">{section.intro}</p>}
-            {section.paragraphs && section.paragraphs.map((p) => (
-              <p class="text-labFgMuted leading-relaxed mb-3">{p}</p>
-            ))}
+      <ol class="legal-body">
+        {sections.map((section, i) => (
+          <li class="legal-section">
+            <h2>
+              <span class="legal-no">{String(i + 1).padStart(2, "0")}</span>
+              {section.title}
+            </h2>
+            {section.intro && <p>{section.intro}</p>}
+            {section.paragraphs?.map((p) => <p>{p}</p>)}
             {section.items && (
-              <ul class="space-y-2.5 mt-3">
-                {section.items.map((item) => (
-                  <li class="flex gap-3 text-labFgMuted leading-relaxed">
-                    <span class="text-signalText font-mono mt-0.5 shrink-0" aria-hidden>›</span>
-                    <span>{item}</span>
-                  </li>
+              <dl>
+                {section.items.map(([term, body]) => (
+                  <div>
+                    <dt>{term}</dt>
+                    <dd>{body}</dd>
+                  </div>
                 ))}
-              </ul>
+              </dl>
             )}
-          </section>
+          </li>
         ))}
-
-        <!-- Contact -->
-        <section class="border border-labBorder bg-paperPanel p-6 md:p-8">
-          <div class="mono-label text-signalText mb-3">8. CONTACT US</div>
-          <p class="text-labFgMuted leading-relaxed mb-2">
-            If you have any questions or concerns about this Privacy Policy, please contact us at:
-          </p>
-          <a href="mailto:privacy@wellheadiq.com" class="break-all font-mono text-labFg hover:text-signalText transition-colors link-underline">
-            privacy@wellheadiq.com
-          </a>
-        </section>
-      </div>
-
-      <div class="mt-12 pt-8 border-t border-labBorder flex items-center justify-between font-mono text-[11px] tracking-wider text-labFgMuted">
-        <span class="text-signalText">/// END OF DOCUMENT</span>
-        <a href="/" class="inline-flex min-h-11 items-center hover:text-signalText transition-colors">RETURN →</a>
-      </div>
+        <li class="legal-section legal-contact">
+          <h2>
+            <span class="legal-no">{String(sections.length + 1).padStart(2, "0")}</span>
+            Contact us
+          </h2>
+          <p>If you have any questions or concerns about this Privacy Policy, please contact us at</p>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </li>
+      </ol>
     </div>
   </main>
+
+  <Footer home="/" />
 </Layout>
+
+<script>
+  import "../scripts/main.js";
+</script>

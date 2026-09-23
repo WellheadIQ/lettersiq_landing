@@ -1,0 +1,75 @@
+---
+import { createPen } from "../../lib/ink.js";
+
+const events = [
+  { tag: "Proration", title: "A proration code turns delinquent", body: "DLQ W-10, DLQ FORM or H-15 VIOL appears on the monthly schedule." },
+  { tag: "P-5", title: "The P-5 renewal clock runs down", body: "60, 30, 14 and 7 days before the organization report expires." },
+  { tag: "Rule 15", title: "An inactive well crosses a milestone", body: "Five and ten years inactive, or a W-3X extension changes status." },
+  { tag: "Certified", title: "A certified pre-severance letter is filed", body: "The Commission's final notice before an order issues." },
+  { tag: "Mail", title: "The letter reaches a mailbox", body: "Days later, and only if it's addressed to you." },
+  { tag: "Order", title: "Severance or seal order", body: "Production stops until the lease is back in compliance." },
+];
+
+const pen = createPen(303, { wobble: 1 });
+const red = createPen(304, { wobble: 1.2 });
+const baseline = pen.line(4, 30, 1190, 30, 1.2) + pen.line(1176, 22, 1194, 30, 0.3) + pen.line(1194, 30, 1176, 39, 0.3);
+const dotX = (i) => 10 + i * 200;
+const ticks = events.map((_, i) => pen.line(dotX(i) + 40, 25, dotX(i) + 40, 35, 0.3)).join("");
+const earlyDots = events.slice(0, 4).map((_, i) => red.circle(dotX(i), 30, 7, 7, { turns: 1.1 })).join("");
+const lateDots = events.slice(4).map((_, i) => pen.circle(dotX(i + 4), 30, 7, 7, { turns: 1.1 })).join("");
+const early = red.poly([[12, 8], [12, 26], [788, 26], [788, 8]], { w: 0.8 });
+const late = pen.poly([[812, 8], [812, 26], [1188, 26], [1188, 8]], { w: 0.8 });
+const rail = pen.line(10, 4, 10, 996, 1.4);
+---
+<section class="section signals" id="signals" aria-labelledby="signals-heading">
+  <div class="shell">
+    <header class="section-head">
+      <p class="fig-label">Fig. 03 · Early signals</p>
+      <h2 id="signals-heading" class="section-title" data-reveal>
+        The certified letter is the <em>last</em> warning, not the first.
+      </h2>
+      <p class="section-lede" data-reveal>
+        Most shut-ins leave a trail of public records before the order.
+        LettersIQ reads that trail every night. The mail only brings the end of it.
+      </p>
+    </header>
+
+    <div class="timeline" data-timeline>
+      <svg class="timeline-line" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true" data-draw-scrub>
+        <path class="ink-l" d={baseline} />
+        <path class="ink-t" d={ticks} />
+        <path class="ink-r timeline-dots" d={earlyDots} />
+        <path class="ink-l timeline-dots" d={lateDots} />
+      </svg>
+      <svg class="timeline-rail" viewBox="0 0 20 1000" preserveAspectRatio="none" aria-hidden="true" data-draw-scrub>
+        <path class="ink-l" d={rail} />
+      </svg>
+      <ol class="timeline-events">
+        {events.map((e, i) => (
+          <li class={`timeline-event ${i < 4 ? "is-early" : "is-late"}`} data-reveal>
+            <p class="timeline-tag">
+              <span>{String(i + 1).padStart(2, "0")}</span>
+              {e.tag}
+            </p>
+            <h3>{e.title}</h3>
+            <p>{e.body}</p>
+          </li>
+        ))}
+      </ol>
+      <svg class="timeline-brackets" viewBox="0 0 1200 34" preserveAspectRatio="none" aria-hidden="true" data-draw-scrub>
+        <path class="ink-r" d={early} />
+        <path class="ink-l" d={late} />
+      </svg>
+      <div class="timeline-keys">
+        <p class="timeline-key is-early">
+          <span class="swatch" aria-hidden="true"></span>
+          LettersIQ puts these in the next 7:00 AM briefing
+        </p>
+        <p class="timeline-key is-late">
+          <span class="swatch" aria-hidden="true"></span>
+          Where the mail finds you
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

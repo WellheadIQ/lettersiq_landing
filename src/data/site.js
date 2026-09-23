@@ -13,7 +13,7 @@ export const site = {
   ogImage: "/og-lettersiq.png",
   ogImageAlt:
     "LettersIQ connects eight Texas Railroad Commission systems into one prioritized morning briefing for Texas oil and gas operators.",
-  themeColor: "#060d1b",
+  themeColor: "#f2eee5",
   locale: "en_US",
   // Entry plan — schema.org offers advertise the lowest price a buyer can pay.
   price: { amount: "399", currency: "USD", unit: "month" },

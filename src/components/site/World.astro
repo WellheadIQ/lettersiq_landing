@@ -1,0 +1,159 @@
+---
+import Ink from "./Ink.astro";
+import Pumpjack from "./Pumpjack.astro";
+import { buildWorld, envelope, groundY } from "../../lib/drawings.js";
+import { createPen } from "../../lib/ink.js";
+
+export interface Props {
+  variant: "hero" | "story";
+  seed?: number;
+  viewBox: string;
+  label: string;
+}
+
+const { variant, seed = 7, viewBox, label } = Astro.props;
+const story = variant === "story";
+const w = buildWorld(seed);
+const [ja, jb, jc] = w.jacks;
+const bat = w.battery;
+const pen = createPen(seed + 400, { wobble: 1.1 });
+const red = createPen(seed + 500, { wobble: 1.4 });
+
+const labels = story
+  ? [
+      { id: "a", x: 118, y: 452, lines: ["LEASE 08-11234", "Yours"], leader: pen.arrow(176, 478, 214, 540, { bend: -0.2, head: 7 }) },
+      { id: "b", x: 560, y: 498, lines: ["LEASE 08-11235", "Yours"], leader: pen.arrow(612, 522, 648, 572, { bend: -0.2, head: 7 }) },
+      { id: "battery", x: 1030, y: 452, lines: ["P-17 SURFACE COMMINGLE", "Shared tank battery"], leader: pen.arrow(1110, 478, 1130, 560, { bend: 0.18, head: 7 }) },
+      { id: "c", x: 1470, y: 436, lines: ["LEASE 08-10977", "Neighbor · another operator"], leader: pen.arrow(1640, 462, 1745, 540, { bend: -0.15, head: 7 }) },
+    ]
+  : [];
+
+const env = envelope(seed + 600);
+const letterAt = [1790, 352];
+const letterCircle = red.circle(letterAt[0] + 60, letterAt[1] + 40, 104, 74, { turns: 1.18, start: -2.2 });
+const stampAt = [bat.x + 215, bat.y - 70];
+const stampPen = createPen(seed + 700, { wobble: 1.6 });
+const stamp = stampPen.rect(-170, -46, 340, 92) + stampPen.rect(-160, -37, 320, 74, { w: 0.8 });
+const noteA = red.arrow(300, 884, 236, 812, { bend: -0.25, head: 8 });
+const noteB = red.arrow(560, 888, 650, 822, { bend: 0.25, head: 8 });
+const buriedNote = pen.arrow(836, 880, 760, 800, { bend: -0.25, head: 7 });
+const signPos = [bat.x + bat.data.sign[0] * bat.s, bat.y + bat.data.sign[1] * bat.s];
+---
+<svg
+  class={`world world--${variant}`}
+  data-world={variant}
+  viewBox={viewBox}
+  preserveAspectRatio="xMidYMid slice"
+  role="img"
+  aria-label={label}
+>
+  {story && (
+    <defs>
+      <clipPath id={`sky-${seed}`}>
+        <rect x="-200" y="-1400" width="2400" height="2100" />
+      </clipPath>
+    </defs>
+  )}
+  {story && (
+    <g class="sky">
+      <path class="ink-t stars" data-stars d={w.stars} />
+      <g data-moon>
+        <path class="ink-h" d={w.moonHatch} />
+        <path class="ink-l" d={w.moon} />
+      </g>
+      <g clip-path={`url(#sky-${seed})`}>
+        <g data-sun transform="translate(0 720)">
+          <path class="ink-l" d={w.sun} />
+          <path class="ink-t" d={w.sunRays} />
+        </g>
+      </g>
+    </g>
+  )}
+
+  <g class="far" data-draw-group="far">
+    <path class="ink-t" d={w.farHills} />
+    <path class="ink-t" d={w.hills} />
+  </g>
+  <g class="lines" data-draw-group="lines">
+    <path class="ink-t" d={w.wires} />
+    <path class="ink-l" d={w.poles} />
+  </g>
+  <g class="ground" data-draw-group="ground">
+    <path class="ink-l" d={w.ground} />
+    <path class="ink-t" d={w.tufts} />
+    <path class="ink-t strata" d={w.strata} />
+    <path class="ink-t buried" d={w.buried} />
+    <path class="ink-t" d={w.shrubs} />
+    <path class="ink-t" d={w.fence} />
+    <path class="ink-t lease-line" d={w.leaseLine} />
+  </g>
+
+  <g
+    class="battery"
+    data-battery
+    transform={`translate(${bat.x.toFixed(1)} ${bat.y.toFixed(1)}) scale(${bat.s})`}
+  >
+    <Ink layers={bat.data.layers} />
+  </g>
+  <text class="w-sign" x={signPos[0]} y={signPos[1] + 6} text-anchor="middle">P-17</text>
+
+  <Pumpjack jack={ja} name={`${variant}-a`} />
+  <Pumpjack jack={jb} name={`${variant}-b`} />
+  <Pumpjack jack={jc} name={`${variant}-c`} />
+
+  {story && (
+    <g class="annotations">
+      <text class="w-note" x={w.leaseX - 12} y={groundY(w.leaseX) - 150} transform={`rotate(-90 ${w.leaseX - 12} ${groundY(w.leaseX) - 150})`}>
+        lease line
+      </text>
+      <g data-part="buried-note">
+        <text class="w-note" x="846" y="898">buried flowlines, all into one battery</text>
+        <path class="ink-t" d={buriedNote} />
+      </g>
+
+      {labels.map((l) => (
+        <g class="w-label" data-label={l.id}>
+          <text x={l.x} y={l.y}>
+            <tspan class="w-label-main" x={l.x}>{l.lines[0]}</tspan>
+            <tspan class="w-label-sub" x={l.x} dy="22">{l.lines[1]}</tspan>
+          </text>
+          <path class="ink-t" d={l.leader} />
+        </g>
+      ))}
+
+      <g class="tracers">
+        <path class="ink-r tracer" data-tracer="c" d={w.tracers.c} />
+        <path class="ink-r tracer" data-tracer="a" d={w.tracers.a} />
+        <path class="ink-r tracer" data-tracer="b" d={w.tracers.b} />
+      </g>
+
+      <g class="red-notes" data-part="no-change">
+        <text class="w-hand" x="250" y="918">nothing changed in your filings</text>
+        <path class="ink-r thin" d={noteA} />
+        <path class="ink-r thin" d={noteB} />
+      </g>
+
+      <g transform={`translate(${letterAt[0]} ${letterAt[1]})`}>
+        <g data-letter>
+          <g transform="rotate(-6 60 39)">
+            <path class="ink-f" d={env.fill} />
+            <path class="ink-l" d={env.body} />
+            <path class="ink-l" d={env.flap} />
+            <path class="ink-r thin" d={env.band} />
+            <path class="ink-t" d={env.stamp} />
+            <text class="w-certified" x="12" y="68">CERTIFIED</text>
+          </g>
+        </g>
+      </g>
+      <path class="ink-r" data-letter-circle d={letterCircle} />
+
+      <g transform={`translate(${stampAt[0].toFixed(1)} ${stampAt[1].toFixed(1)}) rotate(-7)`}>
+        <g data-stamp>
+          <path class="stamp-bg" d="M-170 -46H170V46H-170Z" />
+          <path class="ink-r stamp-edge" d={stamp} />
+          <text class="w-stamp" x="0" y="17" text-anchor="middle">SEVERED</text>
+        </g>
+      </g>
+    </g>
+  )}
+</svg>

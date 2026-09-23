@@ -1,0 +1,47 @@
+---
+import Ink from "./Ink.astro";
+import { pumpjackPose } from "../../lib/drawings.js";
+
+export interface Props {
+  jack: any;
+  name: string;
+}
+
+const { jack, name } = Astro.props;
+const { data, wellX, y, s, flip, speed, seed } = jack;
+const { geom, stat, crank, beam, carrier, rodTop } = data;
+const theta = ((seed * 2.39996) % (Math.PI * 2));
+const pose = pumpjackPose(geom, theta);
+const deg = (rad: number) => ((rad * 180) / Math.PI).toFixed(2);
+const bridle = (cy: number) =>
+  `M-1.6 ${geom.P[1]}V${(cy - 8).toFixed(1)}M1.6 ${geom.P[1]}V${(cy - 8).toFixed(1)}`;
+---
+<g
+  class="pumpjack"
+  data-pumpjack={name}
+  data-geom={JSON.stringify(geom)}
+  data-theta={theta.toFixed(3)}
+  data-speed={speed}
+  data-rod-top={rodTop}
+  transform={`translate(${wellX.toFixed(1)} ${y.toFixed(1)}) scale(${flip ? -s : s} ${s})`}
+>
+  <Ink layers={stat} />
+  <g class="pj-crank" transform={`translate(${geom.C[0]} ${geom.C[1]}) rotate(${deg(theta)})`}>
+    <Ink layers={crank} />
+  </g>
+  <line
+    class="pj-pitman ink-l"
+    x1={pose.K[0].toFixed(1)}
+    y1={pose.K[1].toFixed(1)}
+    x2={pose.E[0].toFixed(1)}
+    y2={pose.E[1].toFixed(1)}
+  />
+  <g class="pj-beam" transform={`translate(${geom.P[0]} ${geom.P[1]}) rotate(${deg(pose.phi)})`}>
+    <Ink layers={beam} />
+  </g>
+  <path class="pj-bridle ink-t" d={bridle(pose.carrierY)} />
+  <line class="pj-rod ink-l" x1="0" y1={pose.carrierY.toFixed(1)} x2="0" y2={rodTop} />
+  <g class="pj-carrier" transform={`translate(0 ${pose.carrierY.toFixed(1)})`}>
+    <Ink layers={carrier} />
+  </g>
+</g>

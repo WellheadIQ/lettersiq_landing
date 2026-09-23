@@ -1,0 +1,7 @@
+---
+export interface Props {
+  layers: { d: string; kind: string }[];
+}
+const { layers } = Astro.props;
+---
+{layers.map((layer) => <path class={`ink-${layer.kind}`} d={layer.d} />)}

@@ -1,0 +1,51 @@
+---
+import { site } from "../../data/site.js";
+import { createPen } from "../../lib/ink.js";
+import { pumpjack } from "../../lib/drawings.js";
+import Pumpjack from "./Pumpjack.astro";
+
+export interface Props {
+  home?: string;
+}
+
+const { home = "" } = Astro.props;
+const pen = createPen(1111, { wobble: 1 });
+const rule = pen.line(0, 6, 1200, 6, 1.4);
+const jack = { data: pumpjack(1212), wellX: 0, y: 0, s: 1, flip: false, speed: 0.8, seed: 1212 };
+const ground =
+  pen.line(-70, 0, 300, 0, 0.9) +
+  [-52, -18, 38, 70, 268, 286].map((x) => pen.line(x, -1, x + 3, -7, 0.2) + pen.line(x + 4, -1, x + 5, -6, 0.2)).join("");
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="shell">
+    <svg class="footer-rule" viewBox="0 0 1200 12" preserveAspectRatio="none" aria-hidden="true" data-draw-on-view>
+      <path class="ink-l" d={rule} />
+    </svg>
+    <div class="footer-grid">
+      <p class="footer-note">
+        Public Texas Railroad Commission records, read every night and
+        delivered by 7:00 AM Central.
+      </p>
+      <nav class="footer-links" aria-label="Footer">
+        <a href={`${home}#story`}>The story</a>
+        <a href={`${home}#systems`}>Coverage</a>
+        <a href={`${home}#pricing`}>Pricing</a>
+        <a href={`${home}#contact`}>Check my operator</a>
+        <a href="/privacy-policy">Privacy policy</a>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </nav>
+    </div>
+    <div class="footer-mark-row">
+      <p class="footer-mark" aria-hidden="true">Letters<span>IQ</span></p>
+      <svg class="footer-jack" viewBox="-70 -186 370 196" aria-hidden="true" data-draw-on-view>
+        <path class="ink-l" d={ground} />
+        <Pumpjack jack={jack} name="footer" />
+      </svg>
+    </div>
+    <div class="footer-base">
+      <span>© {year} <a href={site.parent.url} target="_blank" rel="noopener noreferrer">{site.parent.name}</a></span>
+      <span>Built for Texas oil &amp; gas operators</span>
+    </div>
+  </div>
+</footer>

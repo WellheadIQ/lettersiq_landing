@@ -1,0 +1,37 @@
+---
+const links = [
+  ["The story", "#story"],
+  ["Early signals", "#signals"],
+  ["Coverage", "#systems"],
+  ["Briefing", "#briefing"],
+  ["Pricing", "#pricing"],
+  ["FAQ", "#faq"],
+];
+---
+<header class="nav" data-nav>
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="LettersIQ home">
+      <span class="brand-word">Letters</span><span class="brand-iq">IQ</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      {links.map(([label, href]) => <a href={href}>{label}</a>)}
+    </nav>
+    <p class="nav-clock" aria-live="off">
+      <span class="nav-clock-dot" aria-hidden="true"></span>
+      <span data-next-briefing>Next briefing 07:00 CT</span>
+    </p>
+    <a class="btn btn-ink nav-cta" href="#contact">Check my operator</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet" data-nav-toggle>
+      <span class="nav-toggle-label">Menu</span>
+      <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span></span>
+    </button>
+  </div>
+  <div class="nav-sheet" id="nav-sheet" data-nav-sheet hidden>
+    <nav aria-label="Mobile">
+      {links.map(([label, href], i) => (
+        <a href={href}><span class="nav-sheet-no">{String(i + 1).padStart(2, "0")}</span>{label}</a>
+      ))}
+      <a href="#contact" class="nav-sheet-cta"><span class="nav-sheet-no">→</span>Check my operator</a>
+    </nav>
+  </div>
+</header>

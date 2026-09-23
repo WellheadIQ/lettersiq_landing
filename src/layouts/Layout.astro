@@ -1,20 +1,17 @@
 ---
-import "@fontsource/jetbrains-mono/400.css";
-import "@fontsource/jetbrains-mono/500.css";
-import "@fontsource/jetbrains-mono/600.css";
-import "@fontsource/jetbrains-mono/700.css";
-import "@fontsource/archivo/400.css";
-import "@fontsource/archivo/500.css";
-import "@fontsource/archivo/600.css";
-import "@fontsource/archivo/700.css";
-import "@fontsource/archivo/800.css";
-import "@fontsource/archivo/900.css";
-import "../styles/transitions.css";
+import "@fontsource/commit-mono/400.css";
+import "@fontsource/commit-mono/500.css";
+import "@fontsource/commit-mono/700.css";
+import "@fontsource/commit-mono/400-italic.css";
+import "@fontsource/instrument-serif/400.css";
+import "@fontsource/instrument-serif/400-italic.css";
+import "../styles/site.css";
 import Seo from "../components/Seo.astro";
-// The h1 is the LCP element and sets it in Archivo 800. Left to the stylesheet's
-// own `font-display: swap`, it painted in system-ui first and reflowed the whole
-// hero column downward once the real face arrived.
-import archivoDisplay from "@fontsource/archivo/files/archivo-latin-800-normal.woff2";
+// The hero headline is the LCP element; preloading its face avoids a reflow
+// when the serif replaces the fallback.
+import serifDisplay from "@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2";
+import serifItalic from "@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2";
+import monoBody from "@fontsource/commit-mono/files/commit-mono-latin-400-normal.woff2";
 
 export interface Props {
   title: string;
@@ -36,17 +33,24 @@ const { title, description, image, noindex, primary, breadcrumbs } =
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="generator" content={Astro.generator} />
 
+  <!-- Figures stay drawn if scripts never arrive; the timeout clears the
+       pre-draw state rather than leaving the page blank. -->
+  <script is:inline>
+    document.documentElement.classList.add("js");
+    setTimeout(function () {
+      if (!document.documentElement.classList.contains("motion-ready")) {
+        document.documentElement.classList.remove("js");
+      }
+    }, 4000);
+  </script>
+
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" href="/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
 
-  <link
-    rel="preload"
-    as="font"
-    type="font/woff2"
-    href={archivoDisplay}
-    crossorigin
-  />
+  <link rel="preload" as="font" type="font/woff2" href={serifDisplay} crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href={serifItalic} crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href={monoBody} crossorigin />
 
   <link rel="preconnect" href="https://www.googletagmanager.com" />
   <link rel="dns-prefetch" href="https://www.google-analytics.com" />
@@ -63,7 +67,7 @@ const { title, description, image, noindex, primary, breadcrumbs } =
   <!-- Google tag (gtag.js) — GA4 + Google Ads conversions -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-JLT6WXDYCK"></script>
   <!-- is:inline keeps gtag() on window; bundled as a module it is scoped away and
-       the conversion call in ContactUs.jsx silently never fires. -->
+       the conversion call in the contact form silently never fires. -->
   <script is:inline>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -88,117 +92,10 @@ const { title, description, image, noindex, primary, breadcrumbs } =
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFL6VJ9B"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TFL6VJ9B"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <a href="#main-content" class="skip-link">Skip to content</a>
   <slot />
-  <style is:global>
-    :root {
-      --header-height: 102px;
-      --canvas: #060d1b;
-      --oxford: #0a1428;
-      --signal-red: #c8102e;
-      --cobalt: #3d6bff;
-      --ink: #eaeef6;
-    }
-
-    * {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    html {
-      font-family: 'Archivo', system-ui, sans-serif;
-      background-color: var(--canvas);
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      scroll-padding-top: calc(var(--header-height) + 1rem);
-      scrollbar-gutter: stable;
-      text-rendering: optimizeLegibility;
-    }
-
-    @media (min-width: 768px) {
-      :root { --header-height: 110px; }
-    }
-
-    /* Horizontal clipping lives on <html> only. Repeating overflow-x here made
-       <body> its own scroll container, which silently disables position:sticky
-       for every descendant — including the scroll-conducted story section. */
-    body {
-      background-color: var(--canvas);
-      color: var(--ink);
-      position: relative;
-    }
-
-    /* Skip-to-content — visible only on keyboard focus */
-    .skip-link {
-      position: fixed;
-      top: 0;
-      left: 50%;
-      z-index: 100;
-      display: inline-flex;
-      align-items: center;
-      min-height: 2.75rem;
-      transform: translate(-50%, -120%);
-      background: var(--signal-red);
-      color: #fff;
-      font-family: 'JetBrains Mono', ui-monospace, monospace;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 10px 18px;
-      transition: transform var(--duration-fast) var(--ease-smooth-out);
-    }
-    .skip-link:focus-visible {
-      transform: translate(-50%, 8px);
-      outline: 2px solid #fff;
-      outline-offset: 2px;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .skip-link { transition: none; }
-    }
-
-    /* Monospace utility */
-    .font-mono {
-      font-family: 'JetBrains Mono', ui-monospace, monospace;
-    }
-
-    /* Display face utility */
-    .font-display {
-      font-family: 'Archivo', system-ui, sans-serif;
-    }
-
-    /* Custom scrollbar — dark */
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0a1428;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #24334f;
-      border: 2px solid #0a1428;
-      border-radius: 999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3a4d70;
-    }
-
-    /* Text selection */
-    ::selection {
-      background: #c8102e;
-      color: #fff;
-    }
-
-    /* Tighten display headings */
-    h1, h2 {
-      text-wrap: balance;
-    }
-    p {
-      text-wrap: pretty;
-    }
-  </style>
 </body>
 </html>
