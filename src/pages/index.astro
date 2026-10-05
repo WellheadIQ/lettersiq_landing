@@ -5,11 +5,13 @@ import Hero from "../components/site/Hero.astro";
 import Story from "../components/site/Story.astro";
 import Signals from "../components/site/Signals.astro";
 import Systems from "../components/site/Systems.astro";
+import BlastRadius from "../components/site/BlastRadius.astro";
 import Briefing from "../components/site/Briefing.astro";
 import Pricing from "../components/site/Pricing.astro";
 import Faq from "../components/site/Faq.astro";
 import Contact from "../components/site/Contact.astro";
 import Footer from "../components/site/Footer.astro";
+import hairlineKernel from "../vendor/hairline/kernel.js?raw";
 ---
 
 <Layout
@@ -23,14 +25,21 @@ import Footer from "../components/site/Footer.astro";
     <Story />
     <Signals />
     <Systems />
+    <BlastRadius />
     <Briefing />
     <Pricing />
     <Faq />
     <Contact />
   </main>
   <Footer />
+
+  <!-- The Hairline kernel defines HL for the figure modules; it runs as the
+       page parses, so it is in place before any module script. -->
+  <noscript><style>.hl-plate { display: none; }</style></noscript>
+  <script is:inline set:html={hairlineKernel}></script>
 </Layout>
 
 <script>
   import "../scripts/main.js";
+  import "../scripts/figures.js";
 </script>

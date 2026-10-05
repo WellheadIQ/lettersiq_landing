@@ -487,6 +487,12 @@
       "skillPath": "agent-skills/web-design/gsap-scrolltrigger-storytelling/SKILL.md",
       "computedHash": "c388738853064f4bbb4293b910efc0fb82f957298a49c94214c2522b138ae939"
     },
+    "hairline-create": {
+      "source": "lucasmarkes/hairline",
+      "sourceType": "github",
+      "skillPath": "skills/hairline-create/SKILL.md",
+      "computedHash": "3fbb60d314c7851e41caf8433ecab366d58b6b907afc68848f2264ed9dea5c8c"
+    },
     "high-contrast-skeuomorphic-clean": {
       "source": "MengTo/Skills",
       "sourceType": "github",

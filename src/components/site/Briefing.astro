@@ -1,5 +1,6 @@
 ---
 import { createPen } from "../../lib/ink.js";
+import HairlinePlate from "./HairlinePlate.astro";
 import briefingEmail from "../../assets/images/liq-daily-briefing-email.jpg";
 
 const items = [
@@ -66,7 +67,7 @@ const ring = red.circle(50, 20, 48, 17, { turns: 1.14, start: -2.4 });
   <div class="shell">
     <header class="section-head section-head--split">
       <div>
-        <p class="fig-label">Fig. 05 · The artifact</p>
+        <p class="fig-label">Fig. 06 · The artifact</p>
         <h2 id="briefing-heading" class="section-title" data-reveal>
           One page at 7:00 AM, <em>ranked by what it can stop.</em>
         </h2>
@@ -137,6 +138,26 @@ const ring = red.circle(50, 20, 48, 17, { turns: 1.14, start: -2.4 });
           <p>cleared records close themselves</p>
           <svg viewBox="0 0 124 72" data-draw-on-view><path class="ink-r" d={arrows.resolved} /></svg>
         </div>
+      </div>
+    </div>
+
+    <div class="quiet">
+      <div class="quiet-plate" data-reveal>
+        <HairlinePlate
+          name="mailbox"
+          tag="Fig. 06 · Quiet morning"
+          rest="every flag down"
+          label="Three rural mailboxes on one plank at a lease road, every flag down. One door stands ajar on an empty box."
+        />
+      </div>
+      <div class="quiet-copy">
+        <p class="fig-label">Most mornings</p>
+        <h3 class="quiet-title" data-reveal>Nothing changed? <em>Nothing is sent.</em></h3>
+        <p class="quiet-body" data-reveal>
+          If none of the eight systems moved against your leases overnight,
+          there's no briefing to skim and no all-clear to file. The next email
+          from LettersIQ is one worth opening.
+        </p>
       </div>
     </div>
   </div>

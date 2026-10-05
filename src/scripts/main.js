@@ -115,21 +115,6 @@ function reveals() {
     });
   });
 
-  // Coverage glyphs draw in with their row and redraw on hover.
-  gsap.utils.toArray(".index-row").forEach((row) => {
-    const paths = [...row.querySelectorAll("[data-glyph] path")];
-    gsap.set(paths, { visibility: "hidden" });
-    ScrollTrigger.create({
-      trigger: row,
-      start: "top 90%",
-      once: true,
-      onEnter: () => drawPaths(paths, { delay: 0.2 }),
-    });
-    row.addEventListener("pointerenter", () => {
-      gsap.fromTo(paths, { drawSVG: "0%" }, { drawSVG: "100%", duration: 0.9, ease: "power2.inOut", overwrite: true });
-    });
-  });
-
   // Briefing rows settle one after another, like lines being typed.
   const rows = gsap.utils.toArray("[data-sheet-item]");
   if (!rows.length) return;

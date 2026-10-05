@@ -1,0 +1,20 @@
+---
+export interface Props {
+  name: string;
+  tag: string;
+  label: string;
+  rest: string;
+  caption?: string;
+  class?: string;
+}
+
+const { name, tag, label, rest, caption, class: className } = Astro.props;
+---
+<figure class:list={["hl-plate", className]} data-hl-plate>
+  <div class="hl-bar" aria-hidden="true">
+    <span>{tag}</span>
+    <span class="hl-read" data-hl-read data-rest={rest}>{rest}</span>
+  </div>
+  <div class="hl-stage" data-hl={name} role="img" aria-label={label}></div>
+  {caption && <figcaption class="hl-caption">{caption}</figcaption>}
+</figure>

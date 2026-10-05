@@ -1,5 +1,6 @@
 ---
 import { createPen } from "../../lib/ink.js";
+import HairlinePlate from "./HairlinePlate.astro";
 
 const tiers = [
   { name: "Essential", scope: "Up to 100 leases", price: "$399", cadence: "per month", body: "For single-basin operators who need the whole RRC picture without a compliance team." },
@@ -27,7 +28,7 @@ const checks = included.map(() => pen.poly([[3, 11], [8, 16], [19, 3]]));
   <div class="shell">
     <header class="section-head section-head--split">
       <div>
-        <p class="fig-label">Fig. 06 · Rates</p>
+        <p class="fig-label">Fig. 07 · Rates</p>
         <h2 id="pricing-heading" class="section-title" data-reveal>
           Priced on the portfolio <em>you operate.</em>
         </h2>
@@ -39,9 +40,36 @@ const checks = included.map(() => pen.poly([[3, 11], [8, 16], [19, 3]]));
       </p>
     </header>
 
+    <div class="field">
+      <div class="field-plate" data-reveal>
+        <HairlinePlate
+          name="portfolio"
+          tag="Fig. 07 · Portfolio"
+          rest="point at the field"
+          label="An isometric field of seventy lease pillars on three terraces, one per plan. The first 240 leases stand up, on the middle terrace."
+        />
+      </div>
+      <div class="field-key" data-reveal>
+        <p class="field-lede">
+          Each pillar is ten leases. Point at the field to size a portfolio:
+          every lease up to the pointer stands up, and the terrace that holds
+          the last one is your plan.
+        </p>
+        <ol class="field-tiers">
+          {tiers.map((t, i) => (
+            <li data-tier={t.name.toLowerCase()}>
+              <span class="field-where">{["Back terrace", "Middle terrace", "Front terrace"][i]}</span>
+              <span class="field-name">{t.name}</span>
+              <span class="field-scope">{t.scope}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+
     <div class="rates">
       {tiers.map((t) => (
-        <article class={`rate ${t.featured ? "is-featured" : ""}`} data-reveal>
+        <article class={`rate ${t.featured ? "is-featured" : ""}`} data-reveal data-tier={t.name.toLowerCase()}>
           <header class="rate-head">
             <h3 class="rate-name">{t.name}</h3>
             {t.featured && <span class="rate-flag">Most operators</span>}
